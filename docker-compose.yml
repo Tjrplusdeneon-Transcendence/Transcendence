@@ -1,0 +1,18 @@
+version: '3'
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "4567:4567"
+    networks:
+      - transcendence
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    networks:
+      - transcendence
+
+networks:
+  transcendence:
