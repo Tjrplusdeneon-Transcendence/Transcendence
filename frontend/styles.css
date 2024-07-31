@@ -1,0 +1,23 @@
+body 
+{
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+}
+
+#pongCanvas 
+{
+    border: 1px solid #0095DD;
+    background-color: #fff;
+}
+
+#controls 
+{
+    margin-top: 20px;
+}
+
+#tournament-info 
+{
+    margin-top: 20px;
+    font-weight: bold;
+}

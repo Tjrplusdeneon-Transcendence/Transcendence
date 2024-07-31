@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ft_Transcendence</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>ft_Transcendence</h1>
+    <div>
+        <input type="text" id="alias" placeholder="Enter alias">
+        <input type="password" id="password" placeholder="Enter password">
+        <button id="register-btn">Register</button>
+        <button id="create-tournament-btn">Create Tournament</button>
+        <p id="tournament-info"></p>
+    </div>
+    <div id="tournament-info"></div>
+    <button id="start-game-btn">Start Game</button>
+    <canvas id="pongCanvas" width="800" height="600" style="border:1px solid #000000;"></canvas>
+    <!-- fichier js pour l'inscription et créer des tournoi -->
+    <script src="app.js"></script> 
+    <!-- fichier pour le jeu -->
+    <script src="game.js"></script>
+</body>
+</html>
