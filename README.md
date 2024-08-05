@@ -6,5 +6,8 @@ Seydou:
 Jeremie:
 - [ ] ?
 
+Ulysse:
+- [ ] ?
+
 Sarah:
 - [ ] Front end ?
