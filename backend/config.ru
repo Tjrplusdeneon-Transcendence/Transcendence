@@ -1,9 +1,9 @@
-# /!\ POur aller un peu vite et tester le frontend j'ai utilisé des framework qu'il faudra enlever !!!
+# /!\ Pour aller un peu vite et tester le frontend j'ai utilisé des framework qu'il faudra enlever !!!
 
 
 require 'sinatra'      # Charge le framework Sinatra pour créer des applications web légères en Ruby
 require 'rack/cors'    # Charge Rack::Cors pour la gestion des requêtes Cross-Origin Resource Sharing (CORS)
-require './server'     # Charge le fichier 'server.rb' où les routes de l'application sont définies
+require './app'     # Charge le fichier 'server.rb' où les routes de l'application sont définies
 
 # Configuration de CORS pour permettre à des requêtes provenant de différentes origines d'accéder au serveur
 use Rack::Cors do

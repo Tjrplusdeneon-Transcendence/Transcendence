@@ -1,4 +1,4 @@
-# /!\ POur aller un peu vite et tester le frontend j'ai utilisé des framework qu'il faudra enlever !!!
+# /!\ Pour aller un peu vite et tester le frontend j'ai utilisé des framework qu'il faudra enlever !!!
 
 
 require 'sinatra'         # Charge le framework Sinatra pour créer des applications web légères en Ruby

@@ -25,3 +25,5 @@ gem 'cgi'
 # Rack::Cors est utilisé pour gérer les Cross-Origin Resource Sharing (CORS) dans l'application.
 # permet de contrôler les requêtes HTTP multi-origines.
 gem 'rack-cors'
+
+gem 'rackup'
