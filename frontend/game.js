@@ -1,7 +1,5 @@
 // /!\ Trop long. A trier dans des fichiers differents
 
-// En vrai c'est pas une "ia" a proprement parlé donc ne compte pas vraiment dans le module ?
-
 const canvas = document.getElementById('pongCanvas');
 const context = canvas.getContext('2d');
 
@@ -16,10 +14,15 @@ let dy = -4;
 
 let mouseY = canvas.height / 2; // Position de la souris initiale
 let gameRunning = false; 
-let winner = ''; // Nom du joueur gagnant
+let winner = '';
 
-let isAIEnabled = false; // Indique si l'IA est activée
-const aiSpeed = 4; // Vitesse de l'IA (pour ajuster sa difficulté)
+let isAIEnabled = false; 
+const aiSpeed = 10; 
+let aiReactionTime = 1000; 
+let aiInterval; // Gestionnaire d'intervalle pour la prise de décision de l'IA
+let aiTargetY = canvas.height / 2; // Position cible pour que l'IA déplace sa palette
+const errorProbability = 0.1; // Probabilitee d'erreur de l'ia (20%)
+const predictionErrorMargin = 30; // Marge d'ereur en pixel
 
 // Fonction pour dessiner la palette
 function drawPaddle(x, y) 
@@ -42,7 +45,7 @@ function drawBall()
 }
 
 // Fonction pour dessiner le message de perte
-function drawLossMessage() 
+function gameOverMessage() 
 {
     context.font = '30px Arial';
     context.fillStyle = 'red';
@@ -51,75 +54,96 @@ function drawLossMessage()
     restartButton.style.display = 'block'; // Affiche le bouton de redémarrage
 }
 
-// Fonction pour gérer le mouvement de l'IA
+// Fonction pour que l'IA tente de predire la future position de la balle
+function predictBallPosition() 
+{
+
+    let predictedX = x;
+    let predictedY = y;
+    let predictedDx = dx;
+    let predictedDy = dy;
+
+    while (predictedX > paddleWidth + ballRadius && predictedX < canvas.width - paddleWidth - ballRadius) 
+    {
+        predictedX += predictedDx;
+        predictedY += predictedDy;
+
+        
+        if (predictedY + predictedDy > canvas.height - ballRadius || predictedY + predictedDy < ballRadius) 
+            predictedDy = -predictedDy;
+    }
+
+    if (Math.random() < errorProbability) 
+        predictedY += (Math.random() * predictionErrorMargin * 2) - predictionErrorMargin;
+
+    return predictedY;
+}
+
+// Fonction de prise de décision de l'IA
+function aiDecision() 
+{
+    const predictedY = predictBallPosition();
+
+    if (predictedY < paddleY2 + paddleHeight / 2)
+        aiTargetY = Math.max(predictedY - paddleHeight / 2, 0);
+    else if (predictedY > paddleY2 + paddleHeight / 2) 
+        aiTargetY = Math.min(predictedY - paddleHeight / 2, canvas.height - paddleHeight);
+
+    if (Math.random() < errorProbability) 
+        aiTargetY += (Math.random() * predictionErrorMargin * 2) - predictionErrorMargin;
+}
+
+// Fonction pour déplacer la palette de l'IA
 function moveAI() 
 {
-    if (y > paddleY2 + paddleHeight / 2) 
-        paddleY2 += aiSpeed;
-    else
-        paddleY2 -= aiSpeed;
-
-    // L'IA perd volontairement parfois (10% de chances)
-    if (Math.random() < 0.1) 
-        paddleY2 += aiSpeed * 2; // Déplace l'IA loin de la balle
-
-    // Empêche l'IA de sortir du canvas
-    if (paddleY2 < 0)
-        paddleY2 = 0;
-
-    if (paddleY2 > canvas.height - paddleHeight) 
-        paddleY2 = canvas.height - paddleHeight;
-
+    if (paddleY2 < aiTargetY) 
+        paddleY2 = Math.min(paddleY2 + aiSpeed, aiTargetY);
+    else if (paddleY2 > aiTargetY)
+        paddleY2 = Math.max(paddleY2 - aiSpeed, aiTargetY);
 }
 
 // Fonction pour dessiner le jeu
 function draw() 
 {
     context.clearRect(0, 0, canvas.width, canvas.height);
-    drawPaddle(0, paddleY1); // Palette du joueur 1
-    drawPaddle(canvas.width - paddleWidth, paddleY2); // Palette du joueur 2 ou de l'IA
+    drawPaddle(0, paddleY1); 
+    drawPaddle(canvas.width - paddleWidth, paddleY2); 
     drawBall();
 
-    // Déplace la palette du joueur 1 en fonction de la souris
     paddleY1 = mouseY - paddleHeight / 2;
 
-    // Gère le mouvement de l'IA si elle est activée
-    if (isAIEnabled) 
+    if (isAIEnabled)
         moveAI();
 
-    // Vérifie si la balle touche le bord gauche ou droit du canvas (conditions de perte)
     if (x + dx < ballRadius) 
     {
         winner = isAIEnabled ? 'AI' : 'Player 2';
         gameRunning = false;
-        drawLossMessage();
+        gameOverMessage();
         return;
     } 
     else if (x + dx > canvas.width - ballRadius) 
     {
         winner = 'Player 1';
         gameRunning = false;
-        drawLossMessage();
+        gameOverMessage();
         return;
     }
 
-    // Vérifie les collisions avec les palettes
     if (x + dx < paddleWidth + ballRadius && y > paddleY1 && y < paddleY1 + paddleHeight) 
         dx = -dx;
     else if (x + dx > canvas.width - paddleWidth - ballRadius && y > paddleY2 && y < paddleY2 + paddleHeight)
         dx = -dx;
-    
 
-    // Vérifie les collisions avec les murs (haut et bas)
+
     if (y + dy > canvas.height - ballRadius || y + dy < ballRadius)
         dy = -dy;
 
     x += dx;
     y += dy;
 
-    if (gameRunning) 
+    if (gameRunning)
         requestAnimationFrame(draw);
-    
 }
 
 //Verifie si joueur 1 est solo
@@ -161,46 +185,51 @@ function player2Exists()
 function startGame() 
 {
     player2Exists().then(exists => {
-        isAIEnabled = !exists; // Active l'IA si le joueur 2 n'existe pas
-        document.getElementById('pongCanvas').style.display = 'block'; // Affiche le canvas
-        restartButton.style.display = 'none'; // Cache le bouton de redémarrage
-        gameRunning = true; // Démarre le jeu
+        isAIEnabled = !exists;
+
+        if (isAIEnabled) 
+            aiInterval = setInterval(aiDecision, aiReactionTime); // L'IA prend des décisions toutes les secondes
+
+        document.getElementById('pongCanvas').style.display = 'block';
+        restartButton.style.display = 'none';
+        gameRunning = true;
         x = canvas.width / 2;
         y = canvas.height / 2;
-        dx = 4;
-        dy = -4;
-        draw(); // Démarre l'affichage
+        dx = 2;
+        dy = -2;
+        draw();
     });
 }
 
 function restartGame() 
 {
+    clearInterval(aiInterval); // Efface l'intervalle de prise de décision de l'IA
     winner = '';
     startGame();
 }
 
-// Cache le canvas du jeu au départ
+// Cache le canvas au départ
 document.getElementById('pongCanvas').style.display = 'none';
 
-// Ajoute un gestionnaire d'événements pour suivre la position de la souris
+// Mouvement de la souris
 canvas.addEventListener('mousemove', (event) => {
     const rect = canvas.getBoundingClientRect();
-    mouseY = event.clientY - rect.top; // Ajuste la position Y de la souris relative au canvas
+    mouseY = event.clientY - rect.top;
 
-    // Empêche la palette de sortir du canvas
-    if (mouseY < paddleHeight / 2) 
+    if (mouseY < paddleHeight / 2) {
         mouseY = paddleHeight / 2;
-
-    if (mouseY > canvas.height - paddleHeight / 2) 
+    }
+    if (mouseY > canvas.height - paddleHeight / 2) {
         mouseY = canvas.height - paddleHeight / 2;
+    }
 });
 
-// Ajoute un gestionnaire d'événements pour le bouton de démarrage
+// Bouton de démarrage du jeu
 document.getElementById('start-game-btn').addEventListener('click', startGame);
 
-// Ajoute un bouton pour redémarrer le jeu
+// Bouton de redémarrage
 const restartButton = document.createElement('button');
 restartButton.textContent = 'Restart Game';
 document.body.appendChild(restartButton);
-restartButton.style.display = 'none'; // Cache le bouton au départ
+restartButton.style.display = 'none';
 restartButton.addEventListener('click', restartGame);
