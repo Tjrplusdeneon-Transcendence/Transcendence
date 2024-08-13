@@ -11,6 +11,8 @@ let dx = 2;
 let dy = -2;
 
 let mouseY = canvas.height / 2; // Position de la souris initiale
+let gameRunning = false; // État du jeu
+let winner = ''; // Nom du joueur gagnant
 
 // Fonction pour dessiner la palette
 function drawPaddle(x, y) 
@@ -32,6 +34,17 @@ function drawBall()
     context.closePath();
 }
 
+// Fonction pour dessiner le message de perte
+function drawLossMessage() 
+{
+    context.font = '30px Arial';
+    context.fillStyle = 'red';
+    context.textAlign = 'center';
+    context.fillText(`Game Over! ${winner} Wins!`, canvas.width / 2, canvas.height / 2);
+    restartButton.style.display = 'block'; // Affiche le bouton de redémarrage
+}
+
+// Fonction pour dessiner le jeu
 function draw() 
 {
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -42,9 +55,31 @@ function draw()
     // Déplace la palette du joueur en fonction de la souris
     paddleY1 = mouseY - paddleHeight / 2;
 
-    if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+    // Vérifie si la balle touche le bord gauche ou droit du canvas (conditions de perte)
+    if (x + dx < ballRadius) 
+        {
+        winner = 'Player 2';
+        gameRunning = false;
+        drawLossMessage();
+        return;
+    } 
+    else if (x + dx > canvas.width - ballRadius) 
+    {
+        winner = 'Player 1';
+        gameRunning = false;
+        drawLossMessage();
+        return;
+    }
+
+    // Vérifie les collisions avec les palettes
+    if (x + dx < paddleWidth + ballRadius && y > paddleY1 && y < paddleY1 + paddleHeight) {
+        dx = -dx;
+    } 
+    else if (x + dx > canvas.width - paddleWidth - ballRadius && y > paddleY2 && y < paddleY2 + paddleHeight) {
         dx = -dx;
     }
+
+    // Vérifie les collisions avec les murs (haut et bas)
     if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
         dy = -dy;
     }
@@ -52,13 +87,27 @@ function draw()
     x += dx;
     y += dy;
 
-    requestAnimationFrame(draw);
+    if (gameRunning) {
+        requestAnimationFrame(draw);
+    }
 }
 
 function startGame() 
 {
     document.getElementById('pongCanvas').style.display = 'block'; // Affiche le canvas
-    draw(); // Démarre le jeu
+    restartButton.style.display = 'none'; // Cache le bouton de redémarrage
+    gameRunning = true; // Démarre le jeu
+    x = canvas.width / 2;
+    y = canvas.height / 2;
+    dx = 2;
+    dy = -2;
+    draw(); // Démarre le dessin
+}
+
+function restartGame() 
+{
+    winner = '';
+    startGame();
 }
 
 // Cache le canvas du jeu au départ
@@ -69,13 +118,21 @@ canvas.addEventListener('mousemove', (event) => {
     const rect = canvas.getBoundingClientRect();
     mouseY = event.clientY - rect.top; // Ajuste la position Y de la souris relative au canvas
 
-    // Empeche la palette de sortir du canvas
-    if (mouseY < paddleHeight / 2) 
-	{
+    // Empêche la palette de sortir du canvas
+    if (mouseY < paddleHeight / 2) {
         mouseY = paddleHeight / 2;
     }
-    if (mouseY > canvas.height - paddleHeight / 2) 
-	{
+    if (mouseY > canvas.height - paddleHeight / 2) {
         mouseY = canvas.height - paddleHeight / 2;
     }
 });
+
+// Ajoute un gestionnaire d'événements pour le bouton de démarrage
+document.getElementById('start-game-btn').addEventListener('click', startGame);
+
+// Ajoute un bouton pour redémarrer le jeu
+const restartButton = document.createElement('button');
+restartButton.textContent = 'Restart Game';
+document.body.appendChild(restartButton);
+restartButton.style.display = 'none'; // Cache le bouton au départ
+restartButton.addEventListener('click', restartGame);
