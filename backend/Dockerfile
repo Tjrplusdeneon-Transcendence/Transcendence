@@ -1,18 +1,19 @@
 FROM ruby:3.0
 
-# répertoire de travail dans le conteneur
+# Définir le répertoire de travail dans le conteneur
 WORKDIR /app
 
-# copier tous les fichiers du répertoire courant (donc où se trouve le Dockerfile) dans le répertoire de travail du conteneur (/app)
+# Copier tous les fichiers du répertoire courant dans le répertoire de travail du conteneur (/app)
 COPY . .
 
-# gestionnaire de dépendances pour les projets Ruby (donc voué à changer si au final on utilise pas ruby)
+# Installer le gestionnaire de dépendances Bundler
 RUN gem install bundler
 
-# Installer toutes les dépendances qui se trouveront dans le Gemfile
+# Installer toutes les dépendances spécifiées dans le Gemfile
 RUN bundle install
 
+# Exposer le port 4567 pour permettre l'accès à l'application depuis l'extérieur du conteneur
 EXPOSE 4567
 
-# démarrer le serveur Rack (à voir plus tard si c'est vraiment utile) avec Bundler sur le port 4567 et accessible depuis n'importe quelle adresse IP
-CMD ["bundle", "exec", "rackup", "--host", "0.0.0.0", "-p", "4567"]
+# Démarrer le serveur WEBrick directement
+CMD ["ruby", "app.rb"]

@@ -1,29 +1,10 @@
-# Spécifie la source pour télécharger les gemmes Ruby
+# Gemfile
+
 source 'https://rubygems.org'
 
-# Gemmes nécessaires pour l'application
-
-# Sinatra est un DSL (domain-specific language) pour créer rapidement des applications web en Ruby. Mais du coup il sera enlevé
-gem 'sinatra'
-
-# JSON est utilisé pour parser et générer des données au format JSON
 gem 'json'
-
-# SecureRandom fournit des méthodes pour générer des nombres aléatoires sécurisés
 gem 'securerandom'
-
-# BCrypt est une bibliothèque pour hacher les mots de passe de manière sécurisée
 gem 'bcrypt'
-
-# Dotenv charge les variables d'environnement à partir d'un fichier .env dans ENV, on en aura sûrement besoin
 gem 'dotenv'
-
-# CGI fournit des fonctions pour manipuler les entrées utilisateur et les rendre sûres
-# en échappant les caractères spéciaux.
 gem 'cgi'
-
-# Rack::Cors est utilisé pour gérer les Cross-Origin Resource Sharing (CORS) dans l'application.
-# permet de contrôler les requêtes HTTP multi-origines.
-gem 'rack-cors'
-
-gem 'rackup'
+gem 'webrick'
