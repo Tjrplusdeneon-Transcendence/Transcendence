@@ -13,17 +13,27 @@ Ce projet propose une plateforme de jeux multijoueurs en ligne, incluant des cla
 - **Statistiques de jeu** : Suivi des performances du joueur avec une gestion des scores.
 - **Interface utilisateur** : Développée avec Bootstrap pour une présentation fluide et moderne, tout en gardant le charme des jeux d'arcades.
 - **Backend** : Système de connexion sécurisé et gestion des utilisateurs via Django.
+
+---
   
 ### **Captures d'écran**
 *(Ajouter ici des images illustrant le chat, les jeux, et l'interface globale. Par exemple, des captures du jeu Pong en action, la fenêtre de chat, et la page de connexion des utilisateurs)*
+
+---
 
 ### **Installation**
 
 1. **Cloner le dépôt**
    ```bash
-   git clone https://github.com/ton-repo-url.git
-   cd nom-du-projet
+   git clone https://github.com/Noralya/ft_Transcendence.git
+   cd ft_Transcendence
 	```
+2. **Lancer la bete**
+	```bash
+   make up
+	```
+
+---
 
 ## **Liste des tâches**
 
