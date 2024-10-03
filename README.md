@@ -1,38 +1,58 @@
-### To do list
+# **[ft_Transcendence]**
 
-4 major avec gameplay :
-remote : 			peut etre a enlever car beaucoup de temps  
-multiple player 
-game 2 : 			fait  
-live chat :			in progress, ajouter back pour se log
+## **Aperçu**
+Ce projet propose une plateforme de jeux multijoueurs en ligne, incluant des classiques comme Pong et Memory, avec un système de chat intégré et des statistiques de jeu. Le projet est en cours de développement et implique des fonctionnalités de connexion, gestion des utilisateurs, et IA pour les jeux. 
 
-1 minor avec gameplay complet :
-game custom	:		fait
+### **Fonctionnalités**
+- **Multijoueur** : Permet à plusieurs joueurs de jouer ensemble.
+- **Jeux disponibles** :
+  - **Pong** : Jeu classique avec une intelligence artificielle et des modes de jeu challengeants.
+  - **Memory** : Jeu de mémoire visuel avec les meme options.
+  - **Custom Game** : Options pour personnaliser les jeux.
+- **Chat en direct** : Un chat en temps réel pour échanger avec les autres joueurs pendant les parties (connexion nécessaire).
+- **Statistiques de jeu** : Suivi des performances du joueur avec une gestion des scores.
+- **Interface utilisateur** : Développée avec Bootstrap pour une présentation fluide et moderne, tout en gardant le charme des jeux d'arcades.
+- **Backend** : Système de connexion sécurisé et gestion des utilisateurs via Django.
+  
+### **Captures d'écran**
+*(Ajouter ici des images illustrant le chat, les jeux, et l'interface globale. Par exemple, des captures du jeu Pong en action, la fenêtre de chat, et la page de connexion des utilisateurs)*
 
-1 major avec ia :			fait
-1 minor avec gamestats : 	fait
+### **Installation**
 
-1 major django :			in progress
-1 minor boostrap :			fait
-1 minor database :			a faire
+1. **Cloner le dépôt**
+   ```bash
+   git clone https://github.com/ton-repo-url.git
+   cd nom-du-projet
+	```
 
-### Known bugs to fix
+## **Liste des tâches**
 
-- sur pong quand la balle va vite detections du paddle défectueuse
-- tchat non utiisable en jeu
-- Pong a caper 
+### **Principales fonctionnalités à développer**
+1. **Multijoueur distant** (en réflexion)
+2. **Chat en direct** (en cours)
+3. **Nouveau jeu : Memory** (terminé)
+4. **Gestion du backend utilisateur et login** (en cours)
+5. **Statistiques des jeux** (terminé)
 
-### Who do what
+### **Bug connus**
+1. **Problème de détection des collisions dans Pong** : Lorsque la balle va trop vite, les collisions ne réagissent pas correctement.
+2. **Chat inutilisable en mode jeu** : Résolu. [X]
+3. **Vitesse de la balle dans Pong** : Limiter la vitesse maximale.
 
-Seydou:
-- [ ] ?
+---
 
-Jeremie:
-- [ ] ?
+## **Répartition des tâches**
 
-Ulysse:
-- [ ] Back end
+| **Nom**      | **Tâche**               |
+| ------------ | ----------------------- |
+| **Seydou**   | À définir                |
+| **Jeremie**  | À définir                |
+| **Ulysse**   | Backend                  |
+| **Sarah**    | Frontend                 |
 
-Sarah:
-- [ ] Front end 
+---
 
+## **Merci d'avoir lu**
+Un readme beaucoup trop long pour un projet si peu prétencieux et imprétionnant, mais au moins c'est joli.
+
+---
