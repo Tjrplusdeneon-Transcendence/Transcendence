@@ -45,6 +45,7 @@ body {
 
 /* Modal */
 .modal {
+    pointer-events: none;
     z-index: 990;
 }
 
@@ -411,8 +412,12 @@ body {
 }
 
 .chat-box p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
     font-size: 10px;
     line-height: 1.5;
+    pointer-events: auto;
 }
 
 .chat-input {

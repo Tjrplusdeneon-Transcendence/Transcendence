@@ -33,12 +33,11 @@ document.getElementById('submitButton').addEventListener('click', function() {
 document.getElementById('logoutButton').addEventListener('click', function() {
     isLoggedIn = false;
 
-    // Réafficher le formulaire de connexion
     document.getElementById('loginForm').style.display = 'block';
 
-    // Cacher les informations de profil et les statistiques de jeu
+
     document.getElementById('profileInfo').style.display = 'none';
-    document.getElementById('gameStats').style.display = 'none'; // <-- Ajout de cette ligne
+    document.getElementById('gameStats').style.display = 'none'; 
 });
 
 document.getElementById('sendMessageBtn').addEventListener('click', function() 
