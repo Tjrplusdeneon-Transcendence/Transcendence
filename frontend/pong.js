@@ -18,13 +18,13 @@ let isAIEnabled = false;
 let aiReactionTime = 1000; 
 let aiInterval; // Gestionnaire d'intervalle pour la prise de décision de l'IA
 let aiTargetY = canvas.height / 2; // Position cible pour que l'IA déplace sa raclette
-const errorProbability = 0.2; // Probabilitee d'erreur de l'ia
+const errorProbability = 0.1; // Probabilitee d'erreur de l'ia
 const predictionErrorMargin = 50; // Marge d'erreur en pixel
 
 let difficultySettings = {
-    easy: { speedMultiplier: 1.05, aiSpeed: 6 },
-    medium: { speedMultiplier: 1.1, aiSpeed: 13 },
-    hard: { speedMultiplier: 1.3, aiSpeed: 15 }
+    easy: { speedMultiplier: 1.02, aiSpeed: 6 },
+    medium: { speedMultiplier: 1.08, aiSpeed: 13 },
+    hard: { speedMultiplier: 1.20, aiSpeed: 15 }
 };
 let currentDifficulty = 'medium';
 
@@ -100,7 +100,71 @@ function moveAI()
         paddleY2 = Math.max(paddleY2 - aiSpeed, Math.max(aiTargetY, 0));    
 }
 
+function checkPaddleCollision() 
+{
+    if (dx < 0 && x + dx < paddleWidth + ballRadius) 
+    {
+        let futureY = y + dy;
+
+        if (y > paddleY1 && y < paddleY1 + paddleHeight || futureY > paddleY1 && futureY < paddleY1 + paddleHeight) 
+        {
+            dx = -dx * difficultySettings[currentDifficulty].speedMultiplier;
+            x = paddleWidth + ballRadius; 
+        }
+    }
+
+    if (dx > 0 && x + dx > canvas.width - paddleWidth - ballRadius) 
+    {
+        let futureY = y + dy;
+
+        if (y > paddleY2 && y < paddleY2 + paddleHeight || futureY > paddleY2 && futureY < paddleY2 + paddleHeight) 
+        {
+            dx = -dx * difficultySettings[currentDifficulty].speedMultiplier;
+            x = canvas.width - paddleWidth - ballRadius; 
+        }
+    }
+}
+
 function draw() 
+{
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    drawPaddle(0, paddleY1); 
+    drawPaddle(canvas.width - paddleWidth, paddleY2); 
+    drawBall();
+
+    paddleY1 = mouseY - paddleHeight / 2;
+
+    if (isAIEnabled) 
+        moveAI();
+
+    checkPaddleCollision();
+
+    if (x + dx < ballRadius) 
+    {
+        winner = isAIEnabled ? 'AI' : 'Player 2';
+        gameRunning = false;
+        gameOverMessage();
+        return;
+    } 
+    else if (x + dx > canvas.width - ballRadius) 
+    {
+        winner = 'Player 1';
+        gameRunning = false;
+        gameOverMessage();
+        return;
+    }
+
+    if (y + dy > canvas.height - ballRadius || y + dy < ballRadius)
+        dy = -dy;
+
+    x += dx * difficultySettings[currentDifficulty].speedMultiplier;
+    y += dy * difficultySettings[currentDifficulty].speedMultiplier;
+
+    if (gameRunning) 
+        requestAnimationFrame(draw);
+}
+
+/*function draw() (A GARDER SI JAMAIS)
 {
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawPaddle(0, paddleY1); 
@@ -138,7 +202,7 @@ function draw()
     y += dy * difficultySettings[currentDifficulty].speedMultiplier;
     if (gameRunning)
         requestAnimationFrame(draw);
-}
+}*/
 
 //Verifie si joueur 1 est solo
 async function isPlayer2Registered() 
@@ -232,7 +296,8 @@ canvas.addEventListener('mousemove', (event) => {
         mouseY = canvas.height - paddleHeight / 2;
 });
 
-document.getElementById('start-pong-game-btn').addEventListener('click', () => {
+document.getElementById('start-pong-game-btn').addEventListener('click', function() {
+    document.getElementById('pongCanvas').style.pointerEvents = 'auto';
     const selectedDifficulty = document.getElementById('difficultySelect').value;
     currentDifficulty = selectedDifficulty;
 
