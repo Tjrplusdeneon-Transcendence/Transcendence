@@ -7,27 +7,33 @@ let paddleY2 = (canvas.height - paddleHeight) / 2;
 const ballRadius = 10;
 let x = canvas.width / 2;
 let y = canvas.height / 2;
-let dx = -4;
-let dy = -4;
+let dx = -200; // Vitesse de la balle en pixels par seconde
+let dy = -200; // Vitesse de la balle en pixels par seconde
 
-let mouseY = canvas.height / 2; // Position de la souris initiale
+let mouseY = canvas.height / 2; 
 let gameRunning = false; 
-let winner = '';
+let lastTime = 0; // Stocke le temps de la dernière frame
 
+let winner = '';
 let isAIEnabled = false;
-let aiReactionTime = 1000; 
-let aiInterval; // Gestionnaire d'intervalle pour la prise de décision de l'IA
-let aiTargetY = canvas.height / 2; // Position cible pour que l'IA déplace sa raclette
-const errorProbability = 0.1; // Probabilitee d'erreur de l'ia
-const predictionErrorMargin = 50; // Marge d'erreur en pixel
+let aiReactionTime = 1000;
+let aiLastReactionTime = 0;
+let aiTargetY = canvas.height / 2; 
+const errorProbabilityBase = 0.01; // Probabilité de base plus réaliste pour tester
+const maxErrorOffset = 50; // Décalage maximal en pixels
+let aiErrorCooldown = 0; // Temps avant que l'IA puisse faire une nouvelle prédiction
+const aiCooldownTime = 1.0; // Délai en secondes entre chaque nouvelle décision
+let aiMistake = false; // Indique si l'IA a fait une erreur
+
+let aiDecisionTime = 0;
+const aiDecisionInterval = 1.0;
 
 let difficultySettings = {
-    easy: { speedMultiplier: 1.02, aiSpeed: 6 },
-    medium: { speedMultiplier: 1.08, aiSpeed: 13 },
-    hard: { speedMultiplier: 1.20, aiSpeed: 15 }
+    easy: { speedMultiplier: 1.02, aiSpeed: 300 },
+    medium: { speedMultiplier: 1.08, aiSpeed: 500 },
+    hard: { speedMultiplier: 1.20, aiSpeed: 600 }
 };
 let currentDifficulty = 'medium';
-
 const aiSpeed = difficultySettings[currentDifficulty].aiSpeed;
 
 function drawPaddle(x, y) 
@@ -58,7 +64,12 @@ function gameOverMessage()
     context.fillStyle = 'red';
     context.textAlign = 'center';
     context.fillText(`Game Over! ${winner} Wins!`, canvas.width / 2, canvas.height / 2);
-    restartButton.style.display = 'block'; 
+}
+
+function calculateErrorProbability() 
+{
+    const scaledProbability = Math.pow(errorProbabilityBase, 2);
+    return Math.random() < scaledProbability;
 }
 
 function predictBallPosition() 
@@ -70,83 +81,118 @@ function predictBallPosition()
 
     while (predictedX > paddleWidth + ballRadius && predictedX < canvas.width - paddleWidth - ballRadius) 
     {
-        predictedX += predictedDx;
-        predictedY += predictedDy;
+        let timeToVerticalWall = predictedDx > 0
+            ? (canvas.width - paddleWidth - ballRadius - predictedX) / predictedDx
+            : (paddleWidth + ballRadius - predictedX) / predictedDx;
+        
+        let timeToHorizontalWall = predictedDy > 0
+            ? (canvas.height - ballRadius - predictedY) / predictedDy
+            : (ballRadius - predictedY) / predictedDy;
+
+        let timeToNextEvent = Math.min(timeToVerticalWall, timeToHorizontalWall);
+
+        predictedX += predictedDx * timeToNextEvent;
+        predictedY += predictedDy * timeToNextEvent;
+
         if (predictedY + predictedDy > canvas.height - ballRadius || predictedY + predictedDy < ballRadius) 
             predictedDy = -predictedDy;
     }
-    if (Math.random() < errorProbability) 
-        predictedY += (Math.random() * predictionErrorMargin * 2) - predictionErrorMargin;
+
     return predictedY;
 }
 
-function aiDecision()
+function aiDecision(deltaTime) 
 {
-    const predictedY = predictBallPosition();
+    aiDecisionTime += deltaTime;
 
-    if (predictedY < paddleY2 + paddleHeight / 2)
-        aiTargetY = Math.max(predictedY - paddleHeight / 2, 0);
-    else if (predictedY > paddleY2 + paddleHeight / 2) 
-        aiTargetY = Math.min(predictedY - paddleHeight / 2, canvas.height - paddleHeight);
-    if (Math.random() < errorProbability) 
-        aiTargetY += (Math.random() * predictionErrorMargin * 2) - predictionErrorMargin;
-}
-
-function moveAI() 
-{
-    if (paddleY2 < aiTargetY) 
-        paddleY2 = Math.min(paddleY2 + aiSpeed, Math.min(aiTargetY, canvas.height - paddleHeight));
-    else if (paddleY2 > aiTargetY)
-        paddleY2 = Math.max(paddleY2 - aiSpeed, Math.max(aiTargetY, 0));    
-}
-
-function checkPaddleCollision() 
-{
-    if (dx < 0 && x + dx < paddleWidth + ballRadius) 
+    if (aiDecisionTime >= aiDecisionInterval) 
     {
-        let futureY = y + dy;
+        let predictedY = predictBallPosition();
 
-        if (y > paddleY1 && y < paddleY1 + paddleHeight || futureY > paddleY1 && futureY < paddleY1 + paddleHeight) 
+        if (calculateErrorProbability()) 
         {
-            dx = -dx * difficultySettings[currentDifficulty].speedMultiplier;
-            x = paddleWidth + ballRadius; 
+            let errorOffset = (Math.random() * maxErrorOffset * 2) - maxErrorOffset;
+            predictedY += errorOffset; 
+            console.log("Error");
         }
-    }
 
-    if (dx > 0 && x + dx > canvas.width - paddleWidth - ballRadius) 
-    {
-        let futureY = y + dy;
-
-        if (y > paddleY2 && y < paddleY2 + paddleHeight || futureY > paddleY2 && futureY < paddleY2 + paddleHeight) 
-        {
-            dx = -dx * difficultySettings[currentDifficulty].speedMultiplier;
-            x = canvas.width - paddleWidth - ballRadius; 
-        }
+        aiTargetY = Math.min(Math.max(predictedY - paddleHeight / 2, 0), canvas.height - paddleHeight);
+        aiDecisionTime = 0; 
     }
 }
 
-function draw() 
+function moveAI(deltaTime) 
 {
+    let distanceToTarget = aiTargetY - paddleY2;
+    let direction = Math.sign(distanceToTarget);
+
+    let adjustedSpeed = aiSpeed * deltaTime;
+
+    if (Math.abs(distanceToTarget) > 1) 
+    {
+        paddleY2 += direction * Math.min(Math.abs(distanceToTarget), adjustedSpeed);
+    }
+}
+
+function checkPaddleCollision(deltaTime) 
+{
+    if (dx < 0 && x + dx * deltaTime < paddleWidth + ballRadius) 
+    {
+        let futureY = y + dy * deltaTime;
+
+        if (futureY > paddleY1 && futureY < paddleY1 + paddleHeight) 
+        {
+            dx = -dx * difficultySettings[currentDifficulty].speedMultiplier;
+            x = paddleWidth + ballRadius;
+        }
+    }
+
+    if (dx > 0 && x + dx * deltaTime > canvas.width - paddleWidth - ballRadius) 
+    {
+        let futureY = y + dy * deltaTime;
+
+        if (futureY > paddleY2 && futureY < paddleY2 + paddleHeight) 
+        {
+            dx = -dx * difficultySettings[currentDifficulty].speedMultiplier;
+            x = canvas.width - paddleWidth - ballRadius;
+        }
+    }
+}
+
+function draw(currentTime) 
+{
+    if (!lastTime) lastTime = currentTime;
+    
+    let deltaTime = Math.max((currentTime - lastTime) / 1000, 0.001);
+    lastTime = currentTime;
+
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawPaddle(0, paddleY1); 
     drawPaddle(canvas.width - paddleWidth, paddleY2); 
     drawBall();
 
     paddleY1 = mouseY - paddleHeight / 2;
+
+    const maxSpeed = 700;
+    dx = Math.min(Math.max(dx, -maxSpeed), maxSpeed);
+    dy = Math.min(Math.max(dy, -maxSpeed), maxSpeed);
 
     if (isAIEnabled) 
-        moveAI();
+    {
+        aiDecision(deltaTime); 
+        moveAI(deltaTime);
+    }
 
-    checkPaddleCollision();
+    checkPaddleCollision(deltaTime);
 
-    if (x + dx < ballRadius) 
+    if (x + dx * deltaTime < ballRadius) 
     {
         winner = isAIEnabled ? 'AI' : 'Player 2';
         gameRunning = false;
         gameOverMessage();
         return;
     } 
-    else if (x + dx > canvas.width - ballRadius) 
+    else if (x + dx * deltaTime > canvas.width - ballRadius) 
     {
         winner = 'Player 1';
         gameRunning = false;
@@ -154,55 +200,15 @@ function draw()
         return;
     }
 
-    if (y + dy > canvas.height - ballRadius || y + dy < ballRadius)
+    if (y + dy * deltaTime > canvas.height - ballRadius || y + dy * deltaTime < ballRadius)
         dy = -dy;
 
-    x += dx * difficultySettings[currentDifficulty].speedMultiplier;
-    y += dy * difficultySettings[currentDifficulty].speedMultiplier;
+    x += dx * difficultySettings[currentDifficulty].speedMultiplier * deltaTime;
+    y += dy * difficultySettings[currentDifficulty].speedMultiplier * deltaTime;
 
-    if (gameRunning) 
-        requestAnimationFrame(draw);
-}
-
-/*function draw() (A GARDER SI JAMAIS)
-{
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    drawPaddle(0, paddleY1); 
-    drawPaddle(canvas.width - paddleWidth, paddleY2); 
-    drawBall();
-
-    paddleY1 = mouseY - paddleHeight / 2;
-
-    if (isAIEnabled)
-        moveAI();
-    if (x + dx < ballRadius) 
-    {
-        winner = isAIEnabled ? 'AI' : 'Player 2';
-        gameRunning = false;
-        gameOverMessage();
-        return;
-    } 
-    else if (x + dx > canvas.width - ballRadius) 
-    {
-        winner = 'Player 1';
-        gameRunning = false;
-        gameOverMessage();
-        return;
-    }
-
-    if (x + dx < paddleWidth + ballRadius && y > paddleY1 && y < paddleY1 + paddleHeight) 
-        dx = -dx * difficultySettings[currentDifficulty].speedMultiplier;
-    else if (x + dx > canvas.width - paddleWidth - ballRadius && y > paddleY2 && y < paddleY2 + paddleHeight)
-        dx = -dx * difficultySettings[currentDifficulty].speedMultiplier;
-
-    if (y + dy > canvas.height - ballRadius || y + dy < ballRadius)
-        dy = -dy;
-
-    x += dx * difficultySettings[currentDifficulty].speedMultiplier;
-    y += dy * difficultySettings[currentDifficulty].speedMultiplier;
     if (gameRunning)
         requestAnimationFrame(draw);
-}*/
+}
 
 //Verifie si joueur 1 est solo
 async function isPlayer2Registered() 
@@ -242,37 +248,28 @@ function player2Exists()
 
 function startGame() 
 {
-    player2Exists().then(exists => {
-        isAIEnabled = !exists;
-
-        if (isAIEnabled) 
-            aiInterval = setInterval(aiDecision, aiReactionTime);
-
-        document.getElementById('pongCanvas').style.display = 'block';
-        gameRunning = true;
-        x = canvas.width / 2;
-        y = canvas.height / 2;
-        draw();
-
-
-    });
+    isAIEnabled = true;
+    document.getElementById('pongCanvas').style.display = 'block';
+    gameRunning = true;
+    x = canvas.width / 2;
+    y = canvas.height / 2;
+    lastTime = 0;
+    requestAnimationFrame(draw);
 }
 
 function restartPong() 
 {
-    clearInterval(aiInterval);
-
     paddleY1 = (canvas.height - paddleHeight) / 2;
     paddleY2 = (canvas.height - paddleHeight) / 2;
     x = canvas.width / 2;
     y = canvas.height / 2;
-    dx = -4;
-    dy = -4;
+    
+    dx = -200;
+    dy = -200;
 
     gameRunning = false;
     winner = '';
     aiTargetY = canvas.height / 2;
-    isAIEnabled = false;
 
     document.getElementById('pongCanvas').style.display = 'none';
     document.getElementById('difficulty-menu').style.display = 'block';
@@ -281,7 +278,15 @@ function restartPong()
     startButton.textContent = 'Start Game';
 
     startButton.removeEventListener('click', restartPong);
-    startButton.addEventListener('click', startGame);
+    startButton.addEventListener('click', function() {
+        const selectedDifficulty = document.getElementById('difficultySelect').value;
+        currentDifficulty = selectedDifficulty;
+
+        document.getElementById('difficulty-menu').style.display = 'none';
+        document.getElementById('pongCanvas').style.display = 'block';
+
+        startGame();
+    });
 }
 
 document.getElementById('pongCanvas').style.display = 'none'; 
@@ -312,3 +317,10 @@ document.getElementById('start-pong-game-btn').addEventListener('click', functio
 
     startGame();
 });
+
+
+/* 
+Note pour la prochaine fois (de rien tkt pour ue fois que j'y pense) :
+La le ot se trompesouvent a cause du temp de reactiion d'une seconde, revoir gepeto pour la prediction avec coup e avance sur plusieur seconde en avance
+
+*/
