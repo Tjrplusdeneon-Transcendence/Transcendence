@@ -317,10 +317,3 @@ document.getElementById('start-pong-game-btn').addEventListener('click', functio
 
     startGame();
 });
-
-
-/* 
-Note pour la prochaine fois (de rien tkt pour ue fois que j'y pense) :
-La le ot se trompesouvent a cause du temp de reactiion d'une seconde, revoir gepeto pour la prediction avec coup e avance sur plusieur seconde en avance
-
-*/
