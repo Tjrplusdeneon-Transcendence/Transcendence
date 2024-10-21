@@ -62,7 +62,7 @@ body {
 {
     color:#fff;
     background-color: #1a1a1a;
-    
+
 }
 
 .modal-body {
@@ -455,6 +455,66 @@ body {
 .chat-input button:hover {
     box-shadow: 0 0 10px rgba(255, 0, 255, 0.7), 0 0 20px rgba(0, 255, 234, 0.7);
     transform: scale(1.1);
+}
+
+/* Users profile */
+.synthwave-modal {
+    background: linear-gradient(135deg, #1e1e1e, #2b2b2b);
+    border: 2px solid #ff8400;
+    box-shadow: 0 0 15px rgba(255, 111, 0, 0.7), 0 0 30px rgba(187, 0, 255, 0.5);
+    padding: 10px;
+    border-radius: 8px;
+    color: white;
+    z-index: 999;
+    pointer-events: auto;
+    width: 200px; 
+}
+
+.synthwave-modal h2 {
+    font-size: 1rem; 
+    color: #ff00ff;
+    text-shadow: 0 0 8px rgba(255, 0, 255, 0.7);
+    text-align: center;
+    margin-bottom: 10px; 
+}
+
+.synthwave-modal button {
+    padding: 8px 15px; 
+    background: linear-gradient(135deg, #ff00ff, #ffa200);
+    border: none;
+    color: white;
+    text-transform: uppercase;
+    border-radius: 4px; 
+    cursor: pointer;
+    font-size: 10px; 
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    margin-right: 20px;
+}
+
+.synthwave-modal button:hover {
+    box-shadow: 0 0 8px rgba(255, 0, 255, 0.7), 0 0 15px rgba(0, 255, 234, 0.7);
+    transform: scale(1.05); 
+}
+
+#profileModal {
+    width: auto; 
+    max-width: 220px; 
+}
+
+.synthwave-modal button:hover {
+    box-shadow: 0 0 10px rgba(255, 0, 255, 0.7), 0 0 20px rgba(0, 255, 234, 0.7);
+    transform: scale(1.1);
+}
+
+#profileContent {
+    position: relative;
+}
+
+#closeProfileModal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
 }
 
 /* Slider */
