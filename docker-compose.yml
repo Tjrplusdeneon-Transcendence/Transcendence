@@ -12,13 +12,13 @@ services:
   web:
     depends_on:
       - db
-    build: ./app
+    build: ./transcendence
     container_name: web
     command: python manage.py runserver 0.0.0.0:8000
     networks:
       - transcendence
     volumes:
-      - ./app:/app
+      - ./transcendence:/app
     ports:
       - "8000:8000"
     env_file:
