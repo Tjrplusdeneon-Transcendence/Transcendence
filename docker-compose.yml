@@ -1,18 +1,33 @@
-version: '3'
 services:
-  backend:
-    build: ./backend
-    ports:
-      - "4567:4567"
+  db:
+    image: postgres:17.0
+    container_name: db
+    env_file:
+      - .env
     networks:
       - transcendence
-
-  frontend:
-    build: ./frontend
-    ports:
-      - "80:80"
+    volumes:
+      - db:/var/lib/postgresql/data
+    restart: always
+  web:
+    depends_on:
+      - db
+    build: ./app
+    container_name: web
+    command: python manage.py runserver 0.0.0.0:8000
     networks:
       - transcendence
+    volumes:
+      - ./app:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    restart: always
 
 networks:
   transcendence:
+    driver: bridge
+
+volumes:
+  db:
