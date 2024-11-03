@@ -1,4 +1,4 @@
-DOCKER_COMPOSE = docker-compose
+DOCKER_COMPOSE = docker compose
 DOCKER_COMPOSE_FILE = docker-compose.yml
 
 # Colors
@@ -24,7 +24,7 @@ COLOR12 = \033[38;5;93m
 COLOR13 = \033[38;5;129m
 
 # Make par defaut
-.DEFAULT_GOAL := help
+.DEFAULT_GOAL := all
 
 .PHONY: help build up down logs clean rebuild banner
 
@@ -37,7 +37,7 @@ $(COLOR10)██║        ██║███████╗██║   ██�
 $(COLOR12)╚═╝        ╚═╝╚══════╝╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝ $(COLOR12)╚═════╝╚══════╝╚═╝  ╚═══╝╚═════╝ ╚══════╝╚═╝  ╚═══╝ ╚═════╝╚══════╝\033[0m\n\
 \n"
 
-
+all: build up
 
 help: ## Display this help message
 	@echo "Usage: make [target]"
@@ -45,14 +45,16 @@ help: ## Display this help message
 	@echo "Targets:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  $(BLUE)%-15s$(NC) %s\n", $$1, $$2}'
 
-build: ## Build the Docker containers
+build: ## Pull or Build the Docker containers
+	@echo "$(YELLOW)Pulling Docker containers...$(NC)"
+	 $(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) pull
 	@echo "$(YELLOW)Building Docker containers...$(NC)"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) build
 	@echo "$(GREEN)Build complete!$(NC)"
 
 up: banner ## Build and run the Docker containers
 	@echo "$(YELLOW)Starting Docker containers...$(NC)"
-	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up --build -d
+	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up #-d
 	@echo "$(GREEN)Containers are up and running!$(NC)"
 
 down: ## Stop the Docker containers
@@ -67,6 +69,8 @@ logs: ## Display logs from the Docker containers
 clean: ## Remove Docker containers and images
 	@echo "$(YELLOW)Cleaning Docker environment...$(NC)"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down --rmi all --volumes --remove-orphans
+	docker system prune -af
+	docker volume prune -af
 	@echo "$(GREEN)Clean complete!$(NC)"
 
 rebuild: clean build up ## Clean, build and run the Docker containers
