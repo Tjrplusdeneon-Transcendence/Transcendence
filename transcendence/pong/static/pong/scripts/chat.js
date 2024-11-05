@@ -16,23 +16,23 @@ document.getElementById('closeButton').addEventListener('click', function()
     }, 300);
 });
 
-document.getElementById('submitButton').addEventListener('click', function() 
-{
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+// document.getElementById('submitButton').addEventListener('click', function() 
+// {
+//     const username = document.getElementById('username').value;
+//     const password = document.getElementById('password').value;
 
-    if (username === 'user' && password === '123') 
-    {
-        isLoggedIn = true;
-        document.getElementById('loginForm').style.display = 'none';
-        document.getElementById('profileInfo').style.display = 'block';
-        document.getElementById('gameStats').style.display = 'block';
-    } 
-    else 
-    {
-        alert('Invalid username or password!');
-    }
-});
+//     if (username === 'user' && password === '123') 
+//     {
+//         isLoggedIn = true;
+//         document.getElementById('loginForm').style.display = 'none';
+//         document.getElementById('profileInfo').style.display = 'block';
+//         document.getElementById('gameStats').style.display = 'block';
+//     } 
+//     else 
+//     {
+//         alert('Invalid username or password!');
+//     }
+// });
 
 document.getElementById('logoutButton').addEventListener('click', function() 
 {

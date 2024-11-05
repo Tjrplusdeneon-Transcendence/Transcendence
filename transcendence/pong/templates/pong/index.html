@@ -28,17 +28,17 @@
         </div>
         <div class="login-panel" id="loginPanel">
             <span id="closeButton">X</span>
-            <div id="loginForm">
+            <!-- <div id="loginForm">
                 <input type="text" id="username" placeholder="Username" />
                 <input type="password" id="password" placeholder="Password" />
                 <button id="submitButton">Submit</button>
-            </div>
-            <!--<form id="loginForm" method="post">
+            </div> -->
+            <form id="loginForm" method="post">
+                {{ message }}
                 {% csrf_token %}
-                <input type="text" id="username" placeholder="Username" />
-                <input type="password" id="password" placeholder="Password" />
+                {{ form.as_p }}
                 <button id="submitButton">Submit</button>
-            </form>-->
+            </form>
             <div id="profileInfo" style="display: none;">
                 <img src="{% static 'pong/images/profile-picture.jpg' %}" alt="Profile Picture" class="profile-picture" />
                 <button id="logoutButton">Logout</button>
