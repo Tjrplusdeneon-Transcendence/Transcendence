@@ -17,6 +17,6 @@ def index(request):
                 message = 'Wrong credentials'
     return render(request, 'pong/index.html', context={'form': form, 'message': message})
 
-def logout(request):
+def logout_user(request):
     logout(request)
     return redirect('index')
