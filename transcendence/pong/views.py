@@ -12,7 +12,7 @@ def index(request):
             user = authenticate(username = form.cleaned_data['username'], password = form.cleaned_data['password'],)
             if user is not None:
                 login(request, user)
-                message = f'{{ user.name }}, connected'
+                message = f'{{ user.username }}, connected'
             else:
                 message = 'Wrong credentials'   
     return render(request, 'pong/index.html', context={'form': form, 'message': message})
