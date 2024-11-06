@@ -12,17 +12,19 @@
         <h3>ft_Transcendence</h3>
     </div>
 
-    <!-- SignUp Btn-->
-    <!-- <div class="signup-container">
-    </div> -->
+    <!-- SignUp -->
+    {% if not user.is_authenticated %}
+    <div class="signup-container">
+        <div class="btn-signup">
+            <a href="{% url 'signup' %}" class="btnsignup" id="signupButton">Sign Up</a>
+        </div>
+    </div>
+    {% endif %}
 
     <!-- Login section -->
     <div class="login-container">
         <div class="btn-login">
             <a href="#" class="btnlog" id="loginButton">Login</a>
-        </div>
-        <div class="btn-signup">
-            <a href="{% url 'signup' %}">Sign Up</a>
         </div>
         <div class="login-panel" id="loginPanel">
             <span id="closeButton">X</span>
@@ -43,18 +45,18 @@
                 <form action="{% url 'logout' %}">
                     <input type="submit" value="Logout" />
                 </form>
-            {% endif %}
-            <div id="profileInfo" style="display: none;">
-                <img src="{% static 'pong/images/profile-picture.jpg' %}" alt="Profile Picture" class="profile-picture" />
-                <button id="logoutButton">Logout</button>
-                <div id="gameStats" style="display: none;">
-                    <h2>Game Statistics</h2>
-                    <p>Games played: <span id="gamesPlayed">0</span></p>
-                    <p>Wins: <span id="wins">0</span></p>
-                    <p>Losses: <span id="losses">0</span></p>
-                    <p>Score: <span id="totalScore">0</span></p>
+                <div id="profileInfo" style="display: none;">
+                    <img src="{% static 'pong/images/profile-picture.jpg' %}" alt="Profile Picture" class="profile-picture" />
+                    <button id="logoutButton">Logout</button>
+                    <div id="gameStats" style="display: none;">
+                        <h2>Game Statistics</h2>
+                        <p>Games played: <span id="gamesPlayed">{{ user.games_played }}</span></p>
+                        <p>Wins: <span id="wins">{{ user.wins }}</span></p>
+                        <p>Losses: <span id="losses">{{ user.losses }}</span></p>
+                        <p>Score: <span id="totalScore">{{ user.score }}</span></p>
+                    </div>
                 </div>
-            </div>
+            {% endif %}
         </div>
     </div>  
     
