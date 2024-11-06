@@ -10,8 +10,9 @@ def index(request):
     message = ''
     print ('-------1---------')
     if request.method == 'POST':
-        print ('-------2---------')
+        print ('>>>>>>>>>>>>>')
         print(request.POST)
+        print ('<<<<<<<<<<<<<<')
         if 'login' in request.POST:
             print ('-------3---------')
             login_form = forms.LoginForm(request.POST, prefix='login')
