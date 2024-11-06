@@ -9,6 +9,7 @@ def index(request):
     chat_form = forms.ChatForm()
     message = ''
     if request.method == 'POST':
+        print ('-----------------')
         print(request.POST)
         if 'login' in request.POST:
             login_form = forms.LoginForm(request.POST)
