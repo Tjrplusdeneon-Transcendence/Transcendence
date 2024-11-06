@@ -26,7 +26,7 @@ def index(request):
             print ('-------4---------')
             chat_form = forms.ChatForm(request.POST, prefix='chat')
             if chat_form.is_valid():
-                chat = chat_form.save()
+                chat_form.save()
     return render(request, 'pong/index.html', context={'login_form': login_form, 'chat_form': chat_form, 'message': message})
 
 def logout_user(request):
