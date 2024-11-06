@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from pong.models import Chat, User
+
+admin.site.register(Chat)
+admin.site.register(User)

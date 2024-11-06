@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
+from pong.models import Chat
 
 class LoginForm(forms.Form):
 	username = forms.CharField(max_length=63, label='Username')
@@ -10,3 +11,8 @@ class SignupForm(UserCreationForm):
 	class Meta(UserCreationForm):
 		model = get_user_model()
 		fields = ('username',)
+
+class ChatForm(forms.ModelForm):
+	class Meta:
+		model = Chat
+		fields = '__all__'

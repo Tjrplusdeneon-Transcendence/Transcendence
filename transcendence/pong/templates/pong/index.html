@@ -37,7 +37,7 @@
                 <form id="loginForm" method="post">
                     {% csrf_token %}
                     {{ message }}
-                    {{ form.as_p }}
+                    {{ login_form.as_p }}
                     <button id="submitButton">Submit</button>
                 </form>
             {% else %}
@@ -67,7 +67,8 @@
         </div>
         <div class="chat-input">
             <input type="text" id="chatMessage" placeholder="Écrire un message..." />
-            <button id="sendMessageBtn">➤</button>
+            <form method="PUSH">{{ chat_form }}</form>
+            <button id="chat">➤</button>
         </div>
     </div>
 
