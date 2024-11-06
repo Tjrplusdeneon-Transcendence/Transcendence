@@ -8,13 +8,11 @@ def index(request):
     login_form = forms.LoginForm()
     chat_form = forms.ChatForm()
     message = ''
-    print ('-------1---------')
     if request.method == 'POST':
-        print ('>>>>>>>>>>>>>')
+        print ('>>>>>>POST>>>>>>>')
         print(request.POST)
         print ('<<<<<<<<<<<<<<')
         if 'login' in request.POST:
-            print ('-------3---------')
             login_form = forms.LoginForm(request.POST)
             if login_form.is_valid():
                 user = authenticate(username = login_form.cleaned_data['username'], password = login_form.cleaned_data['password'],)
@@ -24,9 +22,8 @@ def index(request):
                 else:
                     message = 'Wrong credentials'
         elif 'chat' in request.POST:
-            print ('-------4---------')
-            chat_form.user = 'test'
             chat_form = forms.ChatForm(request.POST)
+            chat_form.user = 'test'
             if chat_form.is_valid():
                 chat = chat_form.save()
     return render(request, 'pong/index.html', context={'login_form': login_form, 'chat_form': chat_form, 'message': message})
