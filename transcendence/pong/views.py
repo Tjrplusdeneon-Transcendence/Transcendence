@@ -26,8 +26,10 @@ def index(request):
             print('[')
             print(request.user.username)
             print(']')
-            chat_form = forms.ChatForm(request.POST, instance=Chat(user=request.user))
+            chat_form = forms.ChatForm(instance=Chat(user=request.user, message=request.POST.message))
+            print('111111')
             if chat_form.is_valid():
+                print('2222222')
                 chat_form.save()
     return render(request, 'pong/index.html', context={'login_form': login_form, 'chat_form': chat_form, 'message': message})
 
