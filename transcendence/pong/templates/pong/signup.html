@@ -1,11 +1,11 @@
-{% extends 'pong/base.html' %}
-{% block content %}
+<!-- {% extends 'pong/base.html' %} -->
+<!-- {% block content %} -->
 <div class="title-container">
 	<h3>New user</h3>
 </div>
 {% if form.errors %}
 	{{ form.errors }}
-{%  endif %}
+{% endif %}
 <form method="POST">
 	{% csrf_token %}
 	{{ form.as_p }}
@@ -13,4 +13,4 @@
 <div>
 	<button type="submit">Signing up</button>
 </div>
-{% endblock content %}
+<!-- {% endblock content %} -->
