@@ -68,6 +68,7 @@
         <div class="chat-input">
             <!-- <input type="text" id="chatMessage" placeholder="Écrire un message..." /> -->
             <form method="POST">
+                {% csrf_token %}
                 {{ chat_form.message }}
                 <button id="chat">➤</button>
             </form>
