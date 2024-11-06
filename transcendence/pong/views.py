@@ -13,6 +13,7 @@ def index(request):
         print ('-------2---------')
         print(request.POST)
         if 'login' in request.POST:
+            print ('-------3---------')
             login_form = forms.LoginForm(request.POST, prefix='login')
             if login_form.is_valid():
                 user = authenticate(username = login_form.cleaned_data['username'], password = login_form.cleaned_data['password'],)
@@ -22,6 +23,7 @@ def index(request):
                 else:
                     message = 'Wrong credentials'
         elif 'chat' in request.POST:
+            print ('-------4---------')
             chat_form = forms.ChatForm(request.POT, prefix='chat')
             if chat_form.is_valid():
                 chat = chat_form.save()
