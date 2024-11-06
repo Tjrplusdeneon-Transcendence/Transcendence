@@ -23,6 +23,9 @@ def index(request):
                 else:
                     message = 'Wrong credentials'
         elif 'chat' in request.POST:
+            print('[')
+            print(request.user.username())
+            print(']')
             chat_form = forms.ChatForm(request.POST, instance=Chat(user=request.user))
             if chat_form.is_valid():
                 chat_form.save()
