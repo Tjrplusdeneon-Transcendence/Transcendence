@@ -25,9 +25,11 @@ def logout_user(request):
 def signup_page(request):
     form = forms.SignupForm()
     if request.method == 'POST':
+        print('POST Method')
         form = forms.SignupForm(request.POST)
         if form.is_valid():
+            print('Sign Up OK')
             user = form.save()
             login(request, user)
-            return redirect('index')
+            return redirect(settings.LOGIN_REDIRECT_URL)
     return render(request, 'pong/signup.html', context={'form': form})
