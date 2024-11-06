@@ -1,0 +1,14 @@
+{% extends 'pong/base.html' %}
+{% block content %}
+<div class="title-container">
+	<h3>New user</h3>
+</div>
+{% if form.errors %}
+	{{ form.errors }}
+{%  endif %}
+<form method="POST">
+	{% csrf_token %}
+	{{ form.as_p }}
+</form>
+<button type="submit">Signing up</button>
+{% endblock content %}
