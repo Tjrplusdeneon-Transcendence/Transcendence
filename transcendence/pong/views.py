@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from . import forms
 from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
+from pong.models import Chat
 
 def index(request):
     login_form = forms.LoginForm()
@@ -22,10 +23,9 @@ def index(request):
                 else:
                     message = 'Wrong credentials'
         elif 'chat' in request.POST:
-            chat_form = forms.ChatForm(request.POST)
-            chat_form.user = 'test'
+            chat_form = forms.ChatForm(request.POST, instance=Chat(user='test'))
             if chat_form.is_valid():
-                chat = chat_form.save()
+                chat_form.save()
     return render(request, 'pong/index.html', context={'login_form': login_form, 'chat_form': chat_form, 'message': message})
 
 def logout_user(request):
