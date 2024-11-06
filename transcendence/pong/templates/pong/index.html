@@ -38,7 +38,7 @@
                     {% csrf_token %}
                     {{ message }}
                     {{ login_form.as_p }}
-                    <button id="submitButton">Submit</button>
+                    <button id="submitButton" name="login" >Submit</button>
                 </form>
             {% else %}
                 <p>Welcome, {{ request.user }}</p>
@@ -70,7 +70,7 @@
             <form method="POST">
                 {% csrf_token %}
                 {{ chat_form.message }}
-                <button id="chat">➤</button>
+                <button id="chat" name="chat" >➤</button>
             </form>
         </div>
     </div>
