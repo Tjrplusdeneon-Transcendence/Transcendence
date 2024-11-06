@@ -24,11 +24,12 @@ def logout_user(request):
 
 def signup_page(request):
     form = forms.SignupForm()
+    print('1')
     if request.method == 'POST':
-        print('POST Method')
+        print('2')
         form = forms.SignupForm(request.POST)
         if form.is_valid():
-            print('Sign Up OK')
+            print('3')
             user = form.save()
             login(request, user)
             return redirect(settings.LOGIN_REDIRECT_URL)
