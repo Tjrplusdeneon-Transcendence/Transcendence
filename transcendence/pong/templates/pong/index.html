@@ -61,6 +61,7 @@
     </div>  
     
     <!-- Tchat -->
+    {% if user.is_authenticated %}
     <div class="chat-container">
         <h2>Tchat</h2>
         <div class="chat-box" id="chatBox">
@@ -74,6 +75,7 @@
             </form>
         </div>
     </div>
+    {% endif %}
 
     <!-- Profile Modal HTML -->
     <div id="profileModal" style="display: none; position: absolute;">
