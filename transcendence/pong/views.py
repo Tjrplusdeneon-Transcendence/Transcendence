@@ -8,8 +8,9 @@ def index(request):
     login_form = forms.LoginForm()
     chat_form = forms.ChatForm()
     message = ''
+        print ('-------1---------')
     if request.method == 'POST':
-        print ('-----------------')
+        print ('-------2---------')
         print(request.POST)
         if 'login' in request.POST:
             login_form = forms.LoginForm(request.POST)
