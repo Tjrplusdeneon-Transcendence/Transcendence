@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from . import forms
 from django.contrib.auth import authenticate, login, logout
+from django.conf import settings
 
 def index(request):
     form = forms.LoginForm()
@@ -19,7 +20,7 @@ def index(request):
 
 def logout_user(request):
     logout(request)
-    return redirect('index')
+    return redirect(settings.LOGIN_REDIRECT_URL)
 
 def signup_page(request):
     form = forms.SignupForm()
