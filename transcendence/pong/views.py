@@ -5,15 +5,15 @@ from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
 
 def index(request):
-    login_form = forms.LoginForm()
-    chat_form = forms.ChatForm()
+    login_form = forms.LoginForm(prefix='login')
+    chat_form = forms.ChatForm(prefix='chat')
     message = ''
     print ('-------1---------')
     if request.method == 'POST':
         print ('-------2---------')
         print(request.POST)
         if 'login' in request.POST:
-            login_form = forms.LoginForm(request.POST)
+            login_form = forms.LoginForm(request.POST, prefix='login')
             if login_form.is_valid():
                 user = authenticate(username = login_form.cleaned_data['username'], password = login_form.cleaned_data['password'],)
                 if user is not None:
@@ -22,7 +22,7 @@ def index(request):
                 else:
                     message = 'Wrong credentials'
         elif 'chat' in request.POST:
-            chat_form = forms.ChatForm(request.POT)
+            chat_form = forms.ChatForm(request.POT, prefix='chat')
             if chat_form.is_valid():
                 chat = chat_form.save()
     return render(request, 'pong/index.html', context={'login_form': login_form, 'chat_form': chat_form, 'message': message})
