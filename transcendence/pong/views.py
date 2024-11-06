@@ -23,9 +23,11 @@ def index(request):
                 else:
                     message = 'Wrong credentials'
         elif 'chat' in request.POST:
-            chat_form = forms.ChatForm(instance=Chat(user=request.user, message=request.POST))
-            if chat_form.is_valid():
-                chat_form.save()
+            chat_form = forms.ChatForm(request.POST)
+            new_chat_form = chat_form.save(commit=False)
+            new_chat_form.user = request.user
+            if new_chat_form.is_valid():
+                new_chat_form.save()
     return render(request, 'pong/index.html', context={'login_form': login_form, 'chat_form': chat_form, 'message': message})
 
 def logout_user(request):
