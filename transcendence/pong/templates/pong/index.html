@@ -38,6 +38,7 @@
             {% else %}
                 <p>Welcome, {{ request.user }}</p>
                 <form method="POST" name="logout">
+                    {% csrf_token %}
                     <input type="submit" value="Logout" />
                 </form>
                 <div id="profileInfo" style="display: none;">
