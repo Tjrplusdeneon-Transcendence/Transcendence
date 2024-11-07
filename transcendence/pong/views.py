@@ -22,6 +22,8 @@ def index(request):
                     # message = f'{ user.username }, connected'
                 else:
                     message = 'Wrong credentials'
+        elif 'logout' in request.POST:
+            logout(request)
         elif 'chat' in request.POST:
             chat_form = forms.ChatForm(request.POST)
             if chat_form.is_valid():
@@ -29,10 +31,6 @@ def index(request):
                 new.user = request.user
                 new.save()
     return render(request, 'pong/index.html', context={'login_form': login_form, 'chat_form': chat_form, 'message': message})
-
-def logout_user(request):
-    logout(request)
-    return redirect(settings.LOGIN_REDIRECT_URL)
 
 def signup_page(request):
     form = forms.SignupForm()

@@ -28,11 +28,6 @@
         </div>
         <div class="login-panel" id="loginPanel">
             <span id="closeButton">X</span>
-            <!-- <div id="loginForm">
-                <input type="text" id="username" placeholder="Username" />
-                <input type="password" id="password" placeholder="Password" />
-                <button id="submitButton">Submit</button>
-            </div> -->
             {% if not user.is_authenticated %}
                 <form id="loginForm" method="post">
                     {% csrf_token %}
@@ -42,7 +37,7 @@
                 </form>
             {% else %}
                 <p>Welcome, {{ request.user }}</p>
-                <form action="{% url 'logout' %}">
+                <form method="POST" name="logout">
                     <input type="submit" value="Logout" />
                 </form>
                 <div id="profileInfo" style="display: none;">
