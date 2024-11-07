@@ -37,9 +37,9 @@
                 </form>
             {% else %}
                 <p>Welcome, {{ request.user }}</p>
-                <form method="POST" name="logout">
+                <form method="POST">
                     {% csrf_token %}
-                    <input type="submit" value="Logout" />
+                    <input type="submit" name="logout" value="Logout" />
                 </form>
                 <div id="profileInfo" style="display: none;">
                     <img src="{% static 'pong/images/profile-picture.jpg' %}" alt="Profile Picture" class="profile-picture" />
