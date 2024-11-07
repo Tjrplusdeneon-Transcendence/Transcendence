@@ -10,9 +10,7 @@ def index(request):
     chat_form = forms.ChatForm()
     message = ''
     if request.method == 'POST':
-        print ('>>>>>>POST>>>>>>>')
-        print(request.POST)
-        print ('<<<<<<<<<<<<<<')
+        print ('>>>>>>POST>>>>>>>', request.POST, '<<<<<<<<<<<<<<')
         if 'login' in request.POST:
             login_form = forms.LoginForm(request.POST)
             if login_form.is_valid():
@@ -23,6 +21,7 @@ def index(request):
                 else:
                     message = 'Wrong credentials'
         elif 'logout' in request.POST:
+            print('loging out')
             logout(request)
         elif 'chat' in request.POST:
             chat_form = forms.ChatForm(request.POST)
