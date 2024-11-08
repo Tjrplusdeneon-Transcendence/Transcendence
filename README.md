@@ -25,8 +25,8 @@ Ce projet propose une plateforme de jeux multijoueurs en ligne, incluant des cla
 
 1. **Cloner le dépôt**
    ```bash
-   git clone https://github.com/Noralya/ft_Transcendence.git
-   cd ft_Transcendence
+   git clone https://github.com/Tjrplusdeneon-Transcendence/Transcendence.git
+   cd Transcendence
 	```
 2. **Lancer la bete**
 	```bash
