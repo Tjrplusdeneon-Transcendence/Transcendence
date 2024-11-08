@@ -55,10 +55,11 @@ Ce projet propose une plateforme de jeux multijoueurs en ligne, incluant des cla
 
 | **Nom**      | **Tâche**               |
 | ------------ | ----------------------- |
-| **Seydou**   | À définir                |
-| **Jeremie**  | À définir                |
+| **Seydou**   | Backend                  |
+| **Jeremie**  | Backend                  |
 | **Ulysse**   | Backend                  |
 | **Sarah**    | Frontend                 |
+| **Nagui**    | Frontend                 |
 
 ---
 
