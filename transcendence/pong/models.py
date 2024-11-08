@@ -1,9 +1,8 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
-class User(models.Model):
-	username = models.fields.CharField(max_length=100) # gestion d erreur : bloquer la taille lors de la creation du username
-	password = models.fields.CharField(max_length=100) # gestion d erreur : bloquer la taille lors de la creation du password
-	score = models.fields.IntegerField()
+class User(AbstractUser):
+	score = models.fields.IntegerField(default=0)
 
 class Chat(models.Model):
 	message = models.fields.CharField(max_length=100)
