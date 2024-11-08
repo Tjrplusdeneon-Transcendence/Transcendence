@@ -233,6 +233,26 @@ body {
     font-family: ka1;
 }
 
+/* Signup */
+.btn-signup .btnsignup {
+    position: absolute;
+    top: 6%;    
+    right: 2%;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    background-color: #1a1a1a;
+    color: #00fbff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-family: 'Press Start 2P', cursive;
+    box-shadow: 0 0 20px rgba(0, 255, 225, 0.5);
+    transition: box-shadow 0.3s ease;    
+}
+
 /* Login */
 .login-panel {
     display: none;
@@ -310,7 +330,7 @@ body {
 
 .btn-login .btnlog {
     position: absolute;
-    top: 2%;
+    top: 2%;    
     right: 2%;
     width: 50px;
     height: 50px;

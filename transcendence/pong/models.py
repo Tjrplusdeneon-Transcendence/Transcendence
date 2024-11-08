@@ -3,6 +3,9 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
 	score = models.fields.IntegerField(default=0)
+	games_played = models.fields.IntegerField(default=0)
+	wins = models.fields.IntegerField(default=0)
+	losses = models.fields.IntegerField(default=0)
 
 class Chat(models.Model):
 	message = models.fields.CharField(max_length=100)

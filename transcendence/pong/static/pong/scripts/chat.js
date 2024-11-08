@@ -42,39 +42,39 @@ document.getElementById('logoutButton').addEventListener('click', function()
     document.getElementById('gameStats').style.display = 'none'; 
 });
 
-document.getElementById('sendMessageBtn').addEventListener('click', function() 
-{
-    if (isLoggedIn) 
-    {
-        const chatBox = document.getElementById('chatBox');
-        const messageInput = document.getElementById('chatMessage');
-        const message = messageInput.value.trim();
-        let Username = "user";
+// document.getElementById('sendMessageBtn').addEventListener('click', function() 
+// {
+//     if (isLoggedIn) 
+//     {
+//         const chatBox = document.getElementById('chatBox');
+//         const messageInput = document.getElementById('chatMessage');
+//         const message = messageInput.value.trim();
+//         let Username = "user";
 
-        if (message !== '') 
-        {
-            const usernameElement = document.createElement('span');
-            usernameElement.textContent = Username;
-            usernameElement.classList.add('clickable-username');
-            usernameElement.style.cursor = 'pointer';
-            usernameElement.style.color = 'blue';
+//         if (message !== '') 
+//         {
+//             const usernameElement = document.createElement('span');
+//             usernameElement.textContent = Username;
+//             usernameElement.classList.add('clickable-username');
+//             usernameElement.style.cursor = 'pointer';
+//             usernameElement.style.color = 'blue';
 
-            const messageElement = document.createElement('p');
-            messageElement.appendChild(usernameElement);
-            messageElement.append(`: ${message}`);
-            chatBox.appendChild(messageElement);
-            chatBox.scrollTop = chatBox.scrollHeight;
-            messageInput.value = '';
+//             const messageElement = document.createElement('p');
+//             messageElement.appendChild(usernameElement);
+//             messageElement.append(`: ${message}`);
+//             chatBox.appendChild(messageElement);
+//             chatBox.scrollTop = chatBox.scrollHeight;
+//             messageInput.value = '';
 
-            usernameElement.addEventListener('click', function(event) 
-            {
-                openProfileModal(Username, event.target);
-            });
-        }
-    } 
-    else 
-        alert('You must be logged in to send messages.');
-});
+//             usernameElement.addEventListener('click', function(event) 
+//             {
+//                 openProfileModal(Username, event.target);
+//             });
+//         }
+//     } 
+//     else 
+//         alert('You must be logged in to send messages.');
+// });
 
 function openProfileModal(username, targetElement) 
 {

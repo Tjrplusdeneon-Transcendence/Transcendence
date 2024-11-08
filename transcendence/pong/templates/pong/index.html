@@ -1,15 +1,6 @@
+{% extends 'pong/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="fr">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ft_Transcendence</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'pong/styles.css' %}" />
-</head>
-
+{% block content %}
 <body>
     <!-- Glitch filter -->
     <video autoplay loop muted id="glitchVideo">
@@ -21,6 +12,15 @@
         <h3>ft_Transcendence</h3>
     </div>
 
+    <!-- SignUp -->
+    {% if not user.is_authenticated %}
+    <div class="signup-container">
+        <div class="btn-signup">
+            <a href="{% url 'signup' %}" class="btnsignup" id="signupButton">Sign Up</a>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- Login section -->
     <div class="login-container">
         <div class="btn-login">
@@ -28,48 +28,50 @@
         </div>
         <div class="login-panel" id="loginPanel">
             <span id="closeButton">X</span>
-            <!-- <div id="loginForm">
-                <input type="text" id="username" placeholder="Username" />
-                <input type="password" id="password" placeholder="Password" />
-                <button id="submitButton">Submit</button>
-            </div> -->
             {% if not user.is_authenticated %}
                 <form id="loginForm" method="post">
                     {% csrf_token %}
-                    {{ form.as_p }}
-                    <button id="submitButton">Submit</button>
                     {{ message }}
+                    {{ login_form.as_p }}
+                    <button id="submitButton" name="login" >Submit</button>
                 </form>
             {% else %}
                 <p>Welcome, {{ request.user }}</p>
-                <form action="{% url 'logout' %}">
-                    <input type="submit" value="Logout" />
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="submit" name="logout" value="Logout" />
                 </form>
-            {% endif %}
-            <div id="profileInfo" style="display: none;">
-                <img src="{% static 'pong/images/profile-picture.jpg' %}" alt="Profile Picture" class="profile-picture" />
-                <button id="logoutButton">Logout</button>
-                <div id="gameStats" style="display: none;">
-                    <h2>Game Statistics</h2>
-                    <p>Games played: <span id="gamesPlayed">0</span></p>
-                    <p>Wins: <span id="wins">0</span></p>
-                    <p>Losses: <span id="losses">0</span></p>
-                    <p>Score: <span id="totalScore">0</span></p>
+                <div id="profileInfo" style="display: none;">
+                    <img src="{% static 'pong/images/profile-picture.jpg' %}" alt="Profile Picture" class="profile-picture" />
+                    <button id="logoutButton">Logout</button>
+                    <div id="gameStats" style="display: none;">
+                        <h2>Game Statistics</h2>
+                        <p>Games played: <span id="gamesPlayed">{{ user.games_played }}</span></p>
+                        <p>Wins: <span id="wins">{{ user.wins }}</span></p>
+                        <p>Losses: <span id="losses">{{ user.losses }}</span></p>
+                        <p>Score: <span id="totalScore">{{ user.score }}</span></p>
+                    </div>
                 </div>
-            </div>
+            {% endif %}
         </div>
     </div>  
     
     <!-- Tchat -->
+    {% if user.is_authenticated %}
     <div class="chat-container">
         <h2>Tchat</h2>
         <div class="chat-box" id="chatBox">
         </div>
         <div class="chat-input">
-            <input type="text" id="chatMessage" placeholder="Écrire un message..." />
-            <button id="sendMessageBtn">➤</button>
+            <!-- <input type="text" id="chatMessage" placeholder="Écrire un message..." /> -->
+            <form method="POST">
+                {% csrf_token %}
+                {{ chat_form }}
+                <button id="chat" name="chat" >➤</button>
+            </form>
         </div>
     </div>
+    {% endif %}
 
     <!-- Profile Modal HTML -->
     <div id="profileModal" style="display: none; position: absolute;">
@@ -227,4 +229,4 @@
     <script src="{% static 'pong/scripts/memory.js' %}"></script>
     <script src="{% static 'pong/scripts/chat.js' %}"></script>
 </body>
-</html>
+{% endblock content %}
