@@ -8,5 +8,5 @@ class User(AbstractUser):
 	losses = models.fields.IntegerField(default=0)
 
 class Chat(models.Model):
-	message = models.fields.CharField(max_length=100)
+	content = models.fields.CharField(max_length=100)
 	user = models.ForeignKey(User, on_delete=models.CASCADE)

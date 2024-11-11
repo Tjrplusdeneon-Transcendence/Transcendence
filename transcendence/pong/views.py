@@ -7,8 +7,9 @@ from pong.models import Chat
 
 def index(request):
     sign_form = None
+    signin_error_message = ''
     chat_form = forms.ChatForm()
-    message = ''
+    chat_messages = Chat.objects.all()[:10]
     if request.method == 'POST':
         print ('>>>>>>POST>>>>>>>', request.POST, '<<<<<<<<<<<<<<')
         if 'signin' in request.POST:
@@ -23,7 +24,7 @@ def index(request):
                 if user is not None:
                     login(request, user)
                 else:
-                    message = 'Wrong credentials'
+                    signin_error_message = 'Wrong credentials'
         elif ('submit' and 'signup-username') in request.POST:
             print('2')
             sign_form = forms.SignupForm(request.POST, prefix="signup")
@@ -39,4 +40,10 @@ def index(request):
                 new = chat_form.save(commit=False)
                 new.user = request.user
                 new.save()
-    return render(request, 'pong/index.html', context={'sign_form': sign_form, 'chat_form': chat_form, 'message': message})
+    return render(request,
+        'pong/index.html',
+        context={'sign_form': sign_form,
+                 'signin_error_message': signin_error_message,
+                 'chat_form': chat_form,
+                 'chat_messages': chat_messages,
+                 })
