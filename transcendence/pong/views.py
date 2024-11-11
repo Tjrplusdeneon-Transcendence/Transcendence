@@ -15,7 +15,7 @@ def index(request):
         if 'signin' in request.POST:
             sign_form = forms.LoginForm(prefix="signin")
             context={'sign_form': sign_form, 'signin_error_message': signin_error_message}
-            return render(request, 'pong/partials/sign_p.html', context)
+            return render(request, 'pong/partials/sign.html', context)
         elif 'signup' in request.POST:
             sign_form = forms.SignupForm(prefix="signup")
         elif ('submit' and 'signin-username') in request.POST:

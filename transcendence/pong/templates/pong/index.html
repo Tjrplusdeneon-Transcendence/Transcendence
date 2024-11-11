@@ -20,19 +20,16 @@
         <div class="login-panel" id="loginPanel">
             <span id="closeButton">X</span>
             {% if not user.is_authenticated %}
-            <form class="signin_form" id="signin_form"
+                <button name="signin" 
                 hx_post = "{% url 'index' %}"
                 hx_target = "#sign_form"
-                hx_swap = "beforeend">
-                {% csrf_token %}
-                <button name="signin" >Sign In</button>
-            </form>
+                hx_swap = "beforeend">Sign In</button>
             <form class="signup_form" id="signup_form" method="post">
                 {% csrf_token %}
                 <button id="signup" name="signup" >Sign Up</button>
             </form>
             <div id="sign_form">
-                {% include 'pong/sign.html' %}
+                {% include 'pong/partials/sign.html' %}
             </div>
             {% else %}
                 <p>Welcome, {{ request.user }}</p>
