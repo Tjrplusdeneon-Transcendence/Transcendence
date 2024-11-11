@@ -6,19 +6,19 @@ from django.conf import settings
 from pong.models import Chat
 
 def index(request):
-    login_form = None
+    sign_form = None
     chat_form = forms.ChatForm()
     message = ''
     if request.method == 'POST':
         print ('>>>>>>POST>>>>>>>', request.POST, '<<<<<<<<<<<<<<')
         if 'signin' in request.POST:
-            login_form = forms.LoginForm()
+            sign_form = forms.LoginForm()
         elif 'signup' in request.POST:
-            login_form = forms.SignupForm()
+            sign_form = forms.SignupForm()
         elif 'submit' in request.POST:
-            login_form = forms.LoginForm(request.POST)
-            if login_form.is_valid():
-                user = authenticate(username = login_form.cleaned_data['username'], password = login_form.cleaned_data['password'],)
+            sign_form = forms.LoginForm(request.POST)
+            if sign_form.is_valid():
+                user = authenticate(username = sign_form.cleaned_data['username'], password = sign_form.cleaned_data['password'],)
                 if user is not None:
                     login(request, user)
                     # message = f'{ user.username }, connected'
@@ -33,7 +33,7 @@ def index(request):
                 new = chat_form.save(commit=False)
                 new.user = request.user
                 new.save()
-    return render(request, 'pong/index.html', context={'login_form': login_form, 'chat_form': chat_form, 'message': message})
+    return render(request, 'pong/index.html', context={'sign_form': sign_form, 'chat_form': chat_form, 'message': message})
 
 def signup_page(request):
     form = forms.SignupForm()
