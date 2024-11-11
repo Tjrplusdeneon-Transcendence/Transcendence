@@ -20,6 +20,14 @@
         <div class="login-panel" id="loginPanel">
             <span id="closeButton">X</span>
             {% if not user.is_authenticated %}
+            <form class="signin_form" id="signin_form" method="post">
+                {% csrf_token %}
+                <button name="signin" >Sign In</button>
+            </form>
+            <form class="signup_form" id="signup_form" method="post">
+                {% csrf_token %}
+                <button id="signup" name="signup" >Sign Up</button>
+            </form>
             <form method="post">
                 {% csrf_token %}
                 {{ sign_form.as_p }}
@@ -30,14 +38,6 @@
                 {% if not sign_form is None %}
                     <button name="submit" >Submit</button>
                 {% endif %}
-            </form>
-            <form class="signin_form" id="signin_form" method="post">
-                {% csrf_token %}
-                <button name="signin" >Sign In</button>
-            </form>
-            <form class="signup_form" id="signup_form" method="post">
-                {% csrf_token %}
-                <button id="signup" name="signup" >Sign Up</button>
             </form>
             {% else %}
                 <p>Welcome, {{ request.user }}</p>
