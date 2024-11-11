@@ -351,6 +351,10 @@ body {
     box-shadow: 0 0 40px rgb(255, 174, 0);
 }
 
+.signin_form, .signup_form {
+    display: inline-block;
+}
+
 #gameStats {
     margin-top: 20px;
     padding: 20px;
