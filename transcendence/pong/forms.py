@@ -18,4 +18,4 @@ class SignupForm(UserCreationForm):
 class ChatForm(forms.ModelForm):
 	class Meta:
 		model = Chat
-		fields = ('message',)
+		fields = ('content',)
