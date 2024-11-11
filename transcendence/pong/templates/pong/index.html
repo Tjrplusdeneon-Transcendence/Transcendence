@@ -29,15 +29,21 @@
         <div class="login-panel" id="loginPanel">
             <span id="closeButton">X</span>
             {% if not user.is_authenticated %}
-                <button id="signin" name="signin" >Sign In</button>
-                <button id="signup" name="signup" >Sign Up</button>
-                <form id="loginForm" method="post">
+                <form method="post">
+                    <button name="signin" >Sign In</button>
+                </form>
+                <form method="post">
+                    <button id="signup" name="signup" >Sign Up</button>
+                </form>
+                <form method="post">
                     {% csrf_token %}
                     {{ login_form.as_p }}
-                    <button id="submitButton" name="login" >Submit</button>
                     {{ message }}
                     {% if form.errors %}
                         {{ form.errors }}
+                    {% endif %}
+                    {% if not form is None %}
+                        <button id="submitButton" name="login" >Submit</button>
                     {% endif %}
                 </form>
             {% else %}
