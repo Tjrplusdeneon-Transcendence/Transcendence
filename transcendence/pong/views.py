@@ -13,21 +13,23 @@ def index(request):
         print ('>>>>>>POST>>>>>>>', request.POST, '<<<<<<<<<<<<<<')
         if 'signin' in request.POST:
             sign_form = forms.LoginForm(prefix="signin")
-            if 'submit' in request.POST:
-                sign_form = forms.LoginForm(request.POST, prefix="signin")
-                if sign_form.is_valid():
-                    user = authenticate(username = sign_form.cleaned_data['username'], password = sign_form.cleaned_data['password'],)
-                    if user is not None:
-                        login(request, user)
-                    else:
-                        message = 'Wrong credentials'
         elif 'signup' in request.POST:
             sign_form = forms.SignupForm(prefix="signup")
-            if 'submit' in request.POST:
-                sign_form = forms.SignupForm(request.POST, prefix="signup")
-                if sign_form.is_valid():
-                    user = sign_form.save()
+        elif ('submit' and 'signin-username') in request.POST:
+            print('1')
+            sign_form = forms.LoginForm(request.POST, prefix="signin")
+            if sign_form.is_valid():
+                user = authenticate(username = sign_form.cleaned_data['username'], password = sign_form.cleaned_data['password'],)
+                if user is not None:
                     login(request, user)
+                else:
+                    message = 'Wrong credentials'
+        elif ('submit' and 'signup-username') in request.POST:
+            print('2')
+            sign_form = forms.SignupForm(request.POST, prefix="signup")
+            if sign_form.is_valid():
+                user = sign_form.save()
+                login(request, user)
         elif 'logout' in request.POST:
             print('loging out')
             logout(request)
