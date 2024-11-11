@@ -37,7 +37,7 @@ $(COLOR10)██║        ██║███████╗██║   ██�
 $(COLOR12)╚═╝        ╚═╝╚══════╝╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝ $(COLOR12)╚═════╝╚══════╝╚═╝  ╚═══╝╚═════╝ ╚══════╝╚═╝  ╚═══╝ ╚═════╝╚══════╝\033[0m\n\
 \n"
 
-all: build up
+all: build up migrate
 
 help: ## Display this help message
 	@echo "Usage: make [target]"
@@ -56,6 +56,10 @@ up: banner ## Build and run the Docker containers
 	@echo "$(YELLOW)Starting Docker containers...$(NC)"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up #-d
 	@echo "$(GREEN)Containers are up and running!$(NC)"
+
+migrate:
+	docker exec web makemigrations
+	docker exec web migrate
 
 down: ## Stop the Docker containers
 	@echo "$(YELLOW)Stopping Docker containers...$(NC)"
