@@ -12,18 +12,22 @@ def index(request):
     if request.method == 'POST':
         print ('>>>>>>POST>>>>>>>', request.POST, '<<<<<<<<<<<<<<')
         if 'signin' in request.POST:
-            sign_form = forms.LoginForm()
+            sign_form = forms.LoginForm(prefix="signin")
+            if 'submit' in request.POST:
+                sign_form = forms.LoginForm(request.POST, prefix="signin")
+                if sign_form.is_valid():
+                    user = authenticate(username = sign_form.cleaned_data['username'], password = sign_form.cleaned_data['password'],)
+                    if user is not None:
+                        login(request, user)
+                    else:
+                        message = 'Wrong credentials'
         elif 'signup' in request.POST:
-            sign_form = forms.SignupForm()
-        elif 'submit' in request.POST:
-            sign_form = forms.LoginForm(request.POST)
-            if sign_form.is_valid():
-                user = authenticate(username = sign_form.cleaned_data['username'], password = sign_form.cleaned_data['password'],)
-                if user is not None:
+            sign_form = forms.SignupForm(prefix="signup")
+            if 'submit' in request.POST:
+                sign_form = forms.SignupForm(request.POST, prefix="signup")
+                if sign_form.is_valid():
+                    user = sign_form.save()
                     login(request, user)
-                    # message = f'{ user.username }, connected'
-                else:
-                    message = 'Wrong credentials'
         elif 'logout' in request.POST:
             print('loging out')
             logout(request)
@@ -35,12 +39,12 @@ def index(request):
                 new.save()
     return render(request, 'pong/index.html', context={'sign_form': sign_form, 'chat_form': chat_form, 'message': message})
 
-def signup_page(request):
-    form = forms.SignupForm()
-    if request.method == 'POST':
-        form = forms.SignupForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect(settings.LOGIN_REDIRECT_URL)
-    return render(request, 'pong/signup.html', context={'form': form})
+# def signup_page(request):
+#     form = forms.SignupForm()
+#     if request.method == 'POST':
+#         form = forms.SignupForm(request.POST)
+#         if form.is_valid():
+#             user = form.save()
+#             login(request, user)
+#             return redirect(settings.LOGIN_REDIRECT_URL)
+#     return render(request, 'pong/signup.html', context={'form': form})
