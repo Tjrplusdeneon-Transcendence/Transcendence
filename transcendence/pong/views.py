@@ -6,12 +6,16 @@ from django.conf import settings
 from pong.models import Chat
 
 def index(request):
-    login_form = forms.LoginForm()
+    login_form = None
     chat_form = forms.ChatForm()
     message = ''
     if request.method == 'POST':
         print ('>>>>>>POST>>>>>>>', request.POST, '<<<<<<<<<<<<<<')
-        if 'login' in request.POST:
+        if 'signin' in request.POST:
+            login_form = forms.LoginForm()
+        elif 'signup' in request.POST:
+            login_form = forms.SignupForm()
+        elif 'submit' in request.POST:
             login_form = forms.LoginForm(request.POST)
             if login_form.is_valid():
                 user = authenticate(username = login_form.cleaned_data['username'], password = login_form.cleaned_data['password'],)
