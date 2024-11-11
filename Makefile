@@ -58,8 +58,8 @@ up: banner ## Build and run the Docker containers
 	@echo "$(GREEN)Containers are up and running!$(NC)"
 
 migrate:
-	docker exec web makemigrations
-	docker exec web migrate
+	docker exec -it web bash -c "python manage.py makemigrations"
+	docker exec -it web bash -c "python manage.py migrate"
 
 down: ## Stop the Docker containers
 	@echo "$(YELLOW)Stopping Docker containers...$(NC)"
