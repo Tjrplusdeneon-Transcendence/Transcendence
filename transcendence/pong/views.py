@@ -10,7 +10,7 @@ def index(request):
     signin_error_message = ''
     chat_form = forms.ChatForm()
     chat_messages = Chat.objects.all()[:10]
-    if request.method == 'POST':
+    if request.htmx:
         print ('>>>>>>POST>>>>>>>', request.POST, '<<<<<<<<<<<<<<')
         if 'signin' in request.POST:
             sign_form = forms.LoginForm(prefix="signin")
