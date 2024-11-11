@@ -31,11 +31,11 @@
                     <button name="submit" >Submit</button>
                 {% endif %}
             </form>
-            <form id="signin_form" method="post">
+            <form class="signin_form" id="signin_form" method="post">
                 {% csrf_token %}
                 <button name="signin" >Sign In</button>
             </form>
-            <form id="signup_form" method="post">
+            <form class="signup_form" id="signup_form" method="post">
                 {% csrf_token %}
                 <button id="signup" name="signup" >Sign Up</button>
             </form>
