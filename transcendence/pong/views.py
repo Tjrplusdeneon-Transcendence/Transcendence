@@ -40,6 +40,7 @@ def index(request):
                 new = chat_form.save(commit=False)
                 new.user = request.user
                 new.save()
+                chat_form = forms.ChatForm()
     return render(request,
         'pong/index.html',
         context={'sign_form': sign_form,
