@@ -3,23 +3,14 @@
 {% block content %}
 <body>
     <!-- Glitch filter -->
-    <video autoplay loop muted id="glitchVideo">
+    <!-- <video autoplay loop muted id="glitchVideo">
         <source src="images/glitch.mp4" type="video/mp4">
-    </video>
+    </video> -->
 
     <!-- ft_Transcendence -->
     <div class="title-container">
         <h3>ft_Transcendence</h3>
     </div>
-
-    <!-- SignUp -->
-    {% if not user.is_authenticated %}
-    <div class="signup-container">
-        <div class="btn-signup">
-            <a href="{% url 'signup' %}" class="btnsignup" id="signupButton">Sign Up</a>
-        </div>
-    </div>
-    {% endif %}
 
     <!-- Login section -->
     <div class="login-container">
@@ -29,12 +20,25 @@
         <div class="login-panel" id="loginPanel">
             <span id="closeButton">X</span>
             {% if not user.is_authenticated %}
-                <form id="loginForm" method="post">
-                    {% csrf_token %}
-                    {{ message }}
-                    {{ login_form.as_p }}
-                    <button id="submitButton" name="login" >Submit</button>
-                </form>
+            <form class="signin_form" id="signin_form" method="post">
+                {% csrf_token %}
+                <button name="signin" >Sign In</button>
+            </form>
+            <form class="signup_form" id="signup_form" method="post">
+                {% csrf_token %}
+                <button id="signup" name="signup" >Sign Up</button>
+            </form>
+            <form method="post">
+                {% csrf_token %}
+                {{ sign_form.as_p }}
+                {{ message }}
+                {% if sign_form.errors %}
+                    {{ sign_form.errors }}
+                {% endif %}
+                {% if not sign_form is None %}
+                    <button name="submit" >Submit</button>
+                {% endif %}
+            </form>
             {% else %}
                 <p>Welcome, {{ request.user }}</p>
                 <form method="POST">
