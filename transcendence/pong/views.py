@@ -13,6 +13,7 @@ def index(request):
     if request.htmx:
         print ('>>>>>>POST>>>>>>>', request.POST, '<<<<<<<<<<<<<<')
         if 'signin' in request.POST:
+            print('ICI')
             sign_form = forms.LoginForm(prefix="signin")
             context={'sign_form': sign_form, 'signin_error_message': signin_error_message}
             return render(request, 'pong/partials/sign.html', context)
