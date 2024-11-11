@@ -3,9 +3,9 @@
 {% block content %}
 <body>
     <!-- Glitch filter -->
-    <video autoplay loop muted id="glitchVideo">
+    <!-- <video autoplay loop muted id="glitchVideo">
         <source src="images/glitch.mp4" type="video/mp4">
-    </video>
+    </video> -->
 
     <!-- ft_Transcendence -->
     <div class="title-container">
@@ -29,25 +29,25 @@
         <div class="login-panel" id="loginPanel">
             <span id="closeButton">X</span>
             {% if not user.is_authenticated %}
-                <form method="post">
-                    {% csrf_token %}
-                    <button name="signin" >Sign In</button>
-                </form>
-                <form method="post">
-                    {% csrf_token %}
-                    <button id="signup" name="signup" >Sign Up</button>
-                </form>
-                <form method="post">
-                    {% csrf_token %}
-                    {{ login_form.as_p }}
-                    {{ message }}
-                    {% if form.errors %}
-                        {{ form.errors }}
-                    {% endif %}
-                    {% if not form is None %}
-                        <button id="submitButton" name="login" >Submit</button>
-                    {% endif %}
-                </form>
+            <form method="post">
+                {% csrf_token %}
+                {{ login_form.as_p }}
+                {{ message }}
+                {% if login_form.errors %}
+                {{ login_form.errors }}
+                {% endif %}
+                {% if not login_form is None %}
+                <button id="submitButton" name="login" >Submit</button>
+                {% endif %}
+            </form>
+            <form method="post">
+                {% csrf_token %}
+                <button name="signin" >Sign In</button>
+            </form>
+            <form method="post">
+                {% csrf_token %}
+                <button id="signup" name="signup" >Sign Up</button>
+            </form>
             {% else %}
                 <p>Welcome, {{ request.user }}</p>
                 <form method="POST">
