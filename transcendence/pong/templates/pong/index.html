@@ -21,7 +21,9 @@
             <span id="closeButton">X</span>
             {% if not user.is_authenticated %}
             <form class="signin_form" id="signin_form"
-            hx_post = "{% url 'index' %}" hx_target = "sign_form" hx_swap = "beforeend">
+            hx_post = "{% url 'index' %}"
+            hx_target = "sign_form"
+            hx_swap = "beforeend">
                 {% csrf_token %}
                 <button name="signin" >Sign In</button>
             </form>
@@ -31,7 +33,7 @@
             </form>
             <div id="sign_form">
                 {% include 'pong/sign.html' %}
-            </div>    
+            </div>
             {% else %}
                 <p>Welcome, {{ request.user }}</p>
                 <form method="POST">
