@@ -14,10 +14,10 @@ def index(request):
         print ('>>>>>>POST>>>>>>>', request.POST, '<<<<<<<<<<<<<<')
         if 'signin' in request.POST:
             sign_form = forms.LoginForm(prefix="signin")
+            return render(request, 'pong/partials/sign_p.html', context={'sign_form': sign_form})
         elif 'signup' in request.POST:
             sign_form = forms.SignupForm(prefix="signup")
         elif ('submit' and 'signin-username') in request.POST:
-            print('1')
             sign_form = forms.LoginForm(request.POST, prefix="signin")
             if sign_form.is_valid():
                 user = authenticate(username = sign_form.cleaned_data['username'], password = sign_form.cleaned_data['password'],)
@@ -26,7 +26,6 @@ def index(request):
                 else:
                     signin_error_message = 'Wrong credentials'
         elif ('submit' and 'signup-username') in request.POST:
-            print('2')
             sign_form = forms.SignupForm(request.POST, prefix="signup")
             if sign_form.is_valid():
                 user = sign_form.save()

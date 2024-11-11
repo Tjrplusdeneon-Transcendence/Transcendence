@@ -20,7 +20,8 @@
         <div class="login-panel" id="loginPanel">
             <span id="closeButton">X</span>
             {% if not user.is_authenticated %}
-            <form class="signin_form" id="signin_form" method="post">
+            <form class="signin_form" id="signin_form"
+            hx_post = "{% url 'index' %}" hx_target = "sign_form" hx_swap = "beforeend">
                 {% csrf_token %}
                 <button name="signin" >Sign In</button>
             </form>
@@ -28,17 +29,9 @@
                 {% csrf_token %}
                 <button id="signup" name="signup" >Sign Up</button>
             </form>
-            <form method="post">
-                {% csrf_token %}
-                {{ sign_form.as_p }}
-                {{ signin_error_message }}
-                {% if sign_form.errors %}
-                    {{ sign_form.errors }}
-                {% endif %}
-                {% if not sign_form is None %}
-                    <button name="submit" >Submit</button>
-                {% endif %}
-            </form>
+            <div id="sign_form">
+                {% include 'pong/sign.html' %}
+            </div>    
             {% else %}
                 <p>Welcome, {{ request.user }}</p>
                 <form method="POST">
@@ -66,7 +59,7 @@
         <h2>Tchat</h2>
         <div class="chat-box" id="chatBox">
             <ul>
-                {% for message in chat_messages %}
+                {% for message in chat_messages reversed %}
                     <li>{{ message.content }}</li>
                 {% endfor %}
             </ul>
