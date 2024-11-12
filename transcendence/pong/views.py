@@ -33,5 +33,7 @@ def signup_user(request):
     return render(request, 'pong/partials/signup.html', context={'sign_form': sign_form})
 
 def logout_user(request):
+    print('lo-1')
     logout(request)
+    print('lo-2')
     return render(request, 'pong/partials/panel.html')
