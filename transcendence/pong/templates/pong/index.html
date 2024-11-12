@@ -1,236 +1,201 @@
 {% extends 'pong/base.html' %}
 {% load static %}
 {% block content %}
-<body>
-    <!-- Glitch filter -->
-    <!-- <video autoplay loop muted id="glitchVideo">
-        <source src="images/glitch.mp4" type="video/mp4">
-    </video> -->
+<!-- Glitch filter -->
+<!-- <video autoplay loop muted id="glitchVideo">
+    <source src="images/glitch.mp4" type="video/mp4">
+</video> -->
 
-    <!-- ft_Transcendence -->
-    <div class="title-container">
-        <h3>ft_Transcendence</h3>
+<!-- ft_Transcendence -->
+<div class="title-container">
+    <h3>ft_Transcendence</h3>
+</div>
+
+<!-- Panel section -->
+<div class="login-container">
+    <div class="btn-login">
+        <a href="#" class="btnlog" id="loginButton">Login</a>
     </div>
-
-    <!-- Login section -->
-    <div class="login-container">
-        <div class="btn-login">
-            <a href="#" class="btnlog" id="loginButton">Login</a>
-        </div>
-        <div class="login-panel" id="loginPanel">
-            <span id="closeButton">X</span>
-            {% if not user.is_authenticated %}
-            <form class="signin_form" id="signin_form" method="post">
-                {% csrf_token %}
-                <button name="signin" >Sign In</button>
-            </form>
-            <form class="signup_form" id="signup_form" method="post">
-                {% csrf_token %}
-                <button id="signup" name="signup" >Sign Up</button>
-            </form>
-            <form method="post">
-                {% csrf_token %}
-                {{ sign_form.as_p }}
-                {{ message }}
-                {% if sign_form.errors %}
-                    {{ sign_form.errors }}
-                {% endif %}
-                {% if not sign_form is None %}
-                    <button name="submit" >Submit</button>
-                {% endif %}
-            </form>
-            {% else %}
-                <p>Welcome, {{ request.user }}</p>
-                <form method="POST">
-                    {% csrf_token %}
-                    <input type="submit" name="logout" value="Logout" />
-                </form>
-                <div id="profileInfo" style="display: none;">
-                    <img src="{% static 'pong/images/profile-picture.jpg' %}" alt="Profile Picture" class="profile-picture" />
-                    <button id="logoutButton">Logout</button>
-                    <div id="gameStats" style="display: none;">
-                        <h2>Game Statistics</h2>
-                        <p>Games played: <span id="gamesPlayed">{{ user.games_played }}</span></p>
-                        <p>Wins: <span id="wins">{{ user.wins }}</span></p>
-                        <p>Losses: <span id="losses">{{ user.losses }}</span></p>
-                        <p>Score: <span id="totalScore">{{ user.score }}</span></p>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
-    </div>  
-    
-    <!-- Tchat -->
-    {% if user.is_authenticated %}
-    <div class="chat-container">
-        <h2>Tchat</h2>
-        <div class="chat-box" id="chatBox">
-        </div>
-        <div class="chat-input">
-            <!-- <input type="text" id="chatMessage" placeholder="Écrire un message..." /> -->
-            <form method="POST">
-                {% csrf_token %}
-                {{ chat_form }}
-                <button id="chat" name="chat" >➤</button>
-            </form>
-        </div>
+    <div class="login-panel" id="loginPanel">
+        {% include 'pong/partials/panel.html' %}
     </div>
-    {% endif %}
+</div>  
 
-    <!-- Profile Modal HTML -->
-    <div id="profileModal" style="display: none; position: absolute;">
-        <div id="profileContent" class="synthwave-modal">
-            <span id="closeProfileModal" style="cursor:pointer;">&times;</span>
-            <h2 id="profileUsername"></h2>
-            <button id="addFriendBtn">Add as Friend</button>
-        </div>
-    </div>    
+<!-- Tchat -->
+{% if user.is_authenticated %}
+<div class="chat-container">
+    <h2>Tchat</h2>
+    <div class="chat-box" id="chatBox">
+        <ul>
+            {% for message in chat_messages reversed %}
+                <li>{{ message.content }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="chat-input">
+        <!-- <input type="text" id="chatMessage" placeholder="Écrire un message..." /> -->
+        <form method="POST">
+            {% csrf_token %}
+            {{ chat_form }}
+            <button id="chat" name="chat" >➤</button>
+        </form>
+    </div>
+</div>
+{% endif %}
 
-    <!-- Slider Section -->
-    <section id="carouselIndicators" class="carousel slide slider_section" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="detail-box">
-                                <h1>Pong</h1>
-                                <p>Play a pong game with your friend or our opponent!</p>
-                                <div class="btn-box">
-                                    <a href="#" class="btn1" data-bs-toggle="modal" data-bs-target="#pongModal">Play</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="img-box">
-                                <img src="{% static 'pong/images/logo_pong.png' %}" alt="Game 1">
+<!-- Profile Modal HTML -->
+<div id="profileModal" style="display: none; position: absolute;">
+    <div id="profileContent" class="synthwave-modal">
+        <span id="closeProfileModal" style="cursor:pointer;">&times;</span>
+        <h2 id="profileUsername"></h2>
+        <button id="addFriendBtn">Add as Friend</button>
+    </div>
+</div>    
+
+<!-- Slider Section -->
+<section id="carouselIndicators" class="carousel slide slider_section" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="detail-box">
+                            <h1>Pong</h1>
+                            <p>Play a pong game with your friend or our opponent!</p>
+                            <div class="btn-box">
+                                <a href="#" class="btn1" data-bs-toggle="modal" data-bs-target="#pongModal">Play</a>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="detail-box">
-                                <h1>Memory</h1>
-                                <p>Use your brain and remember the pictures</p>
-                                <div class="btn-box">
-                                    <a href="#" class="btn1" data-bs-toggle="modal" data-bs-target="#memoryModal">Play</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="img-box">
-                                <img src="{% static 'pong/images/logo_memory.png' %}" alt="Game 2">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="detail-box">
-                                <h1>Suika game</h1>
-                                <p>Un troisième jeu pour rendre le site plus cool!</p>
-                                <div class="btn-box">
-                                    <a href="#" class="btn1">Play</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="img-box">
-                                <img src="{% static 'pong/images/logo_.png' %}" alt="Game 3">
-                            </div>
+                    <div class="col-md-6">
+                        <div class="img-box">
+                            <img src="{% static 'pong/images/logo_pong.png' %}" alt="Game 1">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Carousel Controls -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselIndicators" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselIndicators" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-
-        <!-- Carousel Indicators -->
-        <ol class="carousel-indicators">
-            <li data-bs-target="#carouselIndicators" data-bs-slide-to="0" class="active"></li>
-            <li data-bs-target="#carouselIndicators" data-bs-slide-to="1"></li>
-            <li data-bs-target="#carouselIndicators" data-bs-slide-to="2"></li>
-        </ol>
-    </section>
-
-    <!-- Modale pour le jeu Pong -->
-    <div class="modal fade" id="pongModal" data-backdrop="" aria-labelledby="pongModalLabel" aria-hidden="true" data-bs-focus="false" data-bs-backdrop="false" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="pongModalLabel">Pong Game</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
-                </div>
-                <div class="modal-body">
-                    <!-- Difficulty selector -->
-                    <div id="difficulty-menu" class="difficulty-menu mb-3">
-                        <label for="difficultySelect" class="form-label">Select Difficulty:</label>
-                        <select id="difficultySelect" class="form-select">
-                            <option value="easy">Easy</option>
-                            <option value="medium" selected>Medium</option>
-                            <option value="hard">Hard</option>
-                        </select>
+        <div class="carousel-item">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="detail-box">
+                            <h1>Memory</h1>
+                            <p>Use your brain and remember the pictures</p>
+                            <div class="btn-box">
+                                <a href="#" class="btn1" data-bs-toggle="modal" data-bs-target="#memoryModal">Play</a>
+                            </div>
+                        </div>
                     </div>
-                    <canvas id="pongCanvas" width="640" height="480" style="background-color: #000;"></canvas>
+                    <div class="col-md-6">
+                        <div class="img-box">
+                            <img src="{% static 'pong/images/logo_memory.png' %}" alt="Game 2">
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="start-pong-game-btn">Solo Game</button>
-                    <button type="button" class="btn btn-primary" id="start-pong-game-btn">Matchmaking</button>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="detail-box">
+                            <h1>Suika game</h1>
+                            <p>Un troisième jeu pour rendre le site plus cool!</p>
+                            <div class="btn-box">
+                                <a href="#" class="btn1">Play</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="img-box">
+                            <img src="{% static 'pong/images/logo_.png' %}" alt="Game 3">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modale pour le jeu Memory -->
-    <div class="modal fade" id="memoryModal" data-backdrop="" aria-labelledby="memoryModalLabel"  aria-hidden="true" data-bs-focus="false" data-bs-backdrop="false" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="memoryModalLabel">Memory Game</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+    <!-- Carousel Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+
+    <!-- Carousel Indicators -->
+    <ol class="carousel-indicators">
+        <li data-bs-target="#carouselIndicators" data-bs-slide-to="0" class="active"></li>
+        <li data-bs-target="#carouselIndicators" data-bs-slide-to="1"></li>
+        <li data-bs-target="#carouselIndicators" data-bs-slide-to="2"></li>
+    </ol>
+</section>
+
+<!-- Modale pour le jeu Pong -->
+<div class="modal fade" id="pongModal" data-backdrop="" aria-labelledby="pongModalLabel" aria-hidden="true" data-bs-focus="false" data-bs-backdrop="false" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pongModalLabel">Pong Game</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+            </div>
+            <div class="modal-body">
+                <!-- Difficulty selector -->
+                <div id="difficulty-menu" class="difficulty-menu mb-3">
+                    <label for="difficultySelect" class="form-label">Select Difficulty:</label>
+                    <select id="difficultySelect" class="form-select">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
                 </div>
-                <div class="modal-body">
-                    <!-- Difficulty selector -->
-                    <div id="difficulty-menu-m" class="difficulty-menu-m mb-3">
-                        <label for="memoryDifficultySelect" class="form-label">Select Difficulty:</label>
-                        <select id="memoryDifficultySelect" class="form-select">
-                            <option value="easy">Easy</option>
-                            <option value="medium" selected>Medium</option>
-                            <option value="hard">Hard</option>
-                        </select>
-                    </div>
-                        <div id="memory-game-container" class="memory-game-container"></div>
-                    </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="start-memory-game-btn">Solo Game</button>
-                    <button type="button" class="btn btn-primary" id="start-memory-game-btn">Matchmaking</button>
-                </div>
+                <canvas id="pongCanvas" width="640" height="480" style="background-color: #000;"></canvas>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="start-pong-game-btn">Solo Game</button>
+                <button type="button" class="btn btn-primary" id="start-pong-game-btn">Matchmaking</button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Bootstrap JS Bundle && scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script> <!-- A verifier en Django -->
+<!-- Modale pour le jeu Memory -->
+<div class="modal fade" id="memoryModal" data-backdrop="" aria-labelledby="memoryModalLabel"  aria-hidden="true" data-bs-focus="false" data-bs-backdrop="false" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="memoryModalLabel">Memory Game</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+            </div>
+            <div class="modal-body">
+                <!-- Difficulty selector -->
+                <div id="difficulty-menu-m" class="difficulty-menu-m mb-3">
+                    <label for="memoryDifficultySelect" class="form-label">Select Difficulty:</label>
+                    <select id="memoryDifficultySelect" class="form-select">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+                    <div id="memory-game-container" class="memory-game-container"></div>
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="start-memory-game-btn">Solo Game</button>
+                <button type="button" class="btn btn-primary" id="start-memory-game-btn">Matchmaking</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <script src="{% static 'pong/scripts/gamestats.js' %}"></script>
-    <script src="{% static 'pong/scripts/pong.js' %}"></script>
-    <script src="{% static 'pong/scripts/memory.js' %}"></script>
-    <script src="{% static 'pong/scripts/chat.js' %}"></script>
-</body>
+<!-- Bootstrap JS Bundle && scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script> <!-- A verifier en Django -->
+
+<script src="{% static 'pong/scripts/gamestats.js' %}"></script>
+<script src="{% static 'pong/scripts/pong.js' %}"></script>
+<script src="{% static 'pong/scripts/memory.js' %}"></script>
+<script src="{% static 'pong/scripts/chat.js' %}"></script>
 {% endblock content %}

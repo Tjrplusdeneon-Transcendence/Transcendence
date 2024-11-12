@@ -6,7 +6,13 @@ class User(AbstractUser):
 	games_played = models.fields.IntegerField(default=0)
 	wins = models.fields.IntegerField(default=0)
 	losses = models.fields.IntegerField(default=0)
+	
+	def __str__(self):
+		return self.username
 
 class Chat(models.Model):
-	message = models.fields.CharField(max_length=100)
+	content = models.fields.CharField(max_length=100)
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+	def __str__(self):
+		return self.content
