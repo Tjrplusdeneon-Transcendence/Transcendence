@@ -20,11 +20,11 @@
         <span id="closeButton">X</span>
         {% if not user.is_authenticated %}
         <button class="sign_btn" name="signin" 
-            hx_post = "{% url 'signin' %}"
+            hx_get = "{% url 'signin' %}"
             hx_target = "#sign_form"
             hx_swap = "innerHTML">Sign In</button>
         <button class="sign_btn" name="signup" 
-            hx_post = "{% url 'signup' %}"
+            hx_get = "{% url 'signup' %}"
             hx_target = "#sign_form"
             hx_swap = "innerHTML">Sign Up</button>
         <div id="sign_form">
