@@ -1,2 +1,8 @@
-
+<form hx-post="{% url 'signup' %}" hx-target="#panel" hx-swap="outerHTML">
+	{{ sign_form.as_p }}
+	<button>Submit</button>
+	{% if sign_form.errors %}
+		{{ sign_form.errors }}
+	{% endif %}
+</form>
 
