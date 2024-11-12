@@ -1,14 +1,12 @@
 {% extends 'pong/base.html' %}
-{% load static %}
 {% block content %}
-
-<button class="sign_btn"
-	hx_get = "{% url 'signin' %}"
-	hx_target = "#sign_form"
-	hx_swap = "innerHTML">Sign In</button>
-
-<div id="sign_form">
-	<!-- {% include 'pong/partials/sign.html' %} -->
+<h1>Hello</h1>
+<button
+	hx-get="{% url 'signin' %}"
+	hx-target="#bloc"
+	hx-swap="innerHTML">
+	Submit</button>
+<div id="bloc">
+	<p>text below</p>
 </div>
-
 {% endblock content %}

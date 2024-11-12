@@ -1,12 +1,1 @@
-<h3>CHARGEMENT DE LA FORME</h3>
-<form method="post">
-	{% csrf_token %}
-	{{ sign_form.as_p }}
-	{{ signin_error_message }}
-	{% if sign_form.errors %}
-		{{ sign_form.errors }}
-	{% endif %}
-	{% if not sign_form is None %}
-		<button name="submit" >Submit</button>
-	{% endif %}
-</form>
+<h3>test</h3>

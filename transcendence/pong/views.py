@@ -5,8 +5,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
 from pong.models import Chat
 
+
+
 def index(request):
-    return render(request, 'pong/index.html')
+	return render(request, 'app/index.html')
+
+def signin(request):
+	return render(request, 'app/partials/sign.html')
+
 
 # def index(request):
 #     # sign_form = None
@@ -53,20 +59,20 @@ def index(request):
 #                  'chat_messages': chat_messages,
 #                  })
 
-def signin(request):
-    print('SIGNIN')
-    sign_form = forms.LoginForm()
-    context = {
-        'sign_form': sign_form,
-        'signin_error_message': None,
-    }
-    return(request, 'pong/partials/sign.html', context)
+# def signin(request):
+#     print('SIGNIN')
+#     sign_form = forms.LoginForm()
+#     context = {
+#         'sign_form': sign_form,
+#         'signin_error_message': None,
+#     }
+#     return(request, 'pong/partials/sign.html', context)
 
-def signup(request):
-    print('SIGNUP')
-    sign_form = forms.SignupForm()
-    context = {
-        'sign_form': sign_form,
-        'signin_error_message': None,
-    }
-    return(request, 'pong/partials/sign.html', context)
+# def signup(request):
+#     print('SIGNUP')
+#     sign_form = forms.SignupForm()
+#     context = {
+#         'sign_form': sign_form,
+#         'signin_error_message': None,
+#     }
+#     return(request, 'pong/partials/sign.html', context)
