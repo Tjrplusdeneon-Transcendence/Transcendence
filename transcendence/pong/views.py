@@ -26,6 +26,12 @@ def signin(request):
 
 def signup(request):
     sign_form = forms.SignupForm()
+    if request.method == 'POST':
+        sign_form = forms.SignupForm(request.POST)
+        if sign_form.is_valid():
+            user = sign_form.save()
+            login(request, user)
+            return render(request, 'pong/partials/signin.html', context={'sign_form': None, 'signin_error_message': ''})
     return render(request, 'pong/partials/signup.html', context={'sign_form': sign_form})
 
 # def index(request):
