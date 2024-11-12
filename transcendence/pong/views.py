@@ -16,7 +16,7 @@ def signin(request):
     signin_error_message = ''
     if request.method == 'POST':
         print('2')
-        sign_form = forms.LoginForm(request.method)
+        sign_form = forms.LoginForm(request.POST)
         if sign_form.is_valid():
             print('3')
             user = authenticate(username = sign_form.cleaned_data['username'], password = sign_form.cleaned_data['password'],)
