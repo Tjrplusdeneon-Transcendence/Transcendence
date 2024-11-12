@@ -8,10 +8,10 @@ from pong.models import Chat
 
 
 def index(request):
-	return render(request, 'app/index.html')
+	return render(request, 'pong/index.html')
 
 def signin(request):
-	return render(request, 'app/partials/sign.html')
+	return render(request, 'pong/partials/sign.html')
 
 
 # def index(request):
