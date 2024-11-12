@@ -12,6 +12,7 @@ def index(request):
 
 def signin(request):
     sign_form = forms.LoginForm()
+    signin_error_message = ''
     if request.method == 'POST':
         sign_form = forms.LoginForm(request.method)
         if sign_form.is_valid():
@@ -19,8 +20,11 @@ def signin(request):
             if user is not None:
                 login(request, user)
                 sign_form = None
-                return render(request, 'pong/partials/signin.html', {'sign_form': sign_form})
-    return render(request, 'pong/partials/signin.html', {'sign_form': sign_form})
+                return render(request, 'pong/partials/signin.html', context={'sign_form': sign_form, 'signin_error_message': signin_error_message})
+            else:
+                signin_error_message = 'Wrong credentials'
+                return render(request, 'pong/partials/signin.html', context={'sign_form': sign_form, 'signin_error_message': signin_error_message})
+    return render(request, 'pong/partials/signin.html', context={'sign_form': sign_form, 'signin_error_message': signin_error_message})
 
 
 # def index(request):
