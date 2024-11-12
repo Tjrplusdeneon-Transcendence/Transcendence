@@ -1,4 +1,4 @@
-<form hx-post="{% url 'signin' %}" hx-target="#panel" hx-swap="outerHTML">
+<form hx-post="{% url 'signin' %}" hx-target="#sign_form" hx-swap="innerHTML">
 	{{ sign_form.as_p }}
 	<button>Submit</button>
 	{{ signin_error_message }}
