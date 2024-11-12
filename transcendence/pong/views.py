@@ -51,6 +51,7 @@ def index(request):
                  })
 
 def signin(request):
+    print('SIGNIN')
     sign_form = forms.LoginForm()
     context = {
         'sign_form': sign_form,
@@ -59,6 +60,7 @@ def signin(request):
     return(request, 'pong/partials/sign.html', context)
 
 def signup(request):
+    print('SIGNUP')
     sign_form = forms.SignupForm()
     context = {
         'sign_form': sign_form,
