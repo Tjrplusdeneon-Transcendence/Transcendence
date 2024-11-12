@@ -34,4 +34,4 @@ def signup_user(request):
 
 def logout_user(request):
     logout(request)
-    return render(request, 'pong/partials/panel.html')
+    return render(request, 'pong/partials/index.html')
