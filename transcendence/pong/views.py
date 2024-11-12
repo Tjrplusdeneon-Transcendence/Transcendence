@@ -5,8 +5,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
 from pong.models import Chat
 
-
-
 def index(request):
     return render(request, 'pong/index.html')
 
@@ -19,7 +17,7 @@ def signin_user(request):
             user = authenticate(username = sign_form.cleaned_data['username'], password = sign_form.cleaned_data['password'],)
             if user is not None:
                 login(request, user)
-                sign_form = None
+                return render(request, 'pong/partials/panel.html')
             else:
                 signin_error_message = 'Wrong credentials'
     return render(request, 'pong/partials/signin.html', context={'sign_form': sign_form, 'signin_error_message': signin_error_message})
@@ -31,9 +29,9 @@ def signup_user(request):
         if sign_form.is_valid():
             user = sign_form.save()
             login(request, user)
-            sign_form = None
+            return render(request, 'pong/partials/panel.html')
     return render(request, 'pong/partials/signup.html', context={'sign_form': sign_form})
 
 def logout_user(request):
     logout(request)
-    return render(request, 'pong/partials/logout.html')
+    return render(request, 'pong/partials/panel.html')

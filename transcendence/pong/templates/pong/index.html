@@ -1,19 +1,6 @@
 {% extends 'pong/base.html' %}
 {% block content %}
 
-{% if not user.is_authenticated %}
-	<button hx-get="{% url 'signin' %}" hx-target="#sign_form" hx-swap="innerHTML">
-		Sign In
-	</button>
-	<button hx-get="{% url 'signup' %}" hx-target="#sign_form" hx-swap="innerHTML">
-		Sign Up
-	</button>	
-	<div id="sign_form"></div>
-{% else %}
-	<p>Welcome, {{ request.user }}</p>
-	<button hx-get="{% url 'logout' %}">
-		Log Out
-	</button>
-{% endif %}
+{% include 'pong/partials/panel.html' %}
 
 {% endblock content %}
