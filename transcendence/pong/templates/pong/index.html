@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 
-<button class="sign_btn" name="signin" 
+<button class="sign_btn"
 	hx_get = "{% url 'signin' %}"
 	hx_target = "#sign_form"
 	hx_swap = "innerHTML">Sign In</button>
