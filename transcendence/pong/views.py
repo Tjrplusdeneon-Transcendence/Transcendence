@@ -11,7 +11,15 @@ def index(request):
     return render(request, 'pong/index.html')
 
 def signin(request):
-    sign_form = forms.SignupForm()
+    sign_form = forms.LoginForm()
+    if request.method == 'POST':
+        sign_form = forms.LoginForm(request.method)
+        if sign_form.is_valid():
+            user = authenticate(username = sign_form.cleaned_data['username'], password = sign_form.cleaned_data['password'],)
+            if user is not None:
+                login(request, user)
+                sign_form = None
+                return render(request, 'pong/partials/signin.html', {'sign_form': sign_form})
     return render(request, 'pong/partials/signin.html', {'sign_form': sign_form})
 
 

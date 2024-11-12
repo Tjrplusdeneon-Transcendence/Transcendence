@@ -1,8 +1,13 @@
 {% if not user.is_authenticated %}
 	{{ sign_form.as_p }}
-	<button>
+	<button
+		hx-post="{% url 'signin' %}"
+		hx-target="#bloc"
+		hx-swap="innerHTML">
 		Submit
 	</button>
+{% else %}
+	<p>Welcome, {{ request.user }}</p>
 {% endif %}
 
 
@@ -13,6 +18,4 @@
 
 
 
-<!-- hx-post="{% url 'index' %}"
-hx-target="#bloc"
-hx-swap="innerHTML" -->
+<!--  -->
