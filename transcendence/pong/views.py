@@ -11,10 +11,10 @@ def index(request):
     return render(request, 'pong/index.html')
 
 def signin(request):
-    sign_form = forms.LoginForm()
+    sign_form = forms.SigninForm()
     signin_error_message = ''
     if request.method == 'POST':
-        sign_form = forms.LoginForm(request.POST)
+        sign_form = forms.SigninForm(request.POST)
         if sign_form.is_valid():
             user = authenticate(username = sign_form.cleaned_data['username'], password = sign_form.cleaned_data['password'],)
             if user is not None:
@@ -46,13 +46,13 @@ def logout(request):
 #         print ('>>>>>>POST>>>>>>>', request.POST, '<<<<<<<<<<<<<<')
 #         # if 'signin' in request.POST:
 #         #     print('ICI')
-#         #     sign_form = forms.LoginForm(prefix="signin")
+#         #     sign_form = forms.SigninForm(prefix="signin")
 #         #     context={'sign_form': sign_form, 'signin_error_message': signin_error_message}
 #         #     return render(request, 'pong/partials/sign.html', context)
 #         # if 'signup' in request.POST:
 #         #     sign_form = forms.SignupForm(prefix="signup")
 #         # if ('submit' and 'signin-username') in request.POST:
-#         #     sign_form = forms.LoginForm(request.POST, prefix="signin")
+#         #     sign_form = forms.SigninForm(request.POST, prefix="signin")
 #         #     if sign_form.is_valid():
 #         #         user = authenticate(username = sign_form.cleaned_data['username'], password = sign_form.cleaned_data['password'],)
 #         #         if user is not None:
@@ -84,7 +84,7 @@ def logout(request):
 
 # def signin(request):
 #     print('SIGNIN')
-#     sign_form = forms.LoginForm()
+#     sign_form = forms.SigninForm()
 #     context = {
 #         'sign_form': sign_form,
 #         'signin_error_message': None,
