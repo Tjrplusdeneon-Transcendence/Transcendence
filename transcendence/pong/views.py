@@ -18,7 +18,7 @@ def signin_user(request):
             if user is not None:
                 login(request, user)
                 response = render(request, 'pong/partials/panel.html')
-                # response["HX-Refresh"] = "true"
+                response["HX-Refresh"] = "true"
                 return response
             else:
                 signin_error_message = 'Wrong credentials'
@@ -32,7 +32,7 @@ def signup_user(request):
             user = sign_form.save()
             login(request, user)
             response = render(request, 'pong/partials/panel.html')
-            # response["HX-Refresh"] = "true"
+            response["HX-Refresh"] = "true"
             return response
     return render(request, 'pong/partials/signup.html', context={'sign_form': sign_form})
 
