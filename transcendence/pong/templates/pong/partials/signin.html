@@ -4,14 +4,9 @@
 		hx-target="#bloc"
 		hx-swap="innerHTML">
 		{{ sign_form.as_p }}
-		{{ signin_error_message }}
 		<button>Submit</button>
+		{{ signin_error_message }}
 	</form>
 {% else %}
 	<p>Welcome, {{ request.user }}</p>
 {% endif %}
-
-
-<!-- {% if sign_form.errors %}
-	{{ sign_form.errors }}
-{% endif %} -->

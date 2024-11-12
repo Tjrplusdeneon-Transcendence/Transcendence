@@ -1,0 +1,11 @@
+<form
+	hx-post="{% url 'signup' %}"
+	hx-target="#bloc"
+	hx-swap="innerHTML">
+	{{ sign_form.as_p }}
+	<button>Submit</button>
+	{% if sign_form.errors %}
+		{{ sign_form.errors }}
+	{% endif %}
+</form>
+
