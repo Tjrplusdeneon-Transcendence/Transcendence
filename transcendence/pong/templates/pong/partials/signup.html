@@ -1,4 +1,5 @@
 <form hx-post="{% url 'signup' %}" hx-target="#sign_form" hx-swap="innerHTML">
+	{% csrf_token %}
 	{{ sign_form.as_p }}
 	<button>Submit</button>
 	{% if sign_form.errors %}
