@@ -31,8 +31,11 @@ def signup(request):
         if sign_form.is_valid():
             user = sign_form.save()
             login(request, user)
-            return render(request, 'pong/partials/signin.html', context={'sign_form': None, 'signin_error_message': ''})
     return render(request, 'pong/partials/signup.html', context={'sign_form': sign_form})
+
+def logout(request):
+    logout(request)
+    return render(request, 'pong/partials/logout.html')
 
 # def index(request):
 #     # sign_form = None

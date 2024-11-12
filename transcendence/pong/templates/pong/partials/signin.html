@@ -1,12 +1,11 @@
-{% if not user.is_authenticated %}
-	<form
-		hx-post="{% url 'signin' %}"
-		hx-target="#bloc"
-		hx-swap="innerHTML">
-		{{ sign_form.as_p }}
-		<button>Submit</button>
-		{{ signin_error_message }}
-	</form>
-{% else %}
-	<p>Welcome, {{ request.user }}</p>
-{% endif %}
+<!-- {% if not user.is_authenticated %} -->
+<form
+	hx-post="{% url 'signin' %}"
+	hx-target="#bloc"
+	hx-swap="innerHTML">
+	{{ sign_form.as_p }}
+	<button>Submit</button>
+	{{ signin_error_message }}
+</form>
+<!-- {% else %} -->
+<!-- {% endif %} -->
