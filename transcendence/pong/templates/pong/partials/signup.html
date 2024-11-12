@@ -1,4 +1,4 @@
-<form hx-post="{% url 'signup' %}" hx-target="#sign_form" hx-swap="innerHTML">
+<form hx-post="{% url 'signup' %}" hx-trigger="load" hx-target="#sign_form" hx-swap="innerHTML">
 	{% csrf_token %}
 	{{ sign_form.as_p }}
 	<button>Submit</button>
