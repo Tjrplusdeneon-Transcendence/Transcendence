@@ -12,7 +12,7 @@ def index(request):
 
 def signin(request):
     sign_form = forms.SignupForm()
-    return render(request, 'pong/partials/sign.html', {'sign_form': sign_form})
+    return render(request, 'pong/partials/signin.html', {'sign_form': sign_form})
 
 
 # def index(request):
