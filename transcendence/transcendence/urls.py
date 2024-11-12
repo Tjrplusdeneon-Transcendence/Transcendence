@@ -21,7 +21,7 @@ from pong import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
-    path('signin/', views.signin, name='signin'),
-	path('signup/', views.signup, name='signup'),
-    path('logout/', views.logout, name='logout'),
+    path('signin/', views.signin_user, name='signin'),
+	path('signup/', views.signup_user, name='signup'),
+    path('logout/', views.logout_user, name='logout'),
 ]

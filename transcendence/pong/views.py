@@ -10,7 +10,7 @@ from pong.models import Chat
 def index(request):
     return render(request, 'pong/index.html')
 
-def signin(request):
+def signin_user(request):
     sign_form = forms.SigninForm()
     signin_error_message = ''
     if request.method == 'POST':
@@ -24,7 +24,7 @@ def signin(request):
                 signin_error_message = 'Wrong credentials'
     return render(request, 'pong/partials/signin.html', context={'sign_form': sign_form, 'signin_error_message': signin_error_message})
 
-def signup(request):
+def signup_user(request):
     sign_form = forms.SignupForm()
     if request.method == 'POST':
         sign_form = forms.SignupForm(request.POST)
@@ -34,69 +34,6 @@ def signup(request):
             sign_form = None
     return render(request, 'pong/partials/signup.html', context={'sign_form': sign_form})
 
-def logout(request):
+def logout_user(request):
     logout(request)
     return render(request, 'pong/partials/logout.html')
-
-# def index(request):
-#     # sign_form = None
-#     # signin_error_message = ''
-#     chat_form = forms.ChatForm()
-#     chat_messages = Chat.objects.all()[:10]
-#     if request.method == 'POST':
-#         print ('>>>>>>POST>>>>>>>', request.POST, '<<<<<<<<<<<<<<')
-#         # if 'signin' in request.POST:
-#         #     print('ICI')
-#         #     sign_form = forms.SigninForm(prefix="signin")
-#         #     context={'sign_form': sign_form, 'signin_error_message': signin_error_message}
-#         #     return render(request, 'pong/partials/sign.html', context)
-#         # if 'signup' in request.POST:
-#         #     sign_form = forms.SignupForm(prefix="signup")
-#         # if ('submit' and 'signin-username') in request.POST:
-#         #     sign_form = forms.SigninForm(request.POST, prefix="signin")
-#         #     if sign_form.is_valid():
-#         #         user = authenticate(username = sign_form.cleaned_data['username'], password = sign_form.cleaned_data['password'],)
-#         #         if user is not None:
-#         #             login(request, user)
-#         #         else:
-#         #             signin_error_message = 'Wrong credentials'
-#         # elif ('submit' and 'signup-username') in request.POST:
-#         #     sign_form = forms.SignupForm(request.POST, prefix="signup")
-#         #     if sign_form.is_valid():
-#         #         user = sign_form.save()
-#         #         login(request, user)
-#         if 'logout' in request.POST:
-#             print('loging out')
-#             logout(request)
-#         elif 'chat' in request.POST:
-#             chat_form = forms.ChatForm(request.POST)
-#             if chat_form.is_valid():
-#                 new = chat_form.save(commit=False)
-#                 new.user = request.user
-#                 new.save()
-#                 chat_form = forms.ChatForm()
-#     return render(request,
-#         'pong/index.html',
-#         context={'sign_form': None,
-#                  'signin_error_message': None,
-#                  'chat_form': chat_form,
-#                  'chat_messages': chat_messages,
-#                  })
-
-# def signin(request):
-#     print('SIGNIN')
-#     sign_form = forms.SigninForm()
-#     context = {
-#         'sign_form': sign_form,
-#         'signin_error_message': None,
-#     }
-#     return(request, 'pong/partials/sign.html', context)
-
-# def signup(request):
-#     print('SIGNUP')
-#     sign_form = forms.SignupForm()
-#     context = {
-#         'sign_form': sign_form,
-#         'signin_error_message': None,
-#     }
-#     return(request, 'pong/partials/sign.html', context)
