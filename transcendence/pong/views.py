@@ -26,7 +26,7 @@ def signin(request):
 
 def signup(request):
     sign_form = forms.SignupForm()
-    return render(request, 'pong/partials/signin.html', context={'sign_form': sign_form})
+    return render(request, 'pong/partials/signup.html', context={'sign_form': sign_form})
 
 # def index(request):
 #     # sign_form = None
