@@ -11,21 +11,26 @@ def index(request):
     return render(request, 'pong/index.html')
 
 def signin(request):
+    print('1')
     sign_form = forms.LoginForm()
     signin_error_message = ''
     if request.method == 'POST':
+        print('2')
         sign_form = forms.LoginForm(request.method)
         if sign_form.is_valid():
+            print('3')
             user = authenticate(username = sign_form.cleaned_data['username'], password = sign_form.cleaned_data['password'],)
             if user is not None:
+                print('4')
                 login(request, user)
                 sign_form = None
-                return render(request, 'pong/partials/signin.html', context={'sign_form': sign_form, 'signin_error_message': signin_error_message})
             else:
+                print('5')
                 signin_error_message = 'Wrong credentials'
-                return render(request, 'pong/partials/signin.html', context={'sign_form': sign_form, 'signin_error_message': signin_error_message})
     return render(request, 'pong/partials/signin.html', context={'sign_form': sign_form, 'signin_error_message': signin_error_message})
 
+                # return render(request, 'pong/partials/signin.html', context={'sign_form': sign_form, 'signin_error_message': signin_error_message})
+                # return render(request, 'pong/partials/signin.html', context={'sign_form': sign_form, 'signin_error_message': signin_error_message})
 
 # def index(request):
 #     # sign_form = None
