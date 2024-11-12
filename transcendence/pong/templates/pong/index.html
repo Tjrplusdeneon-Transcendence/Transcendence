@@ -1,5 +1,6 @@
 {% extends 'pong/base.html' %}
 {% block content %}
+
 {% if not user.is_authenticated %}
 	<button hx-get="{% url 'signin' %}" hx-target="#sign_form" hx-swap="innerHTML">
 		Sign In
