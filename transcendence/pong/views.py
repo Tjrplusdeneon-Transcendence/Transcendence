@@ -35,3 +35,12 @@ def signup_user(request):
 def logout_user(request):
     logout(request)
     return render(request, 'pong/partials/panel.html')
+
+def chat(request):
+    chat_form = forms.ChatForm()
+    if request.method == 'POST':
+        chat_form = forms.ChatForm(request.POST)
+        if chat_form.is_valid():
+            chat_form.save()
+            return render(request, 'pong/partials/chat_message.html')
+    return render(request, 'pong/chat.html')

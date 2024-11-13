@@ -10,12 +10,16 @@
     <div class="chat-input">
         <!-- <input type="text" id="chatMessage" placeholder="Écrire un message..." /> -->
         <form
-            hx-ext="ws"
-            ws-connect="/ws/chat/channel"
-            ws-send>
+            hx-put="{% url 'chat_message' %}"
+            hx-target="#chatBox"
+            hx-swap="beforeend">
             {% csrf_token %}
             {{ chat_form }}
             <button id="chat" name="chat" >➤</button>
         </form>
     </div>
 </div>
+
+<!-- hx-ext="ws"
+            ws-connect="/ws/chat"
+            ws-send> -->
