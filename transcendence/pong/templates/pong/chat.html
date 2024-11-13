@@ -12,7 +12,7 @@
         <form
             hx-ext="ws"
             ws-connect="/ws/chat/channel"
-            ws-send >
+            ws-send>
             {% csrf_token %}
             {{ chat_form }}
             <button id="chat" name="chat" >➤</button>
