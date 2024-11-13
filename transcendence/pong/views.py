@@ -42,9 +42,14 @@ def chat(request):
     chat_form = forms.ChatForm()
     if request.method == 'POST':
         chat_form = forms.ChatForm(request.POST)
+        print('1')
         if chat_form.is_valid():
+            print('2')
             new = chat_form.save(commit=False)
+            print('3')
             new.user = request.user
+            print('4')
             new.save()
+            print('5')
             return render(request, 'pong/partials/chat_message.html')
     return render(request, 'pong/chat.html', context={'chat_messages': chat_messages, 'chat_form': chat_form})
