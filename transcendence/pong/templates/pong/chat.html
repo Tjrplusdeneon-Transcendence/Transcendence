@@ -10,7 +10,7 @@
     <div class="chat-input">
         <!-- <input type="text" id="chatMessage" placeholder="Écrire un message..." /> -->
         <form
-            hx-put="{% url 'chat_message' %}"
+            hx-post="{% url 'chat_message' %}"
             hx-target="#chatBox"
             hx-swap="beforeend">
             {% csrf_token %}
