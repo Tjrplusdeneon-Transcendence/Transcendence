@@ -44,7 +44,6 @@ def chat(request):
         chat_form = forms.ChatForm(request.POST)
         if chat_form.is_valid():
             new = chat_form.save(commit=False)
-            chat_form.save()
             new.user = request.user
             new.save()
             return render(request, 'pong/partials/chat_message.html')
