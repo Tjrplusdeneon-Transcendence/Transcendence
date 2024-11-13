@@ -3,7 +3,7 @@
     <div class="chat-box" id="chatBox">
         <ul>
             {% for message in chat_messages reversed %}
-                {% if message.user is request.user %}
+                {% if message.author is request.user %}
                     <li class="flex justify-end mb-4">
                         {{ message.author }}: {{ message.content }}
                     </li>
