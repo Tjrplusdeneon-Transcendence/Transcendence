@@ -6,7 +6,7 @@ from django.conf import settings
 from pong.models import Chat
 
 def index(request):
-    return render(request, 'pong/index.html')
+    return render(request, 'pong/index.html', context={'chat_form': forms.ChatForm()})
 
 def signin_user(request):
     sign_form = forms.SigninForm()
