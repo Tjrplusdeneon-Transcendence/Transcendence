@@ -1,5 +1,5 @@
 from channels.generic.websocket import WebsocketConsumer
 
-def ChatConsumer(WebsocketConsumer):
+class ChatConsumer(WebsocketConsumer):
 	def connect(self):
 		self.accept()
