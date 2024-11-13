@@ -1,0 +1,21 @@
+<div class="chat-container">
+    <h2>Tchat</h2>
+    <div class="chat-box" id="chatBox">
+        <ul>
+            {% for message in chat_messages reversed %}
+                <li>{{ message.content }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="chat-input">
+        <!-- <input type="text" id="chatMessage" placeholder="Écrire un message..." /> -->
+        <form
+            hx-ext="ws"
+            ws-connect="/ws/chat/channel"
+            ws-send >
+            {% csrf_token %}
+            {{ chat_form }}
+            <button id="chat" name="chat" >➤</button>
+        </form>
+    </div>
+</div>
