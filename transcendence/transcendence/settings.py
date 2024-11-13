@@ -74,7 +74,7 @@ TEMPLATES = [
 ]
 
 #WSGI_APPLICATION = 'transcendence.wsgi.application'
-ASGI_APPLICATION = 'routing.application'
+ASGI_APPLICATION = 'transcendence.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
