@@ -23,7 +23,7 @@ class ChatConsumer(WebsocketConsumer):
             'type': 'message_handler',
             'message_id': message.id,
         }
-        async_to_sync(self.channel_layer.group_send)(event)
+        async_to_sync(self.channel_layer.group_send)("chat", event)
 
 
     def message_handler(self, event):
