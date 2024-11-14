@@ -7,11 +7,11 @@ import json
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.user = self.scope['user']
-        async_to_sync(self.channel_layer.group_add)(self.channel_name) # ws channel joins the group
+        async_to_sync(self.channel_layer.group_add)("chat", self.channel_name) # ws channel joins the group
         self.accept()
 
     def disconnect(self, close_code):
-        async_to_sync(self.channel_layer.group_discard)(self.channel_name) # ws channel leaves the group
+        async_to_sync(self.channel_layer.group_discard)("chat", self.channel_name) # ws channel leaves the group
 
     def receive(self, text_data):
         content = (json.loads(text_data))["content"]
