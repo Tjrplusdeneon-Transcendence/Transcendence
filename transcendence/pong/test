@@ -22,3 +22,6 @@
         # )
         # html = render_to_string('pong/partials/chat_message.html', context={'message': message})
         # self.send(text_data=html)
+
+    # def receive(self, text_data):
+    #     pass
