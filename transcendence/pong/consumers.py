@@ -19,7 +19,8 @@ class ChatConsumer(WebsocketConsumer):
     #     })    
 
     def receive(self, text_data):
-        content = (json.loads(text_data))["content"]
+        text_data_json = json.loads(text_data)
+        content = text_data_json["content"]
         message = Chat.objects.create(
             content = content,
             author = self.user,
