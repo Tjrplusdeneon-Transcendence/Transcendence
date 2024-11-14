@@ -18,15 +18,15 @@
     <div class="chat-input">
         <!-- <input type="text" id="chatMessage" placeholder="Écrire un message..." /> -->
         <form
-            hx-post="{% url 'chat_message' %}"
-            hx-target="#chatBox"
-            hx-swap="beforeend">
-                {% include 'pong/partials/chat_form.html' %}
+            hx-ext="ws"
+            ws-connect="/ws/chat"
+            ws-send>
+            {% include 'pong/partials/chat_form.html' %}
             <button id="chat" name="chat" >➤</button>
         </form>
     </div>
 </div>
 
-<!-- hx-ext="ws"
-            ws-connect="/ws/chat"
-            ws-send> -->
+<!-- hx-post="{% url 'chat_message' %}"
+hx-target="#chatBox"
+hx-swap="beforeend" -->
