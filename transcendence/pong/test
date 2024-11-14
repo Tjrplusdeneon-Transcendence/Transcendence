@@ -28,3 +28,6 @@
 
 # from django.template.loader import render_to_string
 
+        # self.user = self.scope['user']
+        # print("USER= ", self.user.username)
+
