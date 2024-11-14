@@ -19,14 +19,10 @@ class ChatConsumer(WebsocketConsumer):
     #     })    
 
     def receive(self, text_data):
-        print("TEXT_DATA : ", text_data)
-        text_data_json = json.loads(text_data)
-        print("TEXT_DATA_JSON : ", text_data_json)
-        content = text_data_json["content"]
-        print("CONTENT : ", content)
-    #     message = Chat.objects.create(
-    #         content = content,
-    #         author = self.user,
-    #     )
-    #     html = render_to_string('pong/partials/chat_message.html', context={'message': message})
-    #     self.send(text_data=html)
+        content = (json.loads(text_data))["content"]
+        message = Chat.objects.create(
+            content = content,
+            author = self.user,
+        )
+        html = render_to_string('pong/partials/chat_message.html', context={'message': message})
+        self.send(text_data=html)
