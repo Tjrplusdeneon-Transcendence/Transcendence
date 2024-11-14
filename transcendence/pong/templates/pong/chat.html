@@ -21,8 +21,7 @@
             hx-post="{% url 'chat_message' %}"
             hx-target="#chatBox"
             hx-swap="beforeend">
-            {% csrf_token %}
-            {{ chat_form }}
+                {% include 'pong/partials/chat_form.html' %}
             <button id="chat" name="chat" >➤</button>
         </form>
     </div>
