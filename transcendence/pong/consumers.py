@@ -11,12 +11,12 @@ class ChatConsumer(WebsocketConsumer):
     # def disconnect(self, close_code):
     #     pass
 
-    def receive(self, event):
-        print(event)
-        self.send({
-            "type": "websocket.send",
-            "text": event["text"],
-        })    
+    # def receive(self, event):
+    #     print(event)
+    #     self.send({
+    #         "type": "websocket.send",
+    #         "text": event["text"],
+    #     })    
 
     # def receive(self, text_data):
     #     text_data_json = json.loads(text_data)
