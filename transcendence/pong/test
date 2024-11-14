@@ -26,6 +26,3 @@
     # def receive(self, text_data):
     #     pass
 
-
-# 
-# from django.template.loader import render_to_string
