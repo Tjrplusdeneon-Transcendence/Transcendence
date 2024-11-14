@@ -5,7 +5,7 @@ import json
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
-        self.user = self.scope['user']
+        # self.user = self.scope['user']
         self.accept()
 
     # def disconnect(self, close_code):
