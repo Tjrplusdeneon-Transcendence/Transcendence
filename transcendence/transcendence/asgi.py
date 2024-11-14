@@ -18,7 +18,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'transcendence.settings')
 
 django_asgi_app = get_asgi_application()
 
-from transcendence import routing
+from pong import routing
 
 application = ProtocolTypeRouter({
     "http": django_asgi_app,

@@ -1,0 +1,32 @@
+<div class="chat-container">
+    <h2>Tchat</h2>
+    <div class="chat-box" id="chatBox">
+        <ul>
+            {% for message in chat_messages reversed %}
+                {% if message.author is request.user %}
+                    <li class="flex justify-end mb-4">
+                        {{ message.author }}: {{ message.content }}
+                    </li>
+                {% else %}
+                <div>
+                    {{ message.author }}: {{ message.content }}
+                </li>            
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="chat-input">
+        <!-- <input type="text" id="chatMessage" placeholder="Écrire un message..." /> -->
+        <form
+            hx-ext="ws"
+            ws-connect="/ws/chat"
+            ws-send>
+            {% include 'pong/partials/chat_form.html' %}
+            <button id="chat" name="chat" >➤</button>
+        </form>
+    </div>
+</div>
+
+<!-- hx-post="{% url 'chat_message' %}"
+hx-target="#chatBox"
+hx-swap="beforeend" -->
