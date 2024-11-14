@@ -25,3 +25,8 @@
 
     # def receive(self, text_data):
     #     pass
+
+
+# from .models import *
+# from django.template.loader import render_to_string
+# import json
