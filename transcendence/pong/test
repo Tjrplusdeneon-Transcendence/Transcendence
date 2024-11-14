@@ -1,9 +1,0 @@
-# def disconnect(self, close_code):
-#     pass
-
-# def receive(self, event):
-#     print(event)
-#     self.send({
-#         "type": "websocket.send",
-#         "text": event["text"],
-#     })    

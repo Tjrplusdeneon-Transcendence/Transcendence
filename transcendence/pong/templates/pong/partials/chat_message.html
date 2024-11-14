@@ -1,3 +1,5 @@
-<li class="flex justify-end mb-4">
-	{{ message.author }}: {{ message.content }}
-</li>
+<div id="chatBox" hx-swap-oob="beforeend">
+	<li>
+		{{ message.author }}: {{ message.content }}
+	</li>
+</div>
