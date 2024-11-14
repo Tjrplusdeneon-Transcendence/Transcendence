@@ -1,5 +1,5 @@
 from channels.generic.websocket import WebsocketConsumer
-from . import models
+from .models import *
 
 import json
 
@@ -10,4 +10,7 @@ class ChatConsumer(WebsocketConsumer):
         
     def receive(self, text_data):
         content = (json.loads(text_data))["content"]
-        print("CONTENT: ", content)
+        message = Chat.objects.create(
+            content = content,
+            author = self.user,
+        )

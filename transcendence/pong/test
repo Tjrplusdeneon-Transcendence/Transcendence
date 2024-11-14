@@ -14,10 +14,7 @@
 
        # 
         # print("AUTHOR: ", self.user.username)
-        # message = Chat.objects.create(
-        #     content = content,
-        #     author = self.user,
-        # )
+
         # html = render_to_string('pong/partials/chat_message.html', context={'message': message})
         # self.send(text_data=html)
 
