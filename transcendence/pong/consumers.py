@@ -27,7 +27,7 @@ class ChatConsumer(WebsocketConsumer):
 
 
     def message_handler(self, event):
-        message = Chat.objects.get(id=event['message.id'])
+        message = Chat.objects.get(id=event['message_id'])
         html = render_to_string('pong/partials/chat_message.html', context={'message': message})
         self.send(text_data=html)
 
