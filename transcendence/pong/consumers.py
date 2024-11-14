@@ -22,7 +22,7 @@ class ChatConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
         content = text_data_json["content"]
         print("CONTENT: ", content)
-        print("AUTHOR: ", self.user.username)
+        # print("AUTHOR: ", self.user.username)
         # message = Chat.objects.create(
         #     content = content,
         #     author = self.user,
