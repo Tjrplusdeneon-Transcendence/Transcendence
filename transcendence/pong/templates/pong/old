@@ -1,30 +1,12 @@
-  <!-- {% if not user.is_authenticated %}
-        <button class="sign_btn" name="signin" 
-            hx_get = "{% url 'signin' %}"
-            hx_target = "#sign_form"
-            hx_swap = "innerHTML">Sign In</button>
-        <button class="sign_btn" name="signup" 
-            hx_get = "{% url 'signup' %}"
-            hx_target = "#sign_form"
-            hx_swap = "innerHTML">Sign Up</button>
-        <div id="sign_form">
-            {% include 'pong/partials/sign.html' %}
-        </div>
-        {% else %}
-            <p>Welcome, {{ request.user }}</p>
-            <form method="POST">
-                {% csrf_token %}
-                <input type="submit" name="logout" value="Logout" />
-            </form>
-            <div id="profileInfo" style="display: none;">
-                <img src="{% static 'pong/images/profile-picture.jpg' %}" alt="Profile Picture" class="profile-picture" />
-                <button id="logoutButton">Logout</button>
-                <div id="gameStats" style="display: none;">
-                    <h2>Game Statistics</h2>
-                    <p>Games played: <span id="gamesPlayed">{{ user.games_played }}</span></p>
-                    <p>Wins: <span id="wins">{{ user.wins }}</span></p>
-                    <p>Losses: <span id="losses">{{ user.losses }}</span></p>
-                    <p>Score: <span id="totalScore">{{ user.score }}</span></p>
-                </div>
-            </div>
-        {% endif %} -->
+ 
+<!-- <div id="profileInfo" style="display: none;">
+    <img src="{% static 'pong/images/profile-picture.jpg' %}" alt="Profile Picture" class="profile-picture" />
+    <button id="logoutButton">Logout</button>
+    <div id="gameStats" style="display: none;">
+        <h2>Game Statistics</h2>
+        <p>Games played: <span id="gamesPlayed">{{ user.games_played }}</span></p>
+        <p>Wins: <span id="wins">{{ user.wins }}</span></p>
+        <p>Losses: <span id="losses">{{ user.losses }}</span></p>
+        <p>Score: <span id="totalScore">{{ user.score }}</span></p>
+    </div>
+</div> -->
