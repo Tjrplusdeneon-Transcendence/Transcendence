@@ -36,15 +36,41 @@ let difficultySettings = {
     medium: { speedMultiplier: 1.12, aiSpeed: 1000, playerSpeed: 1000, dx: -200, dy: -200 },
     hard: { speedMultiplier: 1, aiSpeed: 1600, playerSpeed: 1600, dx: -3000, dy: -3000 }
 };
+
 let currentDifficulty = 'easy';
 let aiSpeed = difficultySettings[currentDifficulty].aiSpeed;
 let playerSpeed = difficultySettings[currentDifficulty].playerSpeed;
 let dx = difficultySettings[currentDifficulty].dx;
 let dy = difficultySettings[currentDifficulty].dy;
 
-
 let upPressed = false;
 let downPressed = false;
+
+const socket = new WebSocket('ws://localhost:8000/ws/pong/');
+
+socket.onopen = function(e) {
+    console.log('WebSocket connected.');
+};
+
+socket.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+    console.log('Received:', data);
+
+    // Update game state in the frontend
+};
+
+socket.onclose = function(event) {
+    console.log('WebSocket closed.');
+};
+
+socket.onerror = function(error) {
+    console.error('WebSocket error:', error);
+};
+
+// Send data to backend
+function movePaddle(direction) {
+    socket.send(JSON.stringify({ action: 'move_paddle', direction }));
+}
 
 document.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowUp') {
@@ -609,6 +635,10 @@ function startGame()
     dx = -Math.abs(speed * Math.cos(angle)); // Ensure the ball starts moving towards the player
     dy = speed * Math.sin(angle);
 
+    // TODO REMOVE YOU COWARD DIPSHIT THAT CANNOT CODE BECAUSE YOU SUCK TOO MUCH AT EVERYTHING YOU HAVE EVER TRIED AND YOU'RE JUST SO BAD AT FUCKING LIVING AND ALL YOU SHOULD DIE
+    dx = 0;
+    dy = 0;
+    
     document.getElementById('pongCanvas').style.display = 'block';
     gameRunning = true;
     x = canvas.width / 2;
