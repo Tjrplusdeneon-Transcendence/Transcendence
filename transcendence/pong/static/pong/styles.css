@@ -233,26 +233,6 @@ body {
     font-family: ka1;
 }
 
-/* Signup */
-.btn-signup .btnsignup {
-    position: absolute;
-    top: 6%;    
-    right: 2%;
-    width: 50px;
-    height: 50px;
-    border-radius: 100%;
-    background-color: #1a1a1a;
-    color: #00fbff;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    font-family: 'Press Start 2P', cursive;
-    box-shadow: 0 0 20px rgba(0, 255, 225, 0.5);
-    transition: box-shadow 0.3s ease;    
-}
-
 /* Login */
 .login-panel {
     display: none;
@@ -330,7 +310,7 @@ body {
 
 .btn-login .btnlog {
     position: absolute;
-    top: 2%;    
+    top: 2%;
     right: 2%;
     width: 50px;
     height: 50px;
@@ -349,11 +329,6 @@ body {
 
 .btn-login .btnlog:hover {
     box-shadow: 0 0 40px rgb(255, 174, 0);
-}
-
-.sign_btn {
-    display: inline-block;
-    width: 49%;
 }
 
 #gameStats {
@@ -694,7 +669,12 @@ body {
     width: 100%;
     height: auto;
     background-color: #1a1a1a;
-    border: 5px solid #d400ff;
+    border: 5px solid;
+    border-image: linear-gradient(to right, 
+        #ff00fb, #ff00fb 1%, /* Pink on the left */
+        #ff00fb 25%, #00FFFF 75%, /* Cyan in the center */
+        #00FFFF 75%, #00FFFF /* Pink on the right */
+    ) 1;
     box-shadow: 0 0 20px rgba(187, 0, 255, 0.5);
     position: relative;
     overflow: hidden;
