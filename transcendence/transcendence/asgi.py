@@ -19,11 +19,12 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'transcendence.settings')
 django_asgi_app = get_asgi_application()
 
 from pong import routing
+from pong.routing import websocket_urlpatterns
 
 application = ProtocolTypeRouter({
-    "http": django_asgi_app,
-    "websocket": AllowedHostsOriginValidator(
-        AuthMiddlewareStack(URLRouter(routing.websocket_urlpatterns))
+    "http":  get_asgi_application(),
+    "websocket":  AuthMiddlewareStack(
+        URLRouter(websocket_urlpatterns)
     ),
 })
 

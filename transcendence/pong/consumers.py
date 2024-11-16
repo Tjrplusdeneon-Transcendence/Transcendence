@@ -3,6 +3,8 @@ from .models import *
 from django.template.loader import render_to_string
 from asgiref.sync import async_to_sync
 import json
+from channels.generic.websocket import AsyncWebsocketConsumer
+
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
@@ -31,5 +33,36 @@ class ChatConsumer(WebsocketConsumer):
         html = render_to_string('pong/partials/chat_message.html', context={'message': message})
         self.send(text_data=html)
 
+
+class PongConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        # Accept the WebSocket connection
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        # Handle WebSocket disconnection
+        pass
+
+    async def receive(self, text_data):
+        # Handle incoming messages
+        data = json.loads(text_data)
+        action = data.get('action')
+
+        if action == 'move_paddle':
+            # Example: Process paddle movement
+            await self.send(text_data=json.dumps({
+                'status': 'paddle_moved',
+                'details': data,
+            }))
+        elif action == 'game_update':
+            # Example: Send updated game state
+            await self.send(text_data=json.dumps({
+                'status': 'game_updated',
+                'state': {
+                    'ball_position': [50, 50],
+                    'player1_score': 1,
+                    'player2_score': 2,
+                },
+            }))
 
 # ATTENTION: la ws doit être disconnect en cas de logout (sinon, erreur sur l'auteur du message, qui reste le premier utilisateur log)
