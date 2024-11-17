@@ -77,21 +77,11 @@ TEMPLATES = [
 #WSGI_APPLICATION = 'transcendence.wsgi.application'
 ASGI_APPLICATION = 'transcendence.asgi.application'
 
-if os.getenv('USE_IN_MEMORY_LAYER', 'False') == 'True':
-    CHANNEL_LAYERS = {
-        "default": {
-            "BACKEND": "channels.layers.InMemoryChannelLayer",
-        },
-    }
-else:
-    CHANNEL_LAYERS = {
-        'default': {
-            'BACKEND': 'channels_redis.core.RedisChannelLayer',
-            'CONFIG': {
-                'hosts': [('127.0.0.1', 6379)],
-            },
-        },
-    }
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
