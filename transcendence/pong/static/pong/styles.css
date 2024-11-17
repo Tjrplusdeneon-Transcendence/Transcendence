@@ -228,9 +228,10 @@ body {
 .title-container{
     color: #ffffff;
     position:absolute;
-    top: 2%;
-    left: 40%;
+    top: 4%;
+    left: 50%;
     font-family: ka1;
+    transform: translate(-50%, -50%);
 }
 
 /* Login */
