@@ -2,8 +2,9 @@ from channels.generic.websocket import WebsocketConsumer
 from .models import *
 from django.template.loader import render_to_string
 from asgiref.sync import async_to_sync
-import json
 from channels.generic.websocket import AsyncWebsocketConsumer
+import json
+import re
 
 
 class ChatConsumer(WebsocketConsumer):
@@ -33,36 +34,73 @@ class ChatConsumer(WebsocketConsumer):
         html = render_to_string('pong/partials/chat_message.html', context={'message': message})
         self.send(text_data=html)
 
-
 class PongConsumer(AsyncWebsocketConsumer):
+    players_waiting = []
+
     async def connect(self):
-        # Accept the WebSocket connection
         await self.accept()
+        PongConsumer.players_waiting.append(self)
+
+        if len(PongConsumer.players_waiting) >= 2:
+            player1 = PongConsumer.players_waiting.pop(0)
+            player2 = PongConsumer.players_waiting.pop(0)
+
+            match_id = self.generate_valid_group_name(f"match_{player1.channel_name}_{player2.channel_name}")
+
+            await self.channel_layer.group_add(match_id, player1.channel_name)
+            await self.channel_layer.group_add(match_id, player2.channel_name)
+
+            await player1.send(json.dumps({'type': 'match_found', 'match_id': match_id, 'player': 'player1'}))
+            await player2.send(json.dumps({'type': 'match_found', 'match_id': match_id, 'player': 'player2'}))
+
+            player1.match_id = match_id
+            player2.match_id = match_id
 
     async def disconnect(self, close_code):
-        # Handle WebSocket disconnection
-        pass
+        if self in PongConsumer.players_waiting:
+            PongConsumer.players_waiting.remove(self)
+        else:
+            await self.channel_layer.group_discard(self.match_id, self.channel_name)
 
     async def receive(self, text_data):
-        # Handle incoming messages
         data = json.loads(text_data)
-        action = data.get('action')
+        action = data.get('type')
 
         if action == 'move_paddle':
-            # Example: Process paddle movement
-            await self.send(text_data=json.dumps({
-                'status': 'paddle_moved',
-                'details': data,
-            }))
+            await self.channel_layer.group_send(
+                self.match_id,
+                {
+                    'type': 'paddle_moved',
+                    'player': data['player'],
+                    'position': data['position']
+                }
+            )
         elif action == 'game_update':
-            # Example: Send updated game state
-            await self.send(text_data=json.dumps({
-                'status': 'game_updated',
-                'state': {
-                    'ball_position': [50, 50],
-                    'player1_score': 1,
-                    'player2_score': 2,
-                },
-            }))
+            await self.channel_layer.group_send(
+                self.match_id,
+                {
+                    'type': 'game_update',
+                    'state': data['state']
+                }
+            )
+
+    async def paddle_moved(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'paddle_moved',
+            'player': event['player'],
+            'position': event['position']
+        }))
+
+    async def game_update(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'game_update',
+            'state': event['state']
+        }))
+
+    def generate_valid_group_name(self, name):
+        # Replace invalid characters with underscores
+        valid_name = re.sub(r'[^a-zA-Z0-9_\-\.]', '_', name)
+        # Ensure the length is less than 100 characters
+        return valid_name[:100]
 
 # ATTENTION: la ws doit être disconnect en cas de logout (sinon, erreur sur l'auteur du message, qui reste le premier utilisateur log)
