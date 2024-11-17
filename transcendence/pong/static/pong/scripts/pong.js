@@ -87,18 +87,16 @@ let playerRole = null;
 //     console.error('WebSocket error:', error);
 // };
 
-function movePaddle(direction) {
-    const position = direction === 'up' ? paddleY1 - playerSpeed : paddleY1 + playerSpeed;
-    socket.send(JSON.stringify({ type: 'move_paddle', player: playerRole, position }));
-}
+// function movePaddle(direction) {
+//     const position = direction === 'up' ? paddleY1 - playerSpeed : paddleY1 + playerSpeed;
+//     socket.send(JSON.stringify({ type: 'move_paddle', player: playerRole, position }));
+// }
 
 document.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowUp') {
         upPressed = true;
-        movePaddle('up');
     } else if (event.key === 'ArrowDown') {
         downPressed = true;
-        movePaddle('down');
     }
 });
 
@@ -406,8 +404,7 @@ let previousBallPositions = [];
 const maxAfterImages = 20;
 
 
-function draw(currentTime) 
-{
+function draw(currentTime) {
     if (!lastTime) lastTime = currentTime;
     
     let deltaTime = Math.max((currentTime - lastTime) / 1000, 0.001);
@@ -415,47 +412,74 @@ function draw(currentTime)
 
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-
     for (let i = 0; i < previousPaddleY1.length; i++) {
         drawPaddle(0, previousPaddleY1[i], '#00FFFF', '#00FFFF', 0.1 * (1 - i / maxAfterImages));
     }
 
-
     for (let i = 0; i < previousPaddleY2.length; i++) {
         drawPaddle(canvas.width - paddleWidth, previousPaddleY2[i], '#ff00fb', '#ff00fb', 0.1 * (1 - i / maxAfterImages));
     }
-
 
     for (let i = 0; i < previousBallPositions.length; i++) {
         const pos = previousBallPositions[i];
         drawBall(pos.x, pos.y, 0.1 * (1 - i / maxAfterImages));
     }
 
-    drawPaddle(0, paddleY1, '#00FFFF',  '#00FFFF');
+    drawPaddle(0, paddleY1, '#00FFFF', '#00FFFF');
     drawPaddle(canvas.width - paddleWidth, paddleY2, '#ff00fb', '#ff00fb');
     drawBall(x, y);
 
-    if (upPressed) {
-        paddleY1 -= playerSpeed * deltaTime;
-    }
-    if (downPressed) {
-        paddleY1 += playerSpeed * deltaTime;
-    }
+    let paddleMoved = false;
 
+    if (playerRole === 'player1') {
+        if (upPressed) {
+            paddleY1 -= playerSpeed * deltaTime;
+            paddleMoved = true;
+        }
+        if (downPressed) {
+            paddleY1 += playerSpeed * deltaTime;
+            paddleMoved = true;
+        }
 
-    if (paddleY1 < 0) {
-        paddleY1 = 0;
-    }
-    if (paddleY1 > canvas.height - paddleHeight) {
-        paddleY1 = canvas.height - paddleHeight;
+        if (paddleY1 < 0) {
+            paddleY1 = 0;
+        }
+        if (paddleY1 > canvas.height - paddleHeight) {
+            paddleY1 = canvas.height - paddleHeight;
+        }
+
+        if (paddleMoved) {
+            console.log(`Player 1 sending paddle position: ${paddleY1}`);
+            sendPaddlePosition(paddleY1);
+        }
+    } else if (playerRole === 'player2') {
+        if (upPressed) {
+            paddleY2 -= playerSpeed * deltaTime;
+            paddleMoved = true;
+        }
+        if (downPressed) {
+            paddleY2 += playerSpeed * deltaTime;
+            paddleMoved = true;
+        }
+
+        if (paddleY2 < 0) {
+            paddleY2 = 0;
+        }
+        if (paddleY2 > canvas.height - paddleHeight) {
+            paddleY2 = canvas.height - paddleHeight;
+        }
+
+        if (paddleMoved) {
+            console.log(`Player 2 sending paddle position: ${paddleY2}`);
+            sendPaddlePosition(paddleY2);
+        }
     }
 
     const maxSpeed = 700;
     dx = Math.min(Math.max(dx, -maxSpeed), maxSpeed);
     dy = Math.min(Math.max(dy, -maxSpeed), maxSpeed);
 
-    if (isAIEnabled) 
-    {
+    if (isAIEnabled) {
         if (!firstHit)
             aiLastScanTime += deltaTime;
         aiDecision(aiLastScanTime);
@@ -464,15 +488,12 @@ function draw(currentTime)
 
     checkPaddleCollision(deltaTime);
 
-    if (x + dx * deltaTime < ballRadius) 
-    {
+    if (x + dx * deltaTime < ballRadius) {
         winner = isAIEnabled ? 'AI' : 'Player 2';
         gameRunning = false;
         gameOverMessage();
         return;
-    } 
-    else if (x + dx * deltaTime > canvas.width - ballRadius) 
-    {
+    } else if (x + dx * deltaTime > canvas.width - ballRadius) {
         winner = 'Player 1';
         gameRunning = false;
         gameOverMessage();
@@ -485,13 +506,9 @@ function draw(currentTime)
     x += dx * difficultySettings[currentDifficulty].speedMultiplier * deltaTime;
     y += dy * difficultySettings[currentDifficulty].speedMultiplier * deltaTime;
 
-
     previousPaddleY1.unshift(paddleY1);
     previousPaddleY2.unshift(paddleY2);
-
-
     previousBallPositions.unshift({ x: x, y: y });
-
 
     if (previousPaddleY1.length > maxAfterImages) {
         previousPaddleY1.pop();
@@ -502,6 +519,9 @@ function draw(currentTime)
     if (previousBallPositions.length > maxAfterImages) {
         previousBallPositions.pop();
     }
+
+    // Send game state to the other player
+    sendGameState();
 
     if (gameRunning)
         requestAnimationFrame(draw);
@@ -666,11 +686,6 @@ function startGame() {
     x = canvas.width / 2;
     y = canvas.height / 2;
 
-    const angle = Math.random() * Math.PI / 4 - Math.PI / 8;
-    const speed = Math.sqrt(difficultySettings[currentDifficulty].dx * difficultySettings[currentDifficulty].dx + difficultySettings[currentDifficulty].dy * difficultySettings[currentDifficulty].dy);
-    dx = -Math.abs(speed * Math.cos(angle));
-    dy = speed * Math.sin(angle);
-
     gameRunning = false;
     winner = '';
     aiTargetY = canvas.height / 2 - paddleHeight / 2;
@@ -680,17 +695,8 @@ function startGame() {
     ballMovingTowardsAI = false;
     lastTime = 0;
 
-    document.getElementById('pongCanvas').style.display = 'none';
-    document.getElementById('difficulty-menu').style.display = 'block';
-
-    restartButton.textContent = 'Start Game';
-
-    restartButton.removeEventListener('click', startGame);
-    restartButton.addEventListener('click', function() {
-        const selectedDifficulty = document.getElementById('difficultySelect').value;
-        currentDifficulty = selectedDifficulty;
-        playerSpeed = difficultySettings[currentDifficulty].playerSpeed;
-        aiSpeed = difficultySettings[currentDifficulty].aiSpeed;
+    if (isMatchmaking) {
+        // Directly start the game without showing the restart button or difficulty menu
         document.getElementById('difficulty-menu').style.display = 'none';
         document.getElementById('pongCanvas').style.display = 'block';
 
@@ -700,7 +706,34 @@ function startGame() {
         cancelAnimation = false;
 
         // Start the game
-        isAIEnabled = !isMatchmaking;
+        isAIEnabled = false;
+
+        document.getElementById('pongCanvas').style.display = 'block';
+        gameRunning = true;
+        x = canvas.width / 2;
+        y = canvas.height / 2;
+        lastTime = 0;
+
+        drawInitialGameState();
+
+        showReadyAnimation(() => {
+            requestAnimationFrame(draw);
+        });
+    } else {
+        // Directly start the game with AI enabled
+        playerRole = 'player1';
+        document.getElementById('difficulty-menu').style.display = 'none';
+        document.getElementById('pongCanvas').style.display = 'block';
+
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+        }
+        cancelAnimation = false;
+
+        // Start the game
+        isAIEnabled = true;
+        const selectedDifficulty = document.getElementById('difficultySelect').value;
+        currentDifficulty = selectedDifficulty;
         playerSpeed = difficultySettings[currentDifficulty].playerSpeed;
         aiSpeed = difficultySettings[currentDifficulty].aiSpeed;
 
@@ -722,49 +755,10 @@ function startGame() {
 
         showReadyAnimation(() => {
             requestAnimationFrame(draw);
-        });
-    });
+            });
+        };
+ }
 
-    // Automatically start the game if not in matchmaking mode
-    if (!isMatchmaking) {
-        const selectedDifficulty = document.getElementById('difficultySelect').value;
-        currentDifficulty = selectedDifficulty;
-        playerSpeed = difficultySettings[currentDifficulty].playerSpeed;
-        aiSpeed = difficultySettings[currentDifficulty].aiSpeed;
-        document.getElementById('difficulty-menu').style.display = 'none';
-        document.getElementById('pongCanvas').style.display = 'block';
-
-        if (animationFrameId) {
-            cancelAnimationFrame(animationFrameId);
-        }
-        cancelAnimation = false;
-
-        // Start the game
-        isAIEnabled = !isMatchmaking;
-        playerSpeed = difficultySettings[currentDifficulty].playerSpeed;
-        aiSpeed = difficultySettings[currentDifficulty].aiSpeed;
-
-        let minAngle = Math.PI / 20;
-        let maxAngle = Math.PI / 5;
-
-        const angle = (Math.random() < 0.5 ? -1 : 1) * (Math.random() * (maxAngle - minAngle) + minAngle);
-        const speed = Math.sqrt(difficultySettings[currentDifficulty].dx * difficultySettings[currentDifficulty].dx + difficultySettings[currentDifficulty].dy * difficultySettings[currentDifficulty].dy);
-        dx = -Math.abs(speed * Math.cos(angle));
-        dy = speed * Math.sin(angle);
-
-        document.getElementById('pongCanvas').style.display = 'block';
-        gameRunning = true;
-        x = canvas.width / 2;
-        y = canvas.height / 2;
-        lastTime = 0;
-
-        drawInitialGameState();
-
-        showReadyAnimation(() => {
-            requestAnimationFrame(draw);
-        });
-    }
-}
 
 function restartPong() {
     startGame();
@@ -886,9 +880,11 @@ document.getElementById('start-solo-game-btn').addEventListener('click', functio
     startGame();
 });
 
+let socket;
+
 document.getElementById('start-matchmaking-btn').addEventListener('click', function() {
     isMatchmaking = true;
-    const socket = new WebSocket('ws://localhost:8000/ws/pong/');
+    socket = new WebSocket('ws://localhost:8000/ws/pong/');
 
     socket.onopen = function(e) {
         console.log('WebSocket connected.');
@@ -897,21 +893,27 @@ document.getElementById('start-matchmaking-btn').addEventListener('click', funct
 
     socket.onmessage = function(event) {
         const data = JSON.parse(event.data);
-        console.log('Received:', data);
-
         if (data.type === 'match_found') {
             playerRole = data.player;
+        } else if (data.type === 'start_game') {
+            initializeGameState(data.initial_state);
             startGame();
-        } else if (data.type === 'paddle_moved') {
-            if (data.player === 'player1') {
-                paddleY1 = data.position;
-            } else if (data.player === 'player2') {
-                paddleY2 = data.position;
-            }
         } else if (data.type === 'game_update') {
+            // Update game state with received data
             x = data.state.ball_position[0];
             y = data.state.ball_position[1];
-            // Update other game state variables as needed
+            paddleY1 = data.state.paddle1_position;
+            paddleY2 = data.state.paddle2_position;
+            dx = data.state.dx;
+            dy = data.state.dy;
+        } else if (data.type === 'paddle_moved') {
+            if (data.player === 'player1') {
+                console.log(`Player 1 received paddle position: ${data.position}`);
+                paddleY1 = data.position;
+            } else if (data.player === 'player2') {
+                console.log(`Player 2 received paddle position: ${data.position}`);
+                paddleY2 = data.position;
+            }
         }
     };
 
@@ -922,16 +924,41 @@ document.getElementById('start-matchmaking-btn').addEventListener('click', funct
     socket.onerror = function(error) {
         console.error('WebSocket error:', error);
     };
-
-    document.getElementById('pongCanvas').style.pointerEvents = 'auto';
-    const selectedDifficulty = document.getElementById('difficultySelect').value;
-    currentDifficulty = selectedDifficulty;
-    document.getElementById('difficulty-menu').style.display = 'none';
-    document.getElementById('pongCanvas').style.display = 'block';
-
-    const startButton = document.getElementById('start-matchmaking-btn');
-    startButton.textContent = 'Restart Game';
-
-    startButton.removeEventListener('click', startGame);
-    startButton.addEventListener('click', restartPong);
 });
+
+function initializeGameState(initialState) {
+    x = initialState.ball_position[0];
+    y = initialState.ball_position[1];
+    paddleY1 = initialState.paddle1_position;
+    paddleY2 = initialState.paddle2_position;
+    dx = initialState.dx;
+    dy = initialState.dy;
+    playerSpeed = initialState.player_speed;
+    aiSpeed = initialState.ai_speed;
+}
+
+function sendGameState() {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({
+            type: 'game_update',
+            state: {
+                ball_position: [x, y],
+                paddle1_position: paddleY1,
+                paddle2_position: paddleY2,
+                dx: dx,
+                dy: dy
+            }
+        }));
+    }
+}
+
+function sendPaddlePosition(position) {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        console.log(`Sending paddle position: ${position}`);
+        socket.send(JSON.stringify({
+            type: 'move_paddle',
+            player: playerRole,
+            position: position
+        }));
+    }
+}

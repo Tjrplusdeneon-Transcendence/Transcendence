@@ -5,7 +5,8 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 import re
-
+import math
+import random
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
@@ -56,6 +57,18 @@ class PongConsumer(AsyncWebsocketConsumer):
             player1.match_id = match_id
             player2.match_id = match_id
 
+            # Generate initial game state
+            initial_state = self.generate_initial_game_state()
+
+            # Notify both players to start the game with the initial state
+            await self.channel_layer.group_send(
+                match_id,
+                {
+                    'type': 'start_game',
+                    'initial_state': initial_state
+                }
+            )
+
     async def disconnect(self, close_code):
         if self in PongConsumer.players_waiting:
             PongConsumer.players_waiting.remove(self)
@@ -96,6 +109,42 @@ class PongConsumer(AsyncWebsocketConsumer):
             'type': 'game_update',
             'state': event['state']
         }))
+
+    async def start_game(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'start_game',
+            'initial_state': event['initial_state']
+        }))
+
+    def generate_initial_game_state(self):
+        paddle_height = 100  # Paddle height from your game
+        canvas_height = 400  # Canvas height from your game
+        canvas_width = 800   # Canvas width from your game
+
+        paddleY1 = (canvas_height - paddle_height) / 2
+        paddleY2 = (canvas_height - paddle_height) / 2
+        x = canvas_width / 2
+        y = canvas_height / 2
+
+        min_angle = math.pi / 20
+        max_angle = math.pi / 5
+        angle = (random.random() < 0.5 and -1 or 1) * (random.random() * (max_angle - min_angle) + min_angle)
+        speed = 300  # Speed from your game
+        dx = -abs(speed * math.cos(angle))
+        dy = speed * math.sin(angle)
+
+        player_speed = 300  # Correct player speed
+        ai_speed = 300      # Correct AI speed
+
+        return {
+            'ball_position': [x, y],
+            'paddle1_position': paddleY1,
+            'paddle2_position': paddleY2,
+            'dx': dx,
+            'dy': dy,
+            'player_speed': player_speed,
+            'ai_speed': ai_speed
+        }
 
     def generate_valid_group_name(self, name):
         # Replace invalid characters with underscores
