@@ -134,15 +134,52 @@ function drawBall(posX = x, posY = y, opacity = 1)
     context.globalAlpha = 1;
 }
 
-function gameOverMessage() 
-{
-    //if its a previous game over message, clear it
+function gameOverMessage() {
+    // Clear any previous game over message
     context.clearRect(canvas.width / 2 - 250, canvas.height / 2 - 100, 500, 150);
     isRestarting = false;
-    const mainText = winner === 'Player 1' ? 'VICTORY!' : 'GAME OVER';
-    const mainColor = winner === 'Player 1' ? '#00FFFF' : '#ff00fb';
-    const secondaryText = winner === 'Player 1' ? 'Player 1 Wins' : 'AI Wins';
-    const secondaryColor = winner === 'Player 1' ? '#ff00fb' : '#00FFFF';
+
+    let mainText, mainColor, secondaryText, secondaryColor;
+
+    if (isAIEnabled) {
+        if (winner === 'AI') {
+            mainText = 'GAME OVER';
+            mainColor = '#ff00fb';
+            secondaryText = 'AI Wins';
+            secondaryColor = '#00FFFF';
+        } else {
+            mainText = 'VICTORY!';
+            mainColor = '#00FFFF';
+            secondaryText = 'You Win';
+            secondaryColor = '#ff00fb';
+        }
+    } else {
+        if (winner === 'Player 1') {
+            if (playerRole === 'player1') {
+                mainText = 'VICTORY!';
+                mainColor = '#00FFFF';
+                secondaryText = 'You Win';
+                secondaryColor = '#ff00fb';
+            } else {
+                mainText = 'GAME OVER';
+                mainColor = '#ff00fb';
+                secondaryText = 'Opponent Wins';
+                secondaryColor = '#00FFFF';
+            }
+        } else if (winner === 'Player 2') {
+            if (playerRole === 'player2') {
+                mainText = 'VICTORY!';
+                mainColor = '#00FFFF';
+                secondaryText = 'You Win';
+                secondaryColor = '#ff00fb';
+            } else {
+                mainText = 'GAME OVER';
+                mainColor = '#ff00fb';
+                secondaryText = 'Opponent Wins';
+                secondaryColor = '#00FFFF';
+            }
+        }
+    }
 
     let mainFontSize = 1;
     let secondaryFontSize = 1;
@@ -159,10 +196,7 @@ function gameOverMessage()
         const progress = timestamp - start;
         mainFontSize = Math.min(targetMainFontSize, (progress / animationDuration) * targetMainFontSize);
 
-    
-    
         context.clearRect(canvas.width / 2 - 250, canvas.height / 2 - 100, 500, 150);
-
 
         context.font = `${mainFontSize}px "ka1"`;
         context.fillStyle = mainColor;
@@ -190,15 +224,12 @@ function gameOverMessage()
         context.font = `${secondaryFontSize}px "ka1"`;
         context.textAlign = 'center';
 
-    
-
         context.shadowColor = 'black';
         context.shadowBlur = 10;
-    
+
         context.lineWidth = 2;
         context.strokeText(secondaryText, canvas.width / 2, canvas.height / 2 + 20);
 
-    
         context.fillStyle = 'white';
         context.fillText(secondaryText, canvas.width / 2, canvas.height / 2 + 20);
 
