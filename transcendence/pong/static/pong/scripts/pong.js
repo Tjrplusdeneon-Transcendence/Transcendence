@@ -22,6 +22,7 @@ let isMatchmaking = false;
 let aiReactionTime = 1000;
 let aiLastReactionTime = 0;
 let aiTargetY = canvas.height / 2 - paddleHeight / 2; 
+
 const maxErrorOffset = 50;
 
 let aiHits = 0;
@@ -51,46 +52,6 @@ let downPressed = false;
 
 
 let playerRole = null;
-
-// const socket = new WebSocket('ws://localhost:8000/ws/pong/');
-
-
-// socket.onopen = function(e) {
-//     console.log('WebSocket connected.');
-// };
-
-// socket.onmessage = function(event) {
-//     const data = JSON.parse(event.data);
-//     console.log('Received:', data);
-
-//     if (data.type === 'match_found') {
-//         playerRole = data.player;
-//         startGame();
-//     } else if (data.type === 'paddle_moved') {
-//         if (data.player === 'player1') {
-//             paddleY1 = data.position;
-//         } else if (data.player === 'player2') {
-//             paddleY2 = data.position;
-//         }
-//     } else if (data.type === 'game_update') {
-//         x = data.state.ball_position[0];
-//         y = data.state.ball_position[1];
-//         // Update other game state variables as needed
-//     }
-// };
-
-// socket.onclose = function(event) {
-//     console.log('WebSocket closed.');
-// };
-
-// socket.onerror = function(error) {
-//     console.error('WebSocket error:', error);
-// };
-
-// function movePaddle(direction) {
-//     const position = direction === 'up' ? paddleY1 - playerSpeed : paddleY1 + playerSpeed;
-//     socket.send(JSON.stringify({ type: 'move_paddle', player: playerRole, position }));
-// }
 
 document.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowUp') {
@@ -134,6 +95,8 @@ function drawBall(posX = x, posY = y, opacity = 1)
     context.globalAlpha = 1;
 }
 
+let isGameOverMessageShown = false;
+
 function gameOverMessage() 
 {
     //if its a previous game over message, clear it
@@ -159,10 +122,7 @@ function gameOverMessage()
         const progress = timestamp - start;
         mainFontSize = Math.min(targetMainFontSize, (progress / animationDuration) * targetMainFontSize);
 
-    
-    
         context.clearRect(canvas.width / 2 - 250, canvas.height / 2 - 100, 500, 150);
-
 
         context.font = `${mainFontSize}px "ka1"`;
         context.fillStyle = mainColor;
@@ -190,15 +150,12 @@ function gameOverMessage()
         context.font = `${secondaryFontSize}px "ka1"`;
         context.textAlign = 'center';
 
-    
-
         context.shadowColor = 'black';
         context.shadowBlur = 10;
     
         context.lineWidth = 2;
         context.strokeText(secondaryText, canvas.width / 2, canvas.height / 2 + 20);
 
-    
         context.fillStyle = 'white';
         context.fillText(secondaryText, canvas.width / 2, canvas.height / 2 + 20);
 
@@ -236,17 +193,14 @@ function predictBallPosition()
 
     while (true) 
     {
-    
         let timeToPaddle = predictedDx > 0
             ? (canvas.width - paddleWidth - ballRadius - predictedX) / predictedDx
             : (paddleWidth + ballRadius - predictedX) / predictedDx;
 
-    
         let timeToHorizontalWall = predictedDy >= 0
             ? (canvas.height - ballRadius - predictedY) / predictedDy
             : (ballRadius - predictedY) / predictedDy;
 
-    
         let timeToNextEvent = Math.min(timeToPaddle, timeToHorizontalWall);
 
     
@@ -277,12 +231,10 @@ function predictBallPosition()
     }
 }
 
-
 function predictTimeToPlayerPaddle() 
 {
     let predictedX = x;
     let predictedDx = dx;
-
 
     let timeToPlayerPaddle = (paddleWidth + ballRadius - predictedX) / predictedDx;
 
@@ -307,14 +259,12 @@ function aiDecision()
         
             aiTargetY = calculateRandomIncorrectPosition();
         } else {
-        
             if (predictedY !== aiLastPredictedY) {
                 aiTargetY = Math.min(Math.max(predictedY - paddleHeight / 2, 0), canvas.height - paddleHeight);
                 aiLastPredictedY = predictedY;
             }
         }
         aiLastScanTime = 0;
-    
     }
 }
 
@@ -343,14 +293,12 @@ const angleAdjustmentDown = -0.2;
 
 function checkPaddleCollision(deltaTime) 
 {
-
     if (dx < 0 && x + dx * deltaTime < paddleWidth + ballRadius) 
     {
         let futureY = y + dy * deltaTime;
 
         if (futureY > paddleY1 && futureY < paddleY1 + paddleHeight) 
         {
-        
             let angleAdjustment = 0;
             if (upPressed) {
                 angleAdjustment = angleAdjustmentUp;
@@ -362,7 +310,6 @@ function checkPaddleCollision(deltaTime)
                 console.log("Player not moving: dy =", dy);
             }
 
-        
             let speed = Math.sqrt(dx * dx + dy * dy);
             let angle = Math.atan2(dy, dx) + angleAdjustment;
             let minAngleCap = (Math.PI * 3) / 11;
@@ -382,8 +329,7 @@ function checkPaddleCollision(deltaTime)
                 aiHits++;
         }
     }
-
-
+  
     if (dx > 0 && x + dx * deltaTime > canvas.width - paddleWidth - ballRadius) 
     {
         let futureY = y + dy * deltaTime;
@@ -485,6 +431,21 @@ function draw(currentTime) {
         aiDecision(aiLastScanTime);
         moveAI(deltaTime);
     }
+    else if (!isAIEnabled) 
+    {
+        if (WPressed)
+            paddleY2 -= playerSpeed * deltaTime;
+
+        if (SPressed)
+            paddleY2 += playerSpeed * deltaTime;
+
+        if (paddleY2 < 0) {
+            paddleY2 = 0;
+        }
+        if (paddleY2 > canvas.height - paddleHeight) {
+            paddleY2 = canvas.height - paddleHeight;
+        }
+    }
 
     checkPaddleCollision(deltaTime);
 
@@ -520,12 +481,93 @@ function draw(currentTime) {
         previousBallPositions.pop();
     }
 
-    // Send game state to the other player
     sendGameState();
 
     if (gameRunning)
         requestAnimationFrame(draw);
 }
+
+/* *****************
+TEST BLACKOUT
+**************** */
+
+// Variables pour le mode obscurité
+let isDarkModeActive = false;
+let darkModeStartTime = 0;
+let darkModeDuration = 3000; // Durée de l'obscurité en ms (par exemple, 3 secondes)
+let nextDarkModeTime = Math.random() * 10000 + 5000; // Temps aléatoire avant le prochain mode noir (entre 5s et 15s)
+
+function checkDarkMode(currentTime) 
+{
+    if (isDarkModeActive) 
+    {
+        if (currentTime - darkModeStartTime > darkModeDuration) 
+        {
+            isDarkModeActive = false;
+            nextDarkModeTime = currentTime + Math.random() * 10000 + 5000; // Prochain blackout entre 5s et 15s
+        }
+    } 
+    else if (currentTime > nextDarkModeTime) 
+    {
+        isDarkModeActive = true;
+        darkModeStartTime = currentTime;
+    }
+
+}
+
+function draw(currentTime) 
+{
+    if (!lastTime) lastTime = currentTime;
+    
+    let deltaTime = Math.max((currentTime - lastTime) / 1000, 0.001);
+    lastTime = currentTime;
+
+    checkDarkMode(currentTime); // Vérifie si le mode obscurité doit être activé
+
+    if (isDarkModeActive) {
+        context.fillStyle = "black";
+        context.fillRect(0, 0, canvas.width, canvas.height); // Remplit l'écran en noir
+
+        // Clignotement aléatoire des paddles et de la balle pendant l'obscurité
+        if (Math.random() > 0.7) {
+            drawPaddle(0, paddleY1, '#00FFFF', '#00FFFF'); // Paddle du joueur
+        }
+        if (Math.random() > 0.7) {
+            drawPaddle(canvas.width - paddleWidth, paddleY2, '#ff00fb', '#ff00fb'); // Paddle de l'IA
+        }
+        if (Math.random() > 0.7) {
+            drawBall(x, y); // Balle
+        }
+    } 
+    else {
+        context.clearRect(0, 0, canvas.width, canvas.height); // Efface le canvas
+
+        // Dessine les afterimages pour paddles et balle comme d'habitude
+        for (let i = 0; i < previousPaddleY1.length; i++) {
+            drawPaddle(0, previousPaddleY1[i], '#00FFFF', '#00FFFF', 0.1 * (1 - i / maxAfterImages));
+        }
+        for (let i = 0; i < previousPaddleY2.length; i++) {
+            drawPaddle(canvas.width - paddleWidth, previousPaddleY2[i], '#ff00fb', '#ff00fb', 0.1 * (1 - i / maxAfterImages));
+        }
+        for (let i = 0; i < previousBallPositions.length; i++) {
+            const pos = previousBallPositions[i];
+            drawBall(pos.x, pos.y, 0.1 * (1 - i / maxAfterImages));
+        }
+
+        // Dessine les paddles et la balle
+        drawPaddle(0, paddleY1, '#00FFFF', '#00FFFF');
+        drawPaddle(canvas.width - paddleWidth, paddleY2, '#ff00fb', '#ff00fb');
+        drawBall(x, y);
+    }
+
+    // Reste du code pour les déplacements et gestion du jeu...
+    if (gameRunning)
+        requestAnimationFrame(draw);
+}
+
+
+
+/////////////////////////////////////////
 
 //Verifie si joueur 1 est solo
 async function isPlayer2Registered() 
@@ -563,7 +605,6 @@ function player2Exists()
     });
 }
 
-
 let animationFrameId;
 let cancelAnimation = false;
 
@@ -573,8 +614,6 @@ function showReadyAnimation(callback) {
     const animationDuration = 200;
     const displayDuration = 1000;
     let start = null;
-
-    
         if (restartButton) {
             restartButton.disabled = true;
         }
@@ -585,26 +624,21 @@ function showReadyAnimation(callback) {
         const progress = timestamp - start;
         fontSize = Math.min(targetFontSize, (progress / animationDuration) * targetFontSize);
 
-    
         context.clearRect(canvas.width / 2 - 150, canvas.height / 2 - 150, 300, 120);
 
-    
         context.font = `${fontSize}px "ka1"`;
         const reaWidth = context.measureText('REA').width;
         const dyWidth = context.measureText('DY?').width;
 
-    
         const totalWidth = reaWidth + dyWidth;
         const startX = (canvas.width - totalWidth) / 2;
 
-    
         context.fillStyle = '#00FFFF';
         context.textAlign = 'left';
         context.shadowColor = '#00FFFF';
         context.shadowBlur = 20;
         context.fillText('REA', startX, canvas.height / 2 - 60);
 
-    
         context.fillStyle = '#ff00fb';
         context.shadowColor = '#ff00fb';
         context.shadowBlur = 20;
@@ -621,7 +655,6 @@ function showReadyAnimation(callback) {
             }, displayDuration);
         }
     }
-
 
     const originalBallGlow = drawBall;
     drawBall = function(posX = x, posY = y, opacity = 1) {
@@ -759,7 +792,6 @@ function startGame() {
         };
  }
 
-
 function restartPong() {
     startGame();
 }
@@ -870,12 +902,15 @@ document.getElementById('start-solo-game-btn').addEventListener('click', functio
     currentDifficulty = selectedDifficulty;
     document.getElementById('difficulty-menu').style.display = 'none';
     document.getElementById('pongCanvas').style.display = 'block';
+    document.getElementById('pong-matchmaking-btn').style.display = 'none';
 
     const startButton = document.getElementById('start-solo-game-btn');
     startButton.textContent = 'Restart Game';
 
     startButton.removeEventListener('click', startGame);
     startButton.addEventListener('click', restartPong);
+
+    isAIEnabled = true;
 
     startGame();
 });
