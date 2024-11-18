@@ -884,7 +884,15 @@ let socket;
 
 document.getElementById('start-matchmaking-btn').addEventListener('click', function() {
     isMatchmaking = true;
-    socket = new WebSocket('ws://localhost:8000/ws/pong/');
+
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const host = window.location.host; // Includes hostname and port (if present)
+    const path = '/ws/pong/';
+
+    const socketUrl = `${protocol}://${host}${path}`;
+    console.log(`Connecting to WebSocket at: ${socketUrl}`);
+
+    socket = new WebSocket(socketUrl);
 
     socket.onopen = function(e) {
         console.log('WebSocket connected.');
