@@ -129,7 +129,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         min_angle = math.pi / 20
         max_angle = math.pi / 5
         angle = (random.random() < 0.5 and -1 or 1) * (random.random() * (max_angle - min_angle) + min_angle)
-        speed = 300  # Speed from your game
+        speed = 200  # Speed from your game
         dx = -abs(speed * math.cos(angle))
         dy = speed * math.sin(angle)
 

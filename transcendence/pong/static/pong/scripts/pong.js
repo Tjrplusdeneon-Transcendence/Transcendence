@@ -412,22 +412,42 @@ function draw(currentTime) {
 
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    for (let i = 0; i < previousPaddleY1.length; i++) {
-        drawPaddle(0, previousPaddleY1[i], '#00FFFF', '#00FFFF', 0.1 * (1 - i / maxAfterImages));
+    // Draw after images for paddles
+    if (playerRole === 'player1') {
+        for (let i = 0; i < previousPaddleY1.length; i++) {
+            drawPaddle(0, previousPaddleY1[i], '#00FFFF', '#00FFFF', 0.1 * (1 - i / maxAfterImages));
+        }
+        for (let i = 0; i < previousPaddleY2.length; i++) {
+            drawPaddle(canvas.width - paddleWidth, previousPaddleY2[i], '#ff00fb', '#ff00fb', 0.1 * (1 - i / maxAfterImages));
+        }
+    } else if (playerRole === 'player2') {
+        for (let i = 0; i < previousPaddleY2.length; i++) {
+            drawPaddle(0, previousPaddleY2[i], '#00FFFF', '#00FFFF', 0.1 * (1 - i / maxAfterImages));
+        }
+        for (let i = 0; i < previousPaddleY1.length; i++) {
+            drawPaddle(canvas.width - paddleWidth, previousPaddleY1[i], '#ff00fb', '#ff00fb', 0.1 * (1 - i / maxAfterImages));
+        }
     }
 
-    for (let i = 0; i < previousPaddleY2.length; i++) {
-        drawPaddle(canvas.width - paddleWidth, previousPaddleY2[i], '#ff00fb', '#ff00fb', 0.1 * (1 - i / maxAfterImages));
-    }
-
+    // Draw after images for the ball
     for (let i = 0; i < previousBallPositions.length; i++) {
         const pos = previousBallPositions[i];
-        drawBall(pos.x, pos.y, 0.1 * (1 - i / maxAfterImages));
+        const ballX = playerRole === 'player2' ? canvas.width - pos.x : pos.x;
+        drawBall(ballX, pos.y, 0.1 * (1 - i / maxAfterImages));
     }
 
-    drawPaddle(0, paddleY1, '#00FFFF', '#00FFFF');
-    drawPaddle(canvas.width - paddleWidth, paddleY2, '#ff00fb', '#ff00fb');
-    drawBall(x, y);
+    // Draw paddles based on player role
+    if (playerRole === 'player1') {
+        drawPaddle(0, paddleY1, '#00FFFF', '#00FFFF'); // Player 1 sees themselves as blue on the left
+        drawPaddle(canvas.width - paddleWidth, paddleY2, '#ff00fb', '#ff00fb'); // Player 1 sees Player 2 as purple on the right
+    } else if (playerRole === 'player2') {
+        drawPaddle(0, paddleY2, '#00FFFF', '#00FFFF'); // Player 2 sees themselves as blue on the left
+        drawPaddle(canvas.width - paddleWidth, paddleY1, '#ff00fb', '#ff00fb'); // Player 2 sees Player 1 as purple on the right
+    }
+
+    // Mirror ball position for Player 2
+    let ballX = playerRole === 'player2' ? canvas.width - x : x;
+    drawBall(ballX, y);
 
     let paddleMoved = false;
 
