@@ -91,20 +91,106 @@ let playerRole = null;
 //     const position = direction === 'up' ? paddleY1 - playerSpeed : paddleY1 + playerSpeed;
 //     socket.send(JSON.stringify({ type: 'move_paddle', player: playerRole, position }));
 // }
+canvas.addEventListener('mousemove', handleMouseMove);
+canvas.addEventListener('mouseleave', handleMouseLeave);
+
+let mouseY = null;
+let mouseInFrame = false;
+let mouseBlocked = false;
+let keyboardActive = false;
+let paddleDirection = 0; // 1 for up, -1 for down, 0 for no movement
+
+function handleMouseMove(event) {
+    const rect = canvas.getBoundingClientRect();
+    mouseY = event.clientY - rect.top;
+    mouseInFrame = true;
+    mouseBlocked = false;
+    keyboardActive = false; // Re-enable mouse interactions
+}
+
+function handleMouseLeave(event) {
+    mouseInFrame = false;
+}
+
+function updatePaddlePosition(deltaTime) {
+    if (mouseY !== null && !mouseBlocked && !keyboardActive) {
+        if (playerRole === 'player1') {
+            if (mouseY < paddleY1 + paddleHeight / 2) {
+                paddleY1 -= playerSpeed * deltaTime;
+                paddleDirection = 1; // Moving up
+            } else if (mouseY > paddleY1 + paddleHeight / 2) {
+                paddleY1 += playerSpeed * deltaTime;
+                paddleDirection = -1; // Moving down
+            } else {
+                paddleDirection = 0; // No movement
+            }
+
+            if (paddleY1 < 0) {
+                paddleY1 = 0;
+            }
+            if (paddleY1 > canvas.height - paddleHeight) {
+                paddleY1 = canvas.height - paddleHeight;
+            }
+
+            if (Math.abs(mouseY - (paddleY1 + paddleHeight / 2)) < 1) {
+                mouseBlocked = true;
+            }
+
+            console.log(`Player 1 sending paddle position: ${paddleY1}`);
+            sendPaddlePosition(paddleY1);
+        } else if (playerRole === 'player2') {
+            if (mouseY < paddleY2 + paddleHeight / 2) {
+                paddleY2 -= playerSpeed * deltaTime;
+                paddleDirection = 1; // Moving up
+            } else if (mouseY > paddleY2 + paddleHeight / 2) {
+                paddleY2 += playerSpeed * deltaTime;
+                paddleDirection = -1; // Moving down
+            } else {
+                paddleDirection = 0; // No movement
+            }
+
+            if (paddleY2 < 0) {
+                paddleY2 = 0;
+            }
+            if (paddleY2 > canvas.height - paddleHeight) {
+                paddleY2 = canvas.height - paddleHeight;
+            }
+
+            if (Math.abs(mouseY - (paddleY2 + paddleHeight / 2)) < 1) {
+                mouseBlocked = true;
+            }
+
+            console.log(`Player 2 sending paddle position: ${paddleY2}`);
+            sendPaddlePosition(paddleY2);
+        }
+    }
+}
 
 document.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowUp') {
         upPressed = true;
+        mouseBlocked = false; // Unblock mouse movement
+        keyboardActive = true; // Disable mouse interactions
+        paddleDirection = 1; // Moving up
     } else if (event.key === 'ArrowDown') {
         downPressed = true;
+        mouseBlocked = false; // Unblock mouse movement
+        keyboardActive = true; // Disable mouse interactions
+        paddleDirection = -1; // Moving down
     }
 });
 
 document.addEventListener('keyup', (event) => {
     if (event.key === 'ArrowUp') {
         upPressed = false;
+        if (!downPressed) {
+            paddleDirection = 0; // No movement
+        }
     } else if (event.key === 'ArrowDown') {
         downPressed = false;
+        if (!upPressed) {
+            paddleDirection = 0; // No movement
+        }
     }
 });
 
@@ -134,15 +220,52 @@ function drawBall(posX = x, posY = y, opacity = 1)
     context.globalAlpha = 1;
 }
 
-function gameOverMessage() 
-{
-    //if its a previous game over message, clear it
+function gameOverMessage() {
+    // Clear any previous game over message
     context.clearRect(canvas.width / 2 - 250, canvas.height / 2 - 100, 500, 150);
     isRestarting = false;
-    const mainText = winner === 'Player 1' ? 'VICTORY!' : 'GAME OVER';
-    const mainColor = winner === 'Player 1' ? '#00FFFF' : '#ff00fb';
-    const secondaryText = winner === 'Player 1' ? 'Player 1 Wins' : 'AI Wins';
-    const secondaryColor = winner === 'Player 1' ? '#ff00fb' : '#00FFFF';
+
+    let mainText, mainColor, secondaryText, secondaryColor;
+
+    if (isAIEnabled) {
+        if (winner === 'AI') {
+            mainText = 'GAME OVER';
+            mainColor = '#ff00fb';
+            secondaryText = 'AI Wins';
+            secondaryColor = '#00FFFF';
+        } else {
+            mainText = 'VICTORY!';
+            mainColor = '#00FFFF';
+            secondaryText = 'You Win';
+            secondaryColor = '#ff00fb';
+        }
+    } else {
+        if (winner === 'Player 1') {
+            if (playerRole === 'player1') {
+                mainText = 'VICTORY!';
+                mainColor = '#00FFFF';
+                secondaryText = 'You Win';
+                secondaryColor = '#ff00fb';
+            } else {
+                mainText = 'GAME OVER';
+                mainColor = '#ff00fb';
+                secondaryText = 'Opponent Wins';
+                secondaryColor = '#00FFFF';
+            }
+        } else if (winner === 'Player 2') {
+            if (playerRole === 'player2') {
+                mainText = 'VICTORY!';
+                mainColor = '#00FFFF';
+                secondaryText = 'You Win';
+                secondaryColor = '#ff00fb';
+            } else {
+                mainText = 'GAME OVER';
+                mainColor = '#ff00fb';
+                secondaryText = 'Opponent Wins';
+                secondaryColor = '#00FFFF';
+            }
+        }
+    }
 
     let mainFontSize = 1;
     let secondaryFontSize = 1;
@@ -159,10 +282,7 @@ function gameOverMessage()
         const progress = timestamp - start;
         mainFontSize = Math.min(targetMainFontSize, (progress / animationDuration) * targetMainFontSize);
 
-    
-    
         context.clearRect(canvas.width / 2 - 250, canvas.height / 2 - 100, 500, 150);
-
 
         context.font = `${mainFontSize}px "ka1"`;
         context.fillStyle = mainColor;
@@ -190,15 +310,12 @@ function gameOverMessage()
         context.font = `${secondaryFontSize}px "ka1"`;
         context.textAlign = 'center';
 
-    
-
         context.shadowColor = 'black';
         context.shadowBlur = 10;
-    
+
         context.lineWidth = 2;
         context.strokeText(secondaryText, canvas.width / 2, canvas.height / 2 + 20);
 
-    
         context.fillStyle = 'white';
         context.fillText(secondaryText, canvas.width / 2, canvas.height / 2 + 20);
 
@@ -341,33 +458,27 @@ function moveAI(deltaTime)
 const angleAdjustmentUp = 0.2;
 const angleAdjustmentDown = -0.2;
 
-function checkPaddleCollision(deltaTime) 
-{
-
-    if (dx < 0 && x + dx * deltaTime < paddleWidth + ballRadius) 
-    {
+function checkPaddleCollision(deltaTime) {
+    if (dx < 0 && x + dx * deltaTime < paddleWidth + ballRadius) {
         let futureY = y + dy * deltaTime;
 
-        if (futureY > paddleY1 && futureY < paddleY1 + paddleHeight) 
-        {
-        
+        if (futureY > paddleY1 && futureY < paddleY1 + paddleHeight) {
             let angleAdjustment = 0;
-            if (upPressed) {
+            if (paddleDirection === 1) {
                 angleAdjustment = angleAdjustmentUp;
                 console.log("Player moving up: dy =", dy);
-            } else if (downPressed) {
+            } else if (paddleDirection === -1) {
                 angleAdjustment = angleAdjustmentDown;
                 console.log("Player moving down: dy =", dy);
             } else {
                 console.log("Player not moving: dy =", dy);
             }
 
-        
             let speed = Math.sqrt(dx * dx + dy * dy);
             let angle = Math.atan2(dy, dx) + angleAdjustment;
             let minAngleCap = (Math.PI * 3) / 11;
             let maxAngleCap = (Math.PI * 8) / 11;
-            
+
             if (Math.abs(angle) > minAngleCap && Math.abs(angle) < maxAngleCap) {
                 angle = Math.atan2(dy, dx);
             }
@@ -383,13 +494,10 @@ function checkPaddleCollision(deltaTime)
         }
     }
 
-
-    if (dx > 0 && x + dx * deltaTime > canvas.width - paddleWidth - ballRadius) 
-    {
+    if (dx > 0 && x + dx * deltaTime > canvas.width - paddleWidth - ballRadius) {
         let futureY = y + dy * deltaTime;
 
-        if (futureY > paddleY2 && futureY < paddleY2 + paddleHeight) 
-        {
+        if (futureY > paddleY2 && futureY < paddleY2 + paddleHeight) {
             dx = -dx * difficultySettings[currentDifficulty].speedMultiplier;
             x = canvas.width - paddleWidth - ballRadius;
             ballMovingTowardsAI = false;
@@ -412,22 +520,42 @@ function draw(currentTime) {
 
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    for (let i = 0; i < previousPaddleY1.length; i++) {
-        drawPaddle(0, previousPaddleY1[i], '#00FFFF', '#00FFFF', 0.1 * (1 - i / maxAfterImages));
+    // Draw after images for paddles
+    if (playerRole === 'player1') {
+        for (let i = 0; i < previousPaddleY1.length; i++) {
+            drawPaddle(0, previousPaddleY1[i], '#00FFFF', '#00FFFF', 0.1 * (1 - i / maxAfterImages));
+        }
+        for (let i = 0; i < previousPaddleY2.length; i++) {
+            drawPaddle(canvas.width - paddleWidth, previousPaddleY2[i], '#ff00fb', '#ff00fb', 0.1 * (1 - i / maxAfterImages));
+        }
+    } else if (playerRole === 'player2') {
+        for (let i = 0; i < previousPaddleY2.length; i++) {
+            drawPaddle(0, previousPaddleY2[i], '#00FFFF', '#00FFFF', 0.1 * (1 - i / maxAfterImages));
+        }
+        for (let i = 0; i < previousPaddleY1.length; i++) {
+            drawPaddle(canvas.width - paddleWidth, previousPaddleY1[i], '#ff00fb', '#ff00fb', 0.1 * (1 - i / maxAfterImages));
+        }
     }
 
-    for (let i = 0; i < previousPaddleY2.length; i++) {
-        drawPaddle(canvas.width - paddleWidth, previousPaddleY2[i], '#ff00fb', '#ff00fb', 0.1 * (1 - i / maxAfterImages));
-    }
-
+    // Draw after images for the ball
     for (let i = 0; i < previousBallPositions.length; i++) {
         const pos = previousBallPositions[i];
-        drawBall(pos.x, pos.y, 0.1 * (1 - i / maxAfterImages));
+        const ballX = playerRole === 'player2' ? canvas.width - pos.x : pos.x;
+        drawBall(ballX, pos.y, 0.1 * (1 - i / maxAfterImages));
     }
 
-    drawPaddle(0, paddleY1, '#00FFFF', '#00FFFF');
-    drawPaddle(canvas.width - paddleWidth, paddleY2, '#ff00fb', '#ff00fb');
-    drawBall(x, y);
+    // Draw paddles based on player role
+    if (playerRole === 'player1') {
+        drawPaddle(0, paddleY1, '#00FFFF', '#00FFFF'); // Player 1 sees themselves as blue on the left
+        drawPaddle(canvas.width - paddleWidth, paddleY2, '#ff00fb', '#ff00fb'); // Player 1 sees Player 2 as purple on the right
+    } else if (playerRole === 'player2') {
+        drawPaddle(0, paddleY2, '#00FFFF', '#00FFFF'); // Player 2 sees themselves as blue on the left
+        drawPaddle(canvas.width - paddleWidth, paddleY1, '#ff00fb', '#ff00fb'); // Player 2 sees Player 1 as purple on the right
+    }
+
+    // Mirror ball position for Player 2
+    let ballX = playerRole === 'player2' ? canvas.width - x : x;
+    drawBall(ballX, y);
 
     let paddleMoved = false;
 
@@ -474,6 +602,9 @@ function draw(currentTime) {
             sendPaddlePosition(paddleY2);
         }
     }
+
+    // Update paddle position based on mouse movement
+    updatePaddlePosition(deltaTime);
 
     const maxSpeed = 700;
     dx = Math.min(Math.max(dx, -maxSpeed), maxSpeed);
