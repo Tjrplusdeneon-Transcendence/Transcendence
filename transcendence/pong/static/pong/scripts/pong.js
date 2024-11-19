@@ -91,20 +91,106 @@ let playerRole = null;
 //     const position = direction === 'up' ? paddleY1 - playerSpeed : paddleY1 + playerSpeed;
 //     socket.send(JSON.stringify({ type: 'move_paddle', player: playerRole, position }));
 // }
+canvas.addEventListener('mousemove', handleMouseMove);
+canvas.addEventListener('mouseleave', handleMouseLeave);
+
+let mouseY = null;
+let mouseInFrame = false;
+let mouseBlocked = false;
+let keyboardActive = false;
+let paddleDirection = 0; // 1 for up, -1 for down, 0 for no movement
+
+function handleMouseMove(event) {
+    const rect = canvas.getBoundingClientRect();
+    mouseY = event.clientY - rect.top;
+    mouseInFrame = true;
+    mouseBlocked = false;
+    keyboardActive = false; // Re-enable mouse interactions
+}
+
+function handleMouseLeave(event) {
+    mouseInFrame = false;
+}
+
+function updatePaddlePosition(deltaTime) {
+    if (mouseY !== null && !mouseBlocked && !keyboardActive) {
+        if (playerRole === 'player1') {
+            if (mouseY < paddleY1 + paddleHeight / 2) {
+                paddleY1 -= playerSpeed * deltaTime;
+                paddleDirection = 1; // Moving up
+            } else if (mouseY > paddleY1 + paddleHeight / 2) {
+                paddleY1 += playerSpeed * deltaTime;
+                paddleDirection = -1; // Moving down
+            } else {
+                paddleDirection = 0; // No movement
+            }
+
+            if (paddleY1 < 0) {
+                paddleY1 = 0;
+            }
+            if (paddleY1 > canvas.height - paddleHeight) {
+                paddleY1 = canvas.height - paddleHeight;
+            }
+
+            if (Math.abs(mouseY - (paddleY1 + paddleHeight / 2)) < 1) {
+                mouseBlocked = true;
+            }
+
+            console.log(`Player 1 sending paddle position: ${paddleY1}`);
+            sendPaddlePosition(paddleY1);
+        } else if (playerRole === 'player2') {
+            if (mouseY < paddleY2 + paddleHeight / 2) {
+                paddleY2 -= playerSpeed * deltaTime;
+                paddleDirection = 1; // Moving up
+            } else if (mouseY > paddleY2 + paddleHeight / 2) {
+                paddleY2 += playerSpeed * deltaTime;
+                paddleDirection = -1; // Moving down
+            } else {
+                paddleDirection = 0; // No movement
+            }
+
+            if (paddleY2 < 0) {
+                paddleY2 = 0;
+            }
+            if (paddleY2 > canvas.height - paddleHeight) {
+                paddleY2 = canvas.height - paddleHeight;
+            }
+
+            if (Math.abs(mouseY - (paddleY2 + paddleHeight / 2)) < 1) {
+                mouseBlocked = true;
+            }
+
+            console.log(`Player 2 sending paddle position: ${paddleY2}`);
+            sendPaddlePosition(paddleY2);
+        }
+    }
+}
 
 document.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowUp') {
         upPressed = true;
+        mouseBlocked = false; // Unblock mouse movement
+        keyboardActive = true; // Disable mouse interactions
+        paddleDirection = 1; // Moving up
     } else if (event.key === 'ArrowDown') {
         downPressed = true;
+        mouseBlocked = false; // Unblock mouse movement
+        keyboardActive = true; // Disable mouse interactions
+        paddleDirection = -1; // Moving down
     }
 });
 
 document.addEventListener('keyup', (event) => {
     if (event.key === 'ArrowUp') {
         upPressed = false;
+        if (!downPressed) {
+            paddleDirection = 0; // No movement
+        }
     } else if (event.key === 'ArrowDown') {
         downPressed = false;
+        if (!upPressed) {
+            paddleDirection = 0; // No movement
+        }
     }
 });
 
@@ -372,33 +458,27 @@ function moveAI(deltaTime)
 const angleAdjustmentUp = 0.2;
 const angleAdjustmentDown = -0.2;
 
-function checkPaddleCollision(deltaTime) 
-{
-
-    if (dx < 0 && x + dx * deltaTime < paddleWidth + ballRadius) 
-    {
+function checkPaddleCollision(deltaTime) {
+    if (dx < 0 && x + dx * deltaTime < paddleWidth + ballRadius) {
         let futureY = y + dy * deltaTime;
 
-        if (futureY > paddleY1 && futureY < paddleY1 + paddleHeight) 
-        {
-        
+        if (futureY > paddleY1 && futureY < paddleY1 + paddleHeight) {
             let angleAdjustment = 0;
-            if (upPressed) {
+            if (paddleDirection === 1) {
                 angleAdjustment = angleAdjustmentUp;
                 console.log("Player moving up: dy =", dy);
-            } else if (downPressed) {
+            } else if (paddleDirection === -1) {
                 angleAdjustment = angleAdjustmentDown;
                 console.log("Player moving down: dy =", dy);
             } else {
                 console.log("Player not moving: dy =", dy);
             }
 
-        
             let speed = Math.sqrt(dx * dx + dy * dy);
             let angle = Math.atan2(dy, dx) + angleAdjustment;
             let minAngleCap = (Math.PI * 3) / 11;
             let maxAngleCap = (Math.PI * 8) / 11;
-            
+
             if (Math.abs(angle) > minAngleCap && Math.abs(angle) < maxAngleCap) {
                 angle = Math.atan2(dy, dx);
             }
@@ -414,13 +494,10 @@ function checkPaddleCollision(deltaTime)
         }
     }
 
-
-    if (dx > 0 && x + dx * deltaTime > canvas.width - paddleWidth - ballRadius) 
-    {
+    if (dx > 0 && x + dx * deltaTime > canvas.width - paddleWidth - ballRadius) {
         let futureY = y + dy * deltaTime;
 
-        if (futureY > paddleY2 && futureY < paddleY2 + paddleHeight) 
-        {
+        if (futureY > paddleY2 && futureY < paddleY2 + paddleHeight) {
             dx = -dx * difficultySettings[currentDifficulty].speedMultiplier;
             x = canvas.width - paddleWidth - ballRadius;
             ballMovingTowardsAI = false;
@@ -525,6 +602,9 @@ function draw(currentTime) {
             sendPaddlePosition(paddleY2);
         }
     }
+
+    // Update paddle position based on mouse movement
+    updatePaddlePosition(deltaTime);
 
     const maxSpeed = 700;
     dx = Math.min(Math.max(dx, -maxSpeed), maxSpeed);
