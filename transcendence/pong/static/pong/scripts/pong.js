@@ -1015,6 +1015,9 @@ document.getElementById('start-solo-game-btn').addEventListener('click', functio
 });
 
 let socket;
+let bothPlayersReady = false;
+let playerReady = false;
+let startButtonClick = false;
 
 document.getElementById('start-multiplayer-btn').addEventListener('click', function() {
     document.getElementById('difficulty-menu').style.display = 'none';
@@ -1026,16 +1029,25 @@ document.getElementById('start-multiplayer-btn').addEventListener('click', funct
 });
 
 document.getElementById('go-back-btn').addEventListener('click', function() {
-    document.getElementById('multiplayer-menu').style.display = 'none';
-    document.getElementById('difficulty-menu').style.display = 'block';
-    document.getElementById('pongCanvas').style.display = 'none'; // Hide the game canvas
-    document.getElementById('start-solo-game-btn').style.display = 'inline-block';
-    document.getElementById('start-multiplayer-btn').style.display = 'inline-block';
+    if (document.getElementById('searching-menu').style.display === 'flex') {
+        document.getElementById('searching-menu').style.display = 'none';
+        document.getElementById('multiplayer-menu').style.display = 'flex';
+    } else {
+        document.getElementById('multiplayer-menu').style.display = 'none';
+        document.getElementById('difficulty-menu').style.display = 'block';
+        document.getElementById('pongCanvas').style.display = 'none'; // Hide the game canvas
+        document.getElementById('start-solo-game-btn').style.display = 'inline-block';
+        document.getElementById('start-multiplayer-btn').style.display = 'inline-block';
+    }
     document.getElementById('go-back-btn').style.display = 'none';
 });
 
 document.getElementById('online-btn').addEventListener('click', function() {
     isMatchmaking = true;
+
+    document.getElementById('multiplayer-menu').style.display = 'none';
+    document.getElementById('searching-menu').style.display = 'flex';
+    document.getElementById('go-back-btn').style.display = 'inline-block';
 
     const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
     const host = window.location.host; // Includes hostname and port (if present)
@@ -1055,9 +1067,22 @@ document.getElementById('online-btn').addEventListener('click', function() {
         const data = JSON.parse(event.data);
         if (data.type === 'match_found') {
             playerRole = data.player;
+            document.getElementById('searching-btn').textContent = 'Start Match';
+            document.getElementById('searching-btn').disabled = false;
+            document.getElementById('searching-btn').classList.add('active');
+        } else if (data.type === 'player_ready') {
+            if (data.player !== playerRole) {
+                bothPlayersReady = true;
+                document.getElementById('searching-btn').textContent = 'Start Match';
+                document.getElementById('searching-btn').disabled = false;
+                document.getElementById('searching-btn').classList.add('active');
+                if (startButtonClick) {
+                    socket.send(JSON.stringify({ type: 'start_game' }));
+                }
+            }
         } else if (data.type === 'start_game') {
-            // Hide the multiplayer menu
-            document.getElementById('multiplayer-menu').style.display = 'none';
+            // Hide the searching menu
+            document.getElementById('searching-menu').style.display = 'none';
             initializeGameState(data.initial_state);
             startGame();
         } else if (data.type === 'game_update') {
@@ -1086,6 +1111,23 @@ document.getElementById('online-btn').addEventListener('click', function() {
     socket.onerror = function(error) {
         console.error('WebSocket error:', error);
     };
+});
+
+let clicks = 0;
+
+document.getElementById('searching-btn').addEventListener('click', function() {
+    clicks++; 
+    if (this.textContent === 'Start Match' && clicks >= 2) {
+        this.textContent = 'Waiting for opponent...';
+        this.disabled = true;
+        playerReady = true;
+        startButtonClick = true;
+        socket.send(JSON.stringify({ type: 'player_ready', player: playerRole }));
+        if (bothPlayersReady) {
+            socket.send(JSON.stringify({ type: 'start_game' }));
+        }
+        clicks = 0;
+    }
 });
 
 function initializeGameState(initialState) {
