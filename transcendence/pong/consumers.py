@@ -63,6 +63,12 @@ class PongConsumer(AsyncWebsocketConsumer):
             PongConsumer.players_waiting.remove(self)
         else:
             await self.channel_layer.group_discard(self.match_id, self.channel_name)
+            await self.channel_layer.group_send(
+                self.match_id,
+                {
+                    'type': 'opponent_left'
+                }
+            )
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -101,8 +107,21 @@ class PongConsumer(AsyncWebsocketConsumer):
                     'initial_state': self.generate_initial_game_state()
                 }
             )
-            # Reset the players_waiting list after the game starts
-            PongConsumer.players_waiting = []
+        elif action == 'rematch':
+            await self.channel_layer.group_send(
+                self.match_id,
+                {
+                    'type': 'rematch',
+                    'player': data['player']
+                }
+            )
+        elif action == 'quit':
+            await self.channel_layer.group_send(
+                self.match_id,
+                {
+                    'type': 'opponent_left'
+                }
+            )
 
     async def paddle_moved(self, event):
         await self.send(text_data=json.dumps({
@@ -128,6 +147,18 @@ class PongConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type': 'start_game',
             'initial_state': event['initial_state']
+        }))
+
+    async def rematch(self, event):
+        player = event['player']
+        await self.send(text_data=json.dumps({
+            'type': 'rematch',
+            'player': player
+        }))
+
+    async def opponent_left(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'opponent_left'
         }))
 
     def generate_initial_game_state(self):

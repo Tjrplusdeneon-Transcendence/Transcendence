@@ -222,6 +222,11 @@ function drawBall(posX = x, posY = y, opacity = 1)
 
 function gameOverMessage() {
     // Clear any previous game over message
+    // if in online match, activate rematch and quit buttons
+    if (isMatchmaking) {
+        document.getElementById('rematch-btn').disabled = false;
+        document.getElementById('quit-btn').disabled = false;
+    }
     context.clearRect(canvas.width / 2 - 250, canvas.height / 2 - 100, 500, 150);
     isRestarting = false;
 
@@ -1017,6 +1022,7 @@ document.getElementById('start-solo-game-btn').addEventListener('click', functio
 let socket;
 let bothPlayersReady = false;
 let playerReady = false;
+let rematchRequested = false;
 
 document.getElementById('start-multiplayer-btn').addEventListener('click', function() {
     document.getElementById('difficulty-menu').style.display = 'none';
@@ -1027,20 +1033,23 @@ document.getElementById('start-multiplayer-btn').addEventListener('click', funct
     document.getElementById('go-back-btn').style.display = 'inline-block';
 });
 
+
 document.getElementById('go-back-btn').addEventListener('click', function() {
     if (document.getElementById('searching-menu').style.display === 'flex') {
         document.getElementById('searching-menu').style.display = 'none';
         document.getElementById('multiplayer-menu').style.display = 'flex';
+        socket.send(JSON.stringify({ type: 'quit' })); // Notify the opponent that the player has left
         socket.close(); // Close the socket connection when going back
         resetMatchmakingState(); // Reset matchmaking state
+        document.getElementById('go-back-btn').style.display = 'inline-block'; // Ensure go-back button is visible
     } else {
         document.getElementById('multiplayer-menu').style.display = 'none';
         document.getElementById('difficulty-menu').style.display = 'block';
         document.getElementById('pongCanvas').style.display = 'none'; // Hide the game canvas
         document.getElementById('start-solo-game-btn').style.display = 'inline-block';
         document.getElementById('start-multiplayer-btn').style.display = 'inline-block';
+        document.getElementById('go-back-btn').style.display = 'none'; // Hide go-back button when returning to main menu
     }
-    document.getElementById('go-back-btn').style.display = 'none';
 });
 
 document.getElementById('online-btn').addEventListener('click', function() {
@@ -1079,11 +1088,33 @@ document.getElementById('online-btn').addEventListener('click', function() {
                 document.getElementById('searching-btn').classList.add('active');
             }
         } else if (data.type === 'start_game') {
-            // Hide the searching menu
+            // Hide the searching menu and go-back button, show rematch and quit buttons
             document.getElementById('searching-menu').style.display = 'none';
+            document.getElementById('go-back-btn').style.display = 'none';
+            document.getElementById('rematch-btn').style.display = 'inline-block';
+            document.getElementById('quit-btn').style.display = 'inline-block';
             initializeGameState(data.initial_state);
             startGame();
             resetMatchmakingState(); // Reset matchmaking state after the game starts
+            document.getElementById('rematch-btn').disabled = true;
+            document.getElementById('quit-btn').disabled = true;
+        } else if (data.type === 'opponent_left') {
+            document.getElementById('searching-btn').textContent = 'Opponent has left the match';
+            document.getElementById('searching-btn').disabled = true;
+            document.getElementById('searching-btn').classList.remove('active');
+            document.getElementById('rematch-btn').textContent = 'Opponent has left the match';
+            document.getElementById('rematch-btn').disabled = true;
+            document.getElementById('quit-btn').disabled = false;
+        } else if (data.type === 'rematch') {
+            if (data.player !== playerRole) {
+                bothPlayersReady = true;
+                document.getElementById('rematch-btn').textContent = 'Opponent wants a rematch';
+                document.getElementById('rematch-btn').disabled = false;
+                document.getElementById('quit-btn').disabled = false;
+            }
+            if (rematchRequested && bothPlayersReady) {
+                socket.send(JSON.stringify({ type: 'start_game' }));
+            }
         } else if (data.type === 'game_update') {
             // Update game state with received data
             x = data.state.ball_position[0];
@@ -1100,6 +1131,9 @@ document.getElementById('online-btn').addEventListener('click', function() {
                 console.log(`Player 2 received paddle position: ${data.position}`);
                 paddleY2 = data.position;
             }
+        } else if (data.type === 'game_over') {
+            // Enable rematch and quit buttons at the end of the match
+            endGame();
         }
     };
 
@@ -1124,6 +1158,23 @@ document.getElementById('searching-btn').addEventListener('click', function() {
     }
 });
 
+document.getElementById('rematch-btn').addEventListener('click', function() {
+    this.textContent = 'Waiting for opponent...';
+    this.disabled = true;
+    rematchRequested = true;
+    socket.send(JSON.stringify({ type: 'rematch', player: playerRole }));
+});
+
+document.getElementById('quit-btn').addEventListener('click', function() {
+    socket.send(JSON.stringify({ type: 'quit' }));
+    resetMatchmakingState();
+    document.getElementById('multiplayer-menu').style.display = 'flex';
+    document.getElementById('rematch-btn').style.display = 'none';
+    document.getElementById('quit-btn').style.display = 'none';
+    document.getElementById('pongCanvas').style.display = 'none'; // Hide the game canvas
+    document.getElementById('go-back-btn').style.display = 'inline-block'; // Ensure go-back button is visible
+});
+
 function initializeGameState(initialState) {
     x = initialState.ball_position[0];
     y = initialState.ball_position[1];
@@ -1138,9 +1189,19 @@ function initializeGameState(initialState) {
 function resetMatchmakingState() {
     bothPlayersReady = false;
     playerReady = false;
+    rematchRequested = false;
     document.getElementById('searching-btn').textContent = 'Searching for opponent...';
     document.getElementById('searching-btn').disabled = true;
     document.getElementById('searching-btn').classList.remove('active');
+    document.getElementById('rematch-btn').textContent = 'Rematch';
+    document.getElementById('rematch-btn').disabled = true;
+    document.getElementById('quit-btn').disabled = true;
+}
+
+function endGame() {
+    // Enable rematch and quit buttons at the end of the match
+    document.getElementById('rematch-btn').disabled = false;
+    document.getElementById('quit-btn').disabled = false;
 }
 
 function sendGameState() {
