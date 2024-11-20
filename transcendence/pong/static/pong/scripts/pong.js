@@ -265,6 +265,7 @@ function gameOverMessage() {
                 secondaryColor = '#00FFFF';
             }
         }
+        document.getElementById('return-menu-btn').style.display = 'inline-block';
     }
 
     let mainFontSize = 1;
@@ -511,51 +512,57 @@ let previousBallPositions = [];
 
 const maxAfterImages = 20;
 
-
 function draw(currentTime) {
     if (!lastTime) lastTime = currentTime;
     
     let deltaTime = Math.max((currentTime - lastTime) / 1000, 0.001);
     lastTime = currentTime;
 
-    context.clearRect(0, 0, canvas.width, canvas.height);
+    // Vérifier le mode obscurité
+    toggleDarknessMode(currentTime);
 
-    // Draw after images for paddles
-    if (playerRole === 'player1') {
-        for (let i = 0; i < previousPaddleY1.length; i++) {
-            drawPaddle(0, previousPaddleY1[i], '#00FFFF', '#00FFFF', 0.1 * (1 - i / maxAfterImages));
+    // Si le mode obscurité est actif et que les éléments sont invisibles, afficher un écran noir
+    if (darknessModeActive && !elementsVisible) {
+        context.fillStyle = 'black';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+    } else {
+        // Afficher les éléments normalement
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (playerRole === 'player1') {
+            for (let i = 0; i < previousPaddleY1.length; i++) {
+                drawPaddle(0, previousPaddleY1[i], '#00FFFF', '#00FFFF', 0.1 * (1 - i / maxAfterImages));
+            }
+            for (let i = 0; i < previousPaddleY2.length; i++) {
+                drawPaddle(canvas.width - paddleWidth, previousPaddleY2[i], '#ff00fb', '#ff00fb', 0.1 * (1 - i / maxAfterImages));
+            }
+        } else if (playerRole === 'player2') {
+            for (let i = 0; i < previousPaddleY2.length; i++) {
+                drawPaddle(0, previousPaddleY2[i], '#00FFFF', '#00FFFF', 0.1 * (1 - i / maxAfterImages));
+            }
+            for (let i = 0; i < previousPaddleY1.length; i++) {
+                drawPaddle(canvas.width - paddleWidth, previousPaddleY1[i], '#ff00fb', '#ff00fb', 0.1 * (1 - i / maxAfterImages));
+            }
         }
-        for (let i = 0; i < previousPaddleY2.length; i++) {
-            drawPaddle(canvas.width - paddleWidth, previousPaddleY2[i], '#ff00fb', '#ff00fb', 0.1 * (1 - i / maxAfterImages));
+    
+        // Draw after images for the ball
+        for (let i = 0; i < previousBallPositions.length; i++) {
+            const pos = previousBallPositions[i];
+            const ballX = playerRole === 'player2' ? canvas.width - pos.x : pos.x;
+            drawBall(ballX, pos.y, 0.1 * (1 - i / maxAfterImages));
         }
-    } else if (playerRole === 'player2') {
-        for (let i = 0; i < previousPaddleY2.length; i++) {
-            drawPaddle(0, previousPaddleY2[i], '#00FFFF', '#00FFFF', 0.1 * (1 - i / maxAfterImages));
+    
+        // Draw paddles based on player role
+        if (playerRole === 'player1') {
+            drawPaddle(0, paddleY1, '#00FFFF', '#00FFFF'); // Player 1 sees themselves as blue on the left
+            drawPaddle(canvas.width - paddleWidth, paddleY2, '#ff00fb', '#ff00fb'); // Player 1 sees Player 2 as purple on the right
+        } else if (playerRole === 'player2') {
+            drawPaddle(0, paddleY2, '#00FFFF', '#00FFFF'); // Player 2 sees themselves as blue on the left
+            drawPaddle(canvas.width - paddleWidth, paddleY1, '#ff00fb', '#ff00fb'); // Player 2 sees Player 1 as purple on the right
         }
-        for (let i = 0; i < previousPaddleY1.length; i++) {
-            drawPaddle(canvas.width - paddleWidth, previousPaddleY1[i], '#ff00fb', '#ff00fb', 0.1 * (1 - i / maxAfterImages));
-        }
+        let ballX = playerRole === 'player2' ? canvas.width - x : x;
+        drawBall(ballX, y);
     }
-
-    // Draw after images for the ball
-    for (let i = 0; i < previousBallPositions.length; i++) {
-        const pos = previousBallPositions[i];
-        const ballX = playerRole === 'player2' ? canvas.width - pos.x : pos.x;
-        drawBall(ballX, pos.y, 0.1 * (1 - i / maxAfterImages));
-    }
-
-    // Draw paddles based on player role
-    if (playerRole === 'player1') {
-        drawPaddle(0, paddleY1, '#00FFFF', '#00FFFF'); // Player 1 sees themselves as blue on the left
-        drawPaddle(canvas.width - paddleWidth, paddleY2, '#ff00fb', '#ff00fb'); // Player 1 sees Player 2 as purple on the right
-    } else if (playerRole === 'player2') {
-        drawPaddle(0, paddleY2, '#00FFFF', '#00FFFF'); // Player 2 sees themselves as blue on the left
-        drawPaddle(canvas.width - paddleWidth, paddleY1, '#ff00fb', '#ff00fb'); // Player 2 sees Player 1 as purple on the right
-    }
-
-    // Mirror ball position for Player 2
-    let ballX = playerRole === 'player2' ? canvas.width - x : x;
-    drawBall(ballX, y);
 
     let paddleMoved = false;
 
@@ -802,6 +809,13 @@ function drawInitialGameState() {
 }
 
 function startGame() {
+    // Récupérer les options sélectionnées
+    const selectedDifficulty = document.getElementById('difficultySelect').value;
+    currentDifficulty = selectedDifficulty;
+    
+    const paddleSizeInput = document.getElementById('paddle-size').value;
+    paddleHeight = parseInt(paddleSizeInput, 10);
+    
     // Reinitialize game state
     const restartButton = isMatchmaking ? document.getElementById('start-multiplayer-btn') : document.getElementById('start-solo-game-btn');
     
@@ -895,7 +909,27 @@ function startGame() {
 
 
 function restartPong() {
-    startGame();
+        // Garder les paramètres actuels de taille et de difficulté
+        const selectedDifficulty = currentDifficulty;
+        const paddleSize = paddleHeight;
+    
+        // Réinitialiser l'état du jeu
+        firstHit = true;
+        aiHits = 0;
+        paddleY1 = (canvas.height - paddleHeight) / 2;
+        paddleY2 = (canvas.height - paddleHeight) / 2;
+        x = canvas.width / 2;
+        y = canvas.height / 2;
+        dx = difficultySettings[selectedDifficulty].dx;
+        dy = difficultySettings[selectedDifficulty].dy;
+    
+        // Réinitialiser l'affichage
+        gameRunning = false;
+        winner = '';
+        aiTargetY = canvas.height / 2 - paddleHeight / 2;
+    
+        // Démarrer directement la partie avec les paramètres actuels
+        startGame();
 }
 
 // document.getElementById('start-solo-game-btn').addEventListener('click', function() {
@@ -1164,5 +1198,93 @@ function sendPaddlePosition(position) {
             player: playerRole,
             position: position
         }));
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const paddleSizeInput = document.getElementById("paddle-size");
+    const paddleSizeDisplay = document.getElementById("paddle-size-display");
+
+    paddleSizeInput.addEventListener("input", function () {
+        paddleHeight = parseInt(paddleSizeInput.value, 10); // Met à jour la hauteur globale du paddle
+        paddleSizeDisplay.textContent = paddleHeight; // Met à jour l'affichage
+    });
+});
+
+function showMenu() {
+    document.getElementById('difficulty-menu').style.display = 'block';
+    document.getElementById('pongCanvas').style.display = 'none';
+    document.getElementById('start-solo-game-btn').textContent = 'Start Game';
+}
+
+function hideMenu() {
+    document.getElementById('difficulty-menu').style.display = 'none';
+    document.getElementById('pongCanvas').style.display = 'block';
+}
+
+
+document.getElementById('start-solo-game-btn').addEventListener('click', function () {
+    if (this.textContent === 'Start Game') {
+        hideMenu(); // Masquer le menu pour lancer la partie
+        startGame();
+    } else if (this.textContent === 'Restart Game') {
+        restartPong();
+    }
+});
+
+document.getElementById('return-menu-btn').addEventListener('click', function () {
+    showMenu();
+    document.getElementById('start-solo-game-btn').textContent = 'Start Game';
+});
+
+let darknessModeActive = false;
+let darknessModeTimer = 0;
+let darknessDuration = 12000; // Durée totale du mode obscurité (en ms)
+let visibilityToggleInterval = 500; // Temps avant de changer entre visible/invisible (en ms)
+let elementsVisible = true; // Indique si les paddles et la balle sont visibles
+let lastVisibilityToggleTime = 0; // Temps du dernier basculement
+
+// Référence à la case à cocher
+const darknessToggleCheckbox = document.getElementById('darknessToggle');
+
+// Variable pour suivre si le mode obscurité est activé
+let darknessModeEnabled = false;
+
+// Mettre à jour l'état du mode obscurité lorsque la case est cochée/décochée
+darknessToggleCheckbox.addEventListener('change', () => {
+    darknessModeEnabled = darknessToggleCheckbox.checked;
+});
+
+function toggleDarknessMode(currentTime) {
+    // Vérifier si la fonctionnalité est activée
+    if (!darknessModeEnabled) {
+        darknessModeActive = false;
+        return;
+    }
+
+    if (!darknessModeActive && Math.random() < 0.0006) 
+    { 
+        // Probabilité faible2 de déclencher
+        darknessModeActive = true;
+        darknessModeTimer = currentTime;
+        elementsVisible = true; // Commencer avec les éléments visibles
+        lastVisibilityToggleTime = currentTime;
+    }
+
+    if (darknessModeActive) {
+        const elapsed = currentTime - darknessModeTimer;
+
+        // Si la durée totale du mode obscurité est écoulée, désactiver
+        if (elapsed >= darknessDuration) {
+            darknessModeActive = false;
+            context.clearRect(0, 0, canvas.width, canvas.height); // Nettoyer la scène
+            return;
+        }
+
+        // Alterner entre visible et invisible en fonction de l'intervalle
+        if (currentTime - lastVisibilityToggleTime >= visibilityToggleInterval) {
+            elementsVisible = !elementsVisible; // Bascule l'état
+            lastVisibilityToggleTime = currentTime;
+        }
     }
 }

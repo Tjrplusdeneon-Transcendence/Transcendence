@@ -135,7 +135,20 @@
                         <option value="medium" selected>Medium</option>
                         <option value="hard">Hard</option>
                     </select>
+                    <!-- Game Customs -->
+                    <div id="gamecustom-blackout">
+                        <label>
+                            <input type="checkbox" id="darknessToggle"> Enable Darkness Mode
+                        </label>
+                    </div>
+                    <!-- <canvas id="pongCanvas" width="640" height="480" style="background-color: #000;"></canvas> -->
+                    <!-- Paddle size selector -->
+                    </select>
+                    <label for="paddle-size">Paddle Size:</label>
+                    <input type="range" id="paddle-size" min="50" max="200" value="100">
+                    <span id="paddle-size-display">100</span>
                 </div>
+
                 <canvas id="pongCanvas" width="640" height="480" style="background-color: #000;"></canvas>
                 <!-- New multiplayer menu -->
                 <div id="multiplayer-menu" style="display: none;">
@@ -151,7 +164,8 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="start-solo-game-btn">Solo Game</button>
                 <button type="button" class="btn btn-primary" id="start-multiplayer-btn">Multiplayer</button>
-                <button type="button" class="btn btn-primary" id="go-back-btn" style="display: none;">Go Back</button>
+                <button type="button" class="btn btn-primary" id="go-back-btn" >Go Back</button>
+                <button type="button" class="btn btn-primary" id="return-menu-btn">Return to Menu</button>
             </div>
         </div>
     </div>
