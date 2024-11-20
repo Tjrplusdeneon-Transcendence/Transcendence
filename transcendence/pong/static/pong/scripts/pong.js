@@ -1017,7 +1017,6 @@ document.getElementById('start-solo-game-btn').addEventListener('click', functio
 let socket;
 let bothPlayersReady = false;
 let playerReady = false;
-let startButtonClick = false;
 
 document.getElementById('start-multiplayer-btn').addEventListener('click', function() {
     document.getElementById('difficulty-menu').style.display = 'none';
@@ -1032,6 +1031,8 @@ document.getElementById('go-back-btn').addEventListener('click', function() {
     if (document.getElementById('searching-menu').style.display === 'flex') {
         document.getElementById('searching-menu').style.display = 'none';
         document.getElementById('multiplayer-menu').style.display = 'flex';
+        socket.close(); // Close the socket connection when going back
+        resetMatchmakingState(); // Reset matchmaking state
     } else {
         document.getElementById('multiplayer-menu').style.display = 'none';
         document.getElementById('difficulty-menu').style.display = 'block';
@@ -1076,15 +1077,13 @@ document.getElementById('online-btn').addEventListener('click', function() {
                 document.getElementById('searching-btn').textContent = 'Start Match';
                 document.getElementById('searching-btn').disabled = false;
                 document.getElementById('searching-btn').classList.add('active');
-                if (startButtonClick) {
-                    socket.send(JSON.stringify({ type: 'start_game' }));
-                }
             }
         } else if (data.type === 'start_game') {
             // Hide the searching menu
             document.getElementById('searching-menu').style.display = 'none';
             initializeGameState(data.initial_state);
             startGame();
+            resetMatchmakingState(); // Reset matchmaking state after the game starts
         } else if (data.type === 'game_update') {
             // Update game state with received data
             x = data.state.ball_position[0];
@@ -1113,20 +1112,15 @@ document.getElementById('online-btn').addEventListener('click', function() {
     };
 });
 
-let clicks = 0;
-
 document.getElementById('searching-btn').addEventListener('click', function() {
-    clicks++; 
-    if (this.textContent === 'Start Match' && clicks >= 2) {
+    if (this.textContent === 'Start Match') {
         this.textContent = 'Waiting for opponent...';
         this.disabled = true;
         playerReady = true;
-        startButtonClick = true;
         socket.send(JSON.stringify({ type: 'player_ready', player: playerRole }));
         if (bothPlayersReady) {
             socket.send(JSON.stringify({ type: 'start_game' }));
         }
-        clicks = 0;
     }
 });
 
@@ -1139,6 +1133,14 @@ function initializeGameState(initialState) {
     dy = initialState.dy;
     playerSpeed = initialState.player_speed;
     aiSpeed = initialState.ai_speed;
+}
+
+function resetMatchmakingState() {
+    bothPlayersReady = false;
+    playerReady = false;
+    document.getElementById('searching-btn').textContent = 'Searching for opponent...';
+    document.getElementById('searching-btn').disabled = true;
+    document.getElementById('searching-btn').classList.remove('active');
 }
 
 function sendGameState() {

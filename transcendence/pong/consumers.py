@@ -40,7 +40,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         await self.accept()
-        PongConsumer.players_waiting.append(self)
+        if self not in PongConsumer.players_waiting:
+            PongConsumer.players_waiting.append(self)
 
         if len(PongConsumer.players_waiting) >= 2:
             player1 = PongConsumer.players_waiting.pop(0)
@@ -56,18 +57,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 
             player1.match_id = match_id
             player2.match_id = match_id
-
-            # Generate initial game state
-            initial_state = self.generate_initial_game_state()
-
-            # Notify both players to start the game with the initial state
-            await self.channel_layer.group_send(
-                match_id,
-                {
-                    'type': 'start_game',
-                    'initial_state': initial_state
-                }
-            )
 
     async def disconnect(self, close_code):
         if self in PongConsumer.players_waiting:
@@ -96,6 +85,24 @@ class PongConsumer(AsyncWebsocketConsumer):
                     'state': data['state']
                 }
             )
+        elif action == 'player_ready':
+            await self.channel_layer.group_send(
+                self.match_id,
+                {
+                    'type': 'player_ready',
+                    'player': data['player']
+                }
+            )
+        elif action == 'start_game':
+            await self.channel_layer.group_send(
+                self.match_id,
+                {
+                    'type': 'start_game',
+                    'initial_state': self.generate_initial_game_state()
+                }
+            )
+            # Reset the players_waiting list after the game starts
+            PongConsumer.players_waiting = []
 
     async def paddle_moved(self, event):
         await self.send(text_data=json.dumps({
@@ -108,6 +115,13 @@ class PongConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type': 'game_update',
             'state': event['state']
+        }))
+
+    async def player_ready(self, event):
+        player = event['player']
+        await self.send(text_data=json.dumps({
+            'type': 'player_ready',
+            'player': player
         }))
 
     async def start_game(self, event):
