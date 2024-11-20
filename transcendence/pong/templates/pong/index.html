@@ -137,10 +137,17 @@
                     </select>
                 </div>
                 <canvas id="pongCanvas" width="640" height="480" style="background-color: #000;"></canvas>
+                <!-- New multiplayer menu -->
+                <div id="multiplayer-menu" style="display: none;">
+                    <button id="local-btn" class="btn btn-primary">Local</button>
+                    <button id="tournament-btn" class="btn btn-primary">Tournament</button>
+                    <button id="online-btn" class="btn btn-primary">Online</button>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="start-solo-game-btn">Solo Game</button>
-                <button type="button" class="btn btn-primary" id="start-matchmaking-btn">Matchmaking</button>
+                <button type="button" class="btn btn-primary" id="start-multiplayer-btn">Multiplayer</button>
+                <button type="button" class="btn btn-primary" id="go-back-btn" style="display: none;">Go Back</button>
             </div>
         </div>
     </div>

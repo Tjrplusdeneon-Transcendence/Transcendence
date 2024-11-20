@@ -803,7 +803,7 @@ function drawInitialGameState() {
 
 function startGame() {
     // Reinitialize game state
-    const restartButton = isMatchmaking ? document.getElementById('start-matchmaking-btn') : document.getElementById('start-solo-game-btn');
+    const restartButton = isMatchmaking ? document.getElementById('start-multiplayer-btn') : document.getElementById('start-solo-game-btn');
     
     if (restartButton) {
         restartButton.disabled = false;
@@ -830,6 +830,9 @@ function startGame() {
         // Directly start the game without showing the restart button or difficulty menu
         document.getElementById('difficulty-menu').style.display = 'none';
         document.getElementById('pongCanvas').style.display = 'block';
+
+        // Hide the multiplayer menu
+        document.getElementById('multiplayer-menu').style.display = 'none';
 
         if (animationFrameId) {
             cancelAnimationFrame(animationFrameId);
@@ -886,9 +889,9 @@ function startGame() {
 
         showReadyAnimation(() => {
             requestAnimationFrame(draw);
-            });
-        };
- }
+        });
+    }
+}
 
 
 function restartPong() {
@@ -1013,7 +1016,25 @@ document.getElementById('start-solo-game-btn').addEventListener('click', functio
 
 let socket;
 
-document.getElementById('start-matchmaking-btn').addEventListener('click', function() {
+document.getElementById('start-multiplayer-btn').addEventListener('click', function() {
+    document.getElementById('difficulty-menu').style.display = 'none';
+    document.getElementById('pongCanvas').style.display = 'none';
+    document.getElementById('multiplayer-menu').style.display = 'flex';
+    document.getElementById('start-solo-game-btn').style.display = 'none';
+    document.getElementById('start-multiplayer-btn').style.display = 'none';
+    document.getElementById('go-back-btn').style.display = 'inline-block';
+});
+
+document.getElementById('go-back-btn').addEventListener('click', function() {
+    document.getElementById('multiplayer-menu').style.display = 'none';
+    document.getElementById('difficulty-menu').style.display = 'block';
+    document.getElementById('pongCanvas').style.display = 'none'; // Hide the game canvas
+    document.getElementById('start-solo-game-btn').style.display = 'inline-block';
+    document.getElementById('start-multiplayer-btn').style.display = 'inline-block';
+    document.getElementById('go-back-btn').style.display = 'none';
+});
+
+document.getElementById('online-btn').addEventListener('click', function() {
     isMatchmaking = true;
 
     const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
@@ -1035,6 +1056,8 @@ document.getElementById('start-matchmaking-btn').addEventListener('click', funct
         if (data.type === 'match_found') {
             playerRole = data.player;
         } else if (data.type === 'start_game') {
+            // Hide the multiplayer menu
+            document.getElementById('multiplayer-menu').style.display = 'none';
             initializeGameState(data.initial_state);
             startGame();
         } else if (data.type === 'game_update') {
