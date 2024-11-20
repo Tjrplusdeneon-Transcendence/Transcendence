@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <title>DOOM</title>
+    <style type="text/css">
+      .dosbox-container { width: 640px; height: 400px; margin: auto; border: 1px solid black; }
+      .dosbox-container > .dosbox-overlay { background: url(./DOOM.png); }
+    </style>
+  </head>
+  <body>
+    <h1 style="text-align: center;">DOOM Launcher</h1>
+    <div id="dosbox" class="dosbox-container"></div>
+    <br />
+    <button onclick="dosbox.requestFullScreen();">Make fullscreen</button>
+
+    <script type="text/javascript" src="./js-dos-api.js"></script>
+    <script type="text/javascript">
+      var dosbox = new Dosbox({
+        id: "dosbox",
+        onload: function (dosbox) {
+          dosbox.run("./DOOM-@evilution.zip", "./");
+        }
+      });
+    </script>
+  </body>
+</html>

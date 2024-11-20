@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOOM Game</title>
+    <script src="https://thedoggybrad.github.io/doom_on_js-dos/js-dos-api.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #DOOM {
+            width: 640px;
+            height: 400px;
+        }
+
+        #DOOM > .dosbox-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        #fullscreen_DOOM {
+            display: none; /* Cache le bouton fullscreen */
+        }
+    </style>
+</head>
+<body>
+    <div id="DOOM" class="dosbox-default"></div>
+
+    <script>
+        var dosbox_DOOM = new Dosbox({
+            id: "DOOM",
+            onload: function (dosbox) {
+                dosbox_DOOM.run("https://thedoggybrad.github.io/doom_on_js-dos/DOOM-@evilution.zip", "./DOOM/DOOM.EXE");
+            },
+            onrun: function (dosbox, app) {
+                console.log("App '" + app + "' is runned");
+            }
+        });
+    </script>
+</body>
+</html>
