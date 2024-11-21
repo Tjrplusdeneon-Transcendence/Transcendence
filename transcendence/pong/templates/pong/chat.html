@@ -28,13 +28,10 @@
 </div>
 
 <script>
-    document.body.addEventListener('htmx:onafterswap', function(event) {
-        if (event.target.closest('#chatForm')) {
-            const form = document.getElementById('chatForm');
-            const inputs = form.querySelectorAll('input[type="text"], textarea');
-            inputs.forEach(function(input) {
-                input.value = '';
-            });
-        }
+    document.getElementById('chatForm').addEventListener('submit', function(event) {
+        const inputs = this.querySelectorAll('input[type="text"], textarea');
+        inputs.forEach(function(input) {
+            input.value = '';
+        });
     });
 </script>
