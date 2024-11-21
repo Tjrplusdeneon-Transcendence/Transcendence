@@ -883,14 +883,9 @@ body {
     transform: scale(1.1);
 }
 
-#mainMenuCanvas {
-    width: 100%;
-    height: auto;
-    background-color: #1a1a1a;
-    position: relative;
-}
 
-.main-menu-button {
+
+/* .main-menu-button {
     position: absolute;
     width: 40%;
     height: 20%;
@@ -909,9 +904,9 @@ body {
 .main-menu-button:hover {
     box-shadow: 0 0 20px rgba(255, 0, 255, 0.7), 0 0 40px rgba(0, 255, 234, 0.7);
     transform: scale(1.1);
-}
+} */
 
-#singleplayerButton {
+/* #singleplayerButton {
     left: 10%;
     top: 40%;
 }
@@ -919,4 +914,44 @@ body {
 #multiplayerButton {
     right: 10%;
     top: 40%;
+} */
+
+#mainMenuCanvas {
+    width: 100%;
+    height: auto;
+    background-color: #1a1a1a;
+    position: relative;
+}
+
+.main-menu-side {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#leftSide {
+    left: 0;
+    background-color: #1a1a1a;
+}
+
+#rightSide {
+    right: 0;
+    background-color: #1a1a1a;
+}
+
+#leftSide:hover {
+    background-color: #00FFFF;
+}
+
+#rightSide:hover {
+    background-color: #ff00fb;
 }

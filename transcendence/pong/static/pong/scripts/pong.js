@@ -1058,6 +1058,30 @@ document.getElementById('multiplayerButton').addEventListener('click', function(
     document.getElementById('go-back-btn').textContent = 'Return to Menu'; // Change button text to "Return to Menu"
 });
 
+document.getElementById('leftSide').addEventListener('click', function() {
+    document.getElementById('mainMenuCanvas').style.display = 'none';
+    document.getElementById('leftSide').style.display = 'none';
+    document.getElementById('rightSide').style.display = 'none';
+    document.getElementById('singleplayerButton').style.display = 'none';
+    document.getElementById('multiplayerButton').style.display = 'none';
+    document.getElementById('difficulty-menu').style.display = 'block';
+    document.getElementById('pongCanvas').style.display = 'none'; // Ensure the game canvas is hidden
+    document.getElementById('start-solo-game-btn').style.display = 'block';
+    document.getElementById('start-solo-game-btn').textContent = 'Start Game'; // Change button text to "Start Game"
+    document.getElementById('return-menu-btn').style.display = 'block';
+});
+
+document.getElementById('rightSide').addEventListener('click', function() {
+    document.getElementById('mainMenuCanvas').style.display = 'none';
+    document.getElementById('leftSide').style.display = 'none';
+    document.getElementById('rightSide').style.display = 'none';
+    document.getElementById('singleplayerButton').style.display = 'none';
+    document.getElementById('multiplayerButton').style.display = 'none';
+    document.getElementById('multiplayer-menu').style.display = 'flex';
+    document.getElementById('go-back-btn').style.display = 'inline-block';
+    document.getElementById('go-back-btn').textContent = 'Return to Menu'; // Change button text to "Return to Menu"
+});
+
 document.getElementById('start-solo-game-btn').addEventListener('click', function() {
     isMatchmaking = false;
     document.getElementById('pongCanvas').style.pointerEvents = 'auto';
@@ -1103,10 +1127,10 @@ document.getElementById('go-back-btn').addEventListener('click', function() {
         document.getElementById('difficulty-menu').style.display = 'none';
         document.getElementById('pongCanvas').style.display = 'none'; // Hide the game canvas
         document.getElementById('mainMenuCanvas').style.display = 'block';
-        document.getElementById('singleplayerButton').style.display = 'block';
-        document.getElementById('multiplayerButton').style.display = 'block'; // Show the multiplayer button
-        document.getElementById('start-solo-game-btn').style.display = 'none';
-        document.getElementById('start-multiplayer-btn').style.display = 'none';
+        document.getElementById('leftSide').style.display = 'flex'; // Show the left side
+        document.getElementById('rightSide').style.display = 'flex'; // Show the right side
+        document.getElementById('singleplayerButton').style.display = 'none';
+        document.getElementById('multiplayerButton').style.display = 'none';
         document.getElementById('go-back-btn').style.display = 'none'; // Hide go-back button when returning to main menu
         document.getElementById('go-back-btn').textContent = 'Go Back'; // Reset button text to "Go Back"
     }
@@ -1346,10 +1370,10 @@ document.getElementById('return-menu-btn').addEventListener('click', function() 
     document.getElementById('pongCanvas').style.display = 'none';
     document.getElementById('multiplayer-menu').style.display = 'none';
     document.getElementById('mainMenuCanvas').style.display = 'block';
-    document.getElementById('singleplayerButton').style.display = 'block';
-    document.getElementById('multiplayerButton').style.display = 'block';
-    document.getElementById('start-solo-game-btn').style.display = 'none';
-    document.getElementById('start-multiplayer-btn').style.display = 'none';
+    document.getElementById('leftSide').style.display = 'flex'; // Show the left side
+    document.getElementById('rightSide').style.display = 'flex'; // Show the right side
+    document.getElementById('singleplayerButton').style.display = 'none';
+    document.getElementById('multiplayerButton').style.display = 'none';
     document.getElementById('return-menu-btn').style.display = 'none';
     document.getElementById('go-back-btn').style.display = 'none';
 });
