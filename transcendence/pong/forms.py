@@ -20,4 +20,4 @@ class ChatForm(forms.ModelForm):
 		model = Chat
 		fields = ('content',)
 	
-	content = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Écrire un message...', 'rows': 4, 'cols': 50}))
+	content = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Écrire un message...'}))
