@@ -26,14 +26,18 @@
     </div>
 </div>
 
+
 <script>
     document.getElementById('chatForm').addEventListener('submit', function(event) {
         event.preventDefault();
+        alert("Submit")
         const formData = new FormData(this);
-        socket.send(JSON.stringify(Object.fromEntries(formData)));
         this.reset();
+        alert("Form should be reset")
+        socket.send(JSON.stringify(Object.fromEntries(formData)));
     });
 </script>
+
 <!-- 
 <script>
     socket.send(JSON.stringify(Object.fromEntries(formData)));
