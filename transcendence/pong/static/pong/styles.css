@@ -882,3 +882,41 @@ body {
     box-shadow: 0 0 20px rgba(255, 0, 255, 0.7), 0 0 40px rgba(0, 255, 234, 0.7);
     transform: scale(1.1);
 }
+
+#mainMenuCanvas {
+    width: 100%;
+    height: auto;
+    background-color: #1a1a1a;
+    position: relative;
+}
+
+.main-menu-button {
+    position: absolute;
+    width: 40%;
+    height: 20%;
+    background: linear-gradient(135deg, #00ffea, #ff00fb);
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 18px;
+    text-align: center;
+    line-height: 2.5;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.main-menu-button:hover {
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.7), 0 0 40px rgba(0, 255, 234, 0.7);
+    transform: scale(1.1);
+}
+
+#singleplayerButton {
+    left: 10%;
+    top: 40%;
+}
+
+#multiplayerButton {
+    right: 10%;
+    top: 40%;
+}

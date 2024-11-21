@@ -118,6 +118,7 @@
     </ol>
 </section>
 
+
 <!-- Modale pour le jeu Pong -->
 <div class="modal fade" id="pongModal" data-backdrop="" aria-labelledby="pongModalLabel" aria-hidden="true" data-bs-focus="false" data-bs-backdrop="false" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
@@ -127,8 +128,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
             </div>
             <div class="modal-body">
+                <!-- New Main Menu Canvas -->
+                <canvas id="mainMenuCanvas" width="640" height="480" style="background-color: #1a1a1a;"></canvas>
+                <button id="singleplayerButton" class="main-menu-button">Singleplayer</button>
+                <button id="multiplayerButton" class="main-menu-button">Multiplayer</button>
+
                 <!-- Difficulty selector -->
-                <div id="difficulty-menu" class="difficulty-menu mb-3">
+                <div id="difficulty-menu" class="difficulty-menu mb-3" style="display: none;">
                     <label for="difficultySelect" class="form-label">Select Difficulty:</label>
                     <select id="difficultySelect" class="form-select">
                         <option value="easy">Easy</option>
@@ -141,33 +147,33 @@
                             <input type="checkbox" id="darknessToggle"> Enable Darkness Mode
                         </label>
                     </div>
-                    <!-- <canvas id="pongCanvas" width="640" height="480" style="background-color: #000;"></canvas> -->
                     <!-- Paddle size selector -->
-                    </select>
                     <label for="paddle-size">Paddle Size:</label>
                     <input type="range" id="paddle-size" min="50" max="200" value="100">
                     <span id="paddle-size-display">100</span>
                 </div>
 
-                <canvas id="pongCanvas" width="640" height="480" style="background-color: #000;"></canvas>
+                <canvas id="pongCanvas" width="640" height="480" style="background-color: #000; display: none;"></canvas>
+                
                 <!-- New multiplayer menu -->
                 <div id="multiplayer-menu" style="display: none;">
                     <button id="local-btn" class="btn btn-primary">Local</button>
                     <button id="tournament-btn" class="btn btn-primary">Tournament</button>
                     <button id="online-btn" class="btn btn-primary">Online</button>
                 </div>
+                
                 <!-- New searching for opponent menu -->
                 <div id="searching-menu" style="display: none;">
                     <button id="searching-btn" class="btn btn-primary" disabled>Searching for opponent...</button>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="start-solo-game-btn">Solo Game</button>
-                <button type="button" class="btn btn-primary" id="start-multiplayer-btn">Multiplayer</button>
+                <button type="button" class="btn btn-primary" id="start-solo-game-btn" style="display: none;">Solo Game</button>
+                <button type="button" class="btn btn-primary" id="start-multiplayer-btn" style="display: none;">Multiplayer</button>
                 <button type="button" class="btn btn-primary" id="rematch-btn" style="display: none;" disabled>Rematch</button>
                 <button type="button" class="btn btn-primary" id="quit-btn" style="display: none;" disabled>Quit</button>
-                <button type="button" class="btn btn-primary" id="go-back-btn" >Go Back</button>
-                <button type="button" class="btn btn-primary" id="return-menu-btn">Return to Menu</button>
+                <button type="button" class="btn btn-primary" id="go-back-btn" style="display: none;">Go Back</button>
+                <button type="button" class="btn btn-primary" id="return-menu-btn" style="display: none;">Return to Menu</button>
             </div>
         </div>
     </div>
