@@ -27,6 +27,21 @@
     </div>
 </div>
 
-<!-- hx-post="{% url 'chat_message' %}"
-hx-target="#chatBox"
-hx-swap="beforeend" -->
+<script>
+    document.getElementById('chat').addEventListener('submit', function(event) {
+        // You could perform additional actions here (e.g., validation)
+        // If everything is valid, submit the form via HTMX
+
+        // Trigger HTMX to submit the form (this will automatically send via WebSocket)
+        // htmx.trigger("#chatForm", "submit");
+
+        // Reset the text inputs inside the form after sending
+        const form = document.getElementById('chatForm');
+        const inputs = form.querySelectorAll('input[type="text"], textarea');
+        
+        // Reset all text-based input fields
+        inputs.forEach(function(input) {
+            input.value = '';  // Clear the input field
+        });
+    });
+</script>
