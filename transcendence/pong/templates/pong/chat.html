@@ -29,8 +29,8 @@
 
 <script>
     document.getElementById('chatForm').addEventListener('submit', function(event) {
+        event.preventDefault();
         alert("1");
-        // event.preventDefault();
         const content = JSON.stringify({'content': content});
         alert("2");
         alert(content);
