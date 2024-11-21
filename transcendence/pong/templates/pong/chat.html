@@ -28,11 +28,7 @@
 
 <script>
     document.getElementById('chatForm').addEventListener('htmx:afterRequest', function(event) {
-        // Reset the textarea after the request has been made
-        const textarea = document.querySelector('textarea[name="content"]');
-        if (textarea) {
-            textarea.value = '';
-        }
+        this.reset();
     });
 </script>
 
