@@ -29,12 +29,13 @@
 
 <script>
     document.getElementById('chatForm').addEventListener('submit', function(event) {
-        event.preventDefault();
+        // event.preventDefault();
         const formData = new FormData(this);
-        socket.send(JSON.stringify(Object.fromEntries(formData)));
-        setTimeout(() => {
-            this.reset();
-        }, 0);
+        // socket.send(JSON.stringify(Object.fromEntries(formData)));
+        chatSocket.send(JSON.stringify({
+                'content': content
+            }));
+        this.reset();
     });
 </script>
 
