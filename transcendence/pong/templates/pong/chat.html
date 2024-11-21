@@ -17,7 +17,7 @@
     </div>
     <div class="chat-input">
         <!-- <input type="text" id="chatMessage" placeholder="Écrire un message..." /> -->
-        <form
+        <form id="chatForm"
             hx-ext="ws"
             ws-connect="/ws/chat"
             ws-send>
@@ -28,7 +28,7 @@
 </div>
 
 <script>
-    document.getElementById('chat').addEventListener('submit', function(event) {
+    document.getElementById('chatForm').addEventListener('submit', function(event) {
         alert("Submit"); 
         // const inputs = this.querySelectorAll('input[type="text"], textarea');
         // inputs.forEach(function(input) {
