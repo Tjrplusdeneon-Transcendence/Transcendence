@@ -31,8 +31,8 @@
     document.getElementById('chatForm').addEventListener('submit', function(event) {
         event.preventDefault();
         const formData = new FormData(this);
-        this.reset();
         socket.send(JSON.stringify(Object.fromEntries(formData)));
+        this.reset();
     });
 </script>
 
