@@ -29,11 +29,8 @@
 
 <script>
     document.getElementById('chat').addEventListener('submit', function(event) {
-        // You could perform additional actions here (e.g., validation)
-        // If everything is valid, submit the form via HTMX
-
-        // Trigger HTMX to submit the form (this will automatically send via WebSocket)
-        // htmx.trigger("#chatForm", "submit");
+        
+        htmx.trigger("#chatForm", "submit"); // send form via WebSocket
 
         // Reset the text inputs inside the form after sending
         const form = document.getElementById('chatForm');
