@@ -32,9 +32,9 @@
         alert("test");
         // event.preventDefault();
         const content = JSON.stringify({'content': content});
-        this.reset();
         alert(content);
         chatSocket.send(content);
+        this.reset();
     });
 </script>
 
