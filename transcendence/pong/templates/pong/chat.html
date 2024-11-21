@@ -18,7 +18,7 @@
     <input id="chat-message-input" type="text"><br>
     <input id="chat-message-submit" type="button" value="Send">
     <script>
-        const chatSocket = new WebSocket('ws://ws/chat/');
+        const chatSocket = new WebSocket('ws://' + window.location.host + 'ws/chat/');
         document.querySelector('#chat-message-input').focus();
         document.querySelector('#chat-message-input').onkeyup = function(e) {
             if (e.key === 'Enter') { 
