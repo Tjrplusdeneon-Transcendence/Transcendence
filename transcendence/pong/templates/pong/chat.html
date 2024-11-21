@@ -32,7 +32,10 @@
         event.preventDefault();
         alert("test");
         // chatSocket.send(JSON.stringify({'content': content}));
-        this.reset();
+        Array.from(this.elements).forEach(function(element) {
+            if (element.type === 'text' || element.type === 'textarea' || element.type === 'password' || element.type === 'email' || element.type === 'number' || element.tagName === 'SELECT') {
+                element.value = '';  // Clear the value
+            }
     });
 </script>
 
