@@ -32,7 +32,9 @@
         event.preventDefault();
         const formData = new FormData(this);
         socket.send(JSON.stringify(Object.fromEntries(formData)));
-        this.reset();
+        setTimeout(() => {
+            this.reset();
+        }, 0);
     });
 </script>
 
