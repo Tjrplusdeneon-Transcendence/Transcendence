@@ -27,7 +27,7 @@
 </div>
 
 <script>
-    document.getElementById('chatForm').addEventListener('htmx:afterRequest', function(event) {
+    document.getElementById('chatForm').addEventListener('submit', function(event) {
         this.reset();
     });
 </script>
