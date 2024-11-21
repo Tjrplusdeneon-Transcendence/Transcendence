@@ -35,10 +35,8 @@
         // Reset the text inputs inside the form after sending
         const form = document.getElementById('chatForm');
         const inputs = form.querySelectorAll('input[type="text"], textarea');
-        
-        // Reset all text-based input fields
         inputs.forEach(function(input) {
-            input.value = '';  // Clear the input field
+            input.value = '';
         });
     });
 </script>
