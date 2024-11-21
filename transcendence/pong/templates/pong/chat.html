@@ -28,9 +28,19 @@
 
 <script>
     document.getElementById('chatForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+        socket.send(JSON.stringify(Object.fromEntries(formData)));
         this.reset();
     });
 </script>
+<!-- 
+<script>
+    socket.send(JSON.stringify(Object.fromEntries(formData)));
+    document.getElementById('chatForm').addEventListener('submit', function(event) {
+        this.reset();
+    });
+</script> -->
 
 <!-- <script>
     document.getElementById('chatForm').addEventListener('submit', function(event) {
