@@ -21,23 +21,26 @@
             ws-connect="/ws/chat"
             ws-send>
             {% include 'pong/partials/chat_form.html' %}
-            <button id="chat" name="chat" >➤</button>
+            <button id="chat" name="chat"  onclick="submitForm()">➤</button>
         </form>
     </div>
 </div>
 
-
 <script>
+    function submitForm() {
+    chatSocket.send(JSON.stringify({'content': content}));
+    document.chatForm.reset();
+    }
+</script>
+
+
+<!-- <script>
     document.getElementById('chatForm').addEventListener('submit', function(event) {
         event.preventDefault();
-        // const formData = new FormData(this);
-        // socket.send(JSON.stringify(Object.fromEntries(formData)));
-        chatSocket.send(JSON.stringify({
-                'content': content
-            }));
+        chatSocket.send(JSON.stringify({'content': content}));
         this.reset();
     });
-</script>
+</script> -->
 
 <!-- 
 <script>
