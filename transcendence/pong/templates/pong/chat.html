@@ -29,6 +29,7 @@
 
 <script>
     document.getElementById('chatForm').addEventListener('submit', function(event) {
+        alert("test");
         event.preventDefault();
         const content = JSON.stringify({'content': content});
         this.reset();
