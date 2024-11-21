@@ -29,10 +29,10 @@
 
 <script>
     document.getElementById('chatForm').addEventListener('submit', function(event) {
-        alert("Submit"); 
-        // const inputs = this.querySelectorAll('input[type="text"], textarea');
-        // inputs.forEach(function(input) {
-        //     input.value = '';
-        // });
+        // alert("Submit"); 
+        const inputs = this.querySelectorAll('input[type="text"], textarea');
+        inputs.forEach(function(input) {
+            input.value = '';
+        });
     });
 </script>
