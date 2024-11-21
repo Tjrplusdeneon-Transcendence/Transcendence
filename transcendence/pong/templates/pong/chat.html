@@ -28,15 +28,13 @@
 </div>
 
 <script>
-    document.getElementById('chat').addEventListener('submit', function(event) {
-        
-        htmx.trigger("#chatForm", "submit"); // send form via WebSocket
-
-        // Reset the text inputs inside the form after sending
-        const form = document.getElementById('chatForm');
-        const inputs = form.querySelectorAll('input[type="text"], textarea');
-        inputs.forEach(function(input) {
-            input.value = '';
-        });
+    document.body.addEventListener('htmx:onafterswap', function(event) {
+        if (event.target.closest('#chatForm')) {
+            const form = document.getElementById('chatForm');
+            const inputs = form.querySelectorAll('input[type="text"], textarea');
+            inputs.forEach(function(input) {
+                input.value = '';
+            });
+        }
     });
 </script>
