@@ -19,3 +19,4 @@ class ChatForm(forms.ModelForm):
 	class Meta:
 		model = Chat
 		fields = ('content',)
+		content = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Écrire un message...', 'rows': 4, 'cols': 50}))
