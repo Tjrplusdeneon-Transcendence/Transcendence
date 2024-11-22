@@ -482,21 +482,20 @@ body {
     word-wrap: break-word; 
 }
 
-.user-message:after {
-    content: "";
-    position: absolute;
-    bottom: -10px; /* Position the tail 10px below the bubble */
-    left: 10px; /* Position the tail towards the left corner */
-    border-width: 10px;
-    border-style: solid;
-    border-color: transparent transparent transparent transparent; /* Make the triangle's border transparent */
-    border-bottom-color: #D400FF; /* Set the bottom part of the tail to the same gradient color */
-    border-left-color: #FF8400; /* Set the left side of the tail to the gradient color */
-  }
-
 .other-message {
     text-align: left;
     margin-right: auto;
+    list-style-type: none;
+    padding: 10px 15px;
+    margin: 10px 0;
+    max-width: 80%;
+    color: white;
+    border-radius: 15px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.4;
+    background: linear-gradient(135deg, #D400FF, #FF8400);
+    word-wrap: break-word; 
 }
 
 
