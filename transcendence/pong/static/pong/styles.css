@@ -503,23 +503,25 @@ li {
 li::after {
     content: "";
     position: absolute;
-    width: 12px;
+    width: 30px;
     height: 12px;
-    background: inherit; /* Inherit gradient */
-    z-index: -1;  /* Ensure the triangle is below the bubble */
-    transform: rotate(45deg);
+    background: inherit;
+    z-index: -1;
+    transform: rotate(305eg);
 }
 
 /* User's message triangle */
 .user-message::after {
     right: -6px;
     top: 10px;
+    linear-gradient(135deg, #FF840000, #FF8400);
 }
 
 /* Other's message triangle */
 .other-message::after {
     left: -6px;
     top: 10px;
+    linear-gradient(135deg, #FF8400, #FF840000);
 }
 
 /* Users profile */
