@@ -11,7 +11,6 @@ def index(request):
     # return render(request, 'pong/index.html', context={'chat_messages': chat_messages, 'chat_form': forms.ChatForm()})
 
 def signin_user(request):
-    print('ICI')
     sign_form = forms.SigninForm()
     signin_error_message = ''
     if request.method == 'POST':
