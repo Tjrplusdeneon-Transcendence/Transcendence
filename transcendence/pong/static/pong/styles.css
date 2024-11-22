@@ -358,7 +358,7 @@ body {
     color: #ffffff;
 }
 
-/* Tchat */
+/* Chat */
 .chat-container {
     position: absolute;
     top: 10%;
@@ -457,6 +457,19 @@ body {
     box-shadow: 0 0 10px rgba(255, 0, 255, 0.7), 0 0 20px rgba(0, 255, 234, 0.7);
     transform: scale(1.1);
 }
+
+.user-message {
+    background-color: #d1e7dd;
+    text-align: right;
+    margin-left: auto;
+}
+
+.other-message {
+    background-color: #f8d7da;
+    text-align: left;
+    margin-right: auto;
+}
+
 
 /* Users profile */
 .synthwave-modal {
