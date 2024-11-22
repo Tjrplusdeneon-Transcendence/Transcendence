@@ -458,6 +458,11 @@ body {
     transform: scale(1.1);
 }
 
+#messageList {
+    list-style-type: none;
+    padding: 0;
+}
+
 .user-message {
     text-align: right;
     margin-left: auto;
