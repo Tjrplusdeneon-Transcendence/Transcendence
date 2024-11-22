@@ -1,9 +1,9 @@
-// document.getElementById('loginButton').addEventListener('click', function(event) 
-// {
-//     event.preventDefault();
-//     document.getElementById('loginPanel').style.display = 'block';
-// 	document.getElementById('chatContainer').style.display = 'block';
-// });
+document.getElementById('loginButton').addEventListener('click', function(event) 
+{
+    event.preventDefault();
+    document.getElementById('loginPanel').style.display = 'block';
+	document.getElementById('chatContainer').style.display = 'block';
+});
 
 // document.getElementById('closeButton').addEventListener('click', function() 
 // {
