@@ -466,7 +466,56 @@ body {
     padding: 0;
 }
 
-.user-message, .other-message {
+/* General chat bubble styles */
+li {
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 10px;
+    max-width: 60%;
+    list-style-type: none;
+    position: relative;
+}
+
+/* User's message */
+.user-message {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    align-self: flex-end;
+    text-align: right;
+    margin-left: auto;
+}
+
+/* Other's message */
+.other-message {
+    background-color: #f8d7da;
+    color: #842029;
+    align-self: flex-start;
+    text-align: left;
+    margin-right: auto;
+}
+
+/* Chat bubble triangle */
+li::before {
+    content: "";
+    position: absolute;
+    border-width: 6px;
+    border-style: solid;
+}
+
+.user-message::before {
+    border-color: transparent transparent transparent #d1e7dd;
+    right: -12px;
+    top: 10px;
+}
+
+.other-message::before {
+    border-color: transparent #f8d7da transparent transparent;
+    left: -12px;
+    top: 10px;
+}
+
+
+/* .user-message, .other-message {
     list-style-type: none;
     padding: 10px 15px;
     margin: 10px 0;
@@ -488,7 +537,7 @@ body {
 .other-message {
     text-align: left;
     margin-right: auto;
-}
+} */
 
 
 /* Users profile */
