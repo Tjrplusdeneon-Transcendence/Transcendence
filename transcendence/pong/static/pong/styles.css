@@ -474,7 +474,6 @@ li {
     max-width: 60%;
     list-style-type: none;
     position: relative;
-    z-index: 1;  /* Ensure the bubble is above the triangle */
 }
 
 /* User's message */
@@ -503,18 +502,17 @@ li {
 li::after {
     content: "";
     position: absolute;
-    width: 30px;
-    height: 12px;
+    width: 10px;
+    height: 15px;
     background: inherit;
-    z-index: -1;
-    transform: rotate(305deg);
+    transform: rotate(200deg);
 }
 
 /* User's message triangle */
 .user-message::after {
-    right: -6px;
-    top: 10px;
-    background: linear-gradient(#FF840000, #FF8400);
+    right: -3px;
+    top: 4px;
+    background: linear-gradient(250deg, #F76B31, #FB7915);
 }
 
 /* Other's message triangle */
@@ -532,7 +530,6 @@ li::after {
     padding: 10px;
     border-radius: 8px;
     color: white;
-    z-index: 999;
     pointer-events: auto;
     width: 200px; 
 }
