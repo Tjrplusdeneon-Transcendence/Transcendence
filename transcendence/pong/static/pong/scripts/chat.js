@@ -23,6 +23,19 @@ document.querySelector('#chat-message-submit').onclick = function(e) {
     }
 };
 
+document.addEventListener('DOMContentLoaded', function() {
+    initializeWebSocket();
+    attachFormSubmitListener();
+});
+
+document.addEventListener('htmx:afterRequest', function(evt) {
+    // Check if the updated content is the chat section
+    if (evt.detail.target.id === 'chatSection') {
+        initializeWebSocket();
+        attachFormSubmitListener();
+    }
+});
+
 
 // document.getElementById('addFriendBtn').addEventListener('click', function() 
 // {

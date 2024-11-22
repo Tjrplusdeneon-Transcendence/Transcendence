@@ -22,14 +22,8 @@ document.addEventListener('htmx:afterRequest', function(evt) {
     updateContent(response);
 });
 
-// document.addEventListener('htmx:afterOnLoad', function(evt) {
-//     if (evt.detail.target.id === 'loginPanel') {
-//         const response = JSON.parse(evt.detail.xhr.responseText);
-//         document.getElementById('loginPanel').innerHTML = response.panel_html;
-//         document.getElementById('chatSection').innerHTML = response.chat_html;
-//         attachButtonListeners(); // Reattach listeners after content swap
-//     }
-// });
+
+
 
 
 document.getElementById('closeButton').addEventListener('click', function() 
