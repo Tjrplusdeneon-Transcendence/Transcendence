@@ -466,9 +466,7 @@ body {
     padding: 0;
 }
 
-.user-message {
-    text-align: right;
-    margin-left: auto;
+/* .user-message, .other-message {
     list-style-type: none;
     padding: 10px 15px;
     margin: 10px 0;
@@ -479,23 +477,17 @@ body {
     font-size: 14px;
     line-height: 1.4;
     background: linear-gradient(135deg, #D400FF, #FF8400);
-    word-wrap: break-word; 
+    word-wrap: break-word;
+} */
+
+.user-message {
+    text-align: right;
+    margin-left: auto;
 }
 
 .other-message {
     text-align: left;
     margin-right: auto;
-    list-style-type: none;
-    padding: 10px 15px;
-    margin: 10px 0;
-    max-width: 80%;
-    color: white;
-    border-radius: 15px;
-    position: relative;
-    font-size: 14px;
-    line-height: 1.4;
-    background: linear-gradient(135deg, #D400FF, #FF8400);
-    word-wrap: break-word; 
 }
 
 
