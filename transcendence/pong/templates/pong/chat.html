@@ -1,6 +1,6 @@
 <div class="chat-container">
     <h2>Tchat</h2>
-    <div class="chat-box" id="chatBox">
+    <!-- <div class="chat-box" id="chatBox">
         <ul>
             {% for message in chat_messages reversed %}
                 {% if message.author is request.user %}
@@ -14,84 +14,39 @@
                 {% endif %}
             {% endfor %}
         </ul>
-    </div>
+    </div> -->
     <div class="chat-input">
-        <form id="chatForm">
-            {% csrf_token %}
-            {{ chat_form }}
-            <button id="chatBtn" name="chatBtn">➤</button>
-        </form>
+    <textarea id="chat-log" cols="100" rows="20"></textarea><br>
+    <input id="chat-message-input" type="text" size="100"><br>
+    <input id="chat-message-submit" type="button" value="Send">        
     </div>
 </div>
 
 <script>
-    console.log("Establishing websocket connection");
     const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/');
-    console.log("Websocket connected");
 
-    document.querySelector('#chatBtn').onclick = function(e) {
-        const messageInputDom = document.querySelector('#chatForm');
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        document.querySelector('#chat-log').value += (data.message + '\n');
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#chat-message-input').focus();
+    document.querySelector('#chat-message-input').onkeyup = function(e) {
+        if (e.key === 'Enter') {  // enter, return
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+
+    document.querySelector('#chat-message-submit').onclick = function(e) {
+        const messageInputDom = document.querySelector('#chat-message-input');
         const message = messageInputDom.value;
-        console.log('MESSAGE:', message);
         chatSocket.send(JSON.stringify({
             'message': message
         }));
-        // messageInputDom.value = '';
-    };        
+        messageInputDom.value = '';
+    };
 </script>
-
-<!-- document.querySelector('#chatForm').focus();
-    document.querySelector('#chatForm').onkeyup = function(e) {
-    if (e.key === 'Enter') { 
-        document.querySelector('#chatBtn').click();
-    }
-}; -->
-
-    <!-- <input id="chat-message-input" type="text"><br>
-    <input id="chat-message-submit" type="button" value="Send">
-    <script>
-        const chatSocket = new WebSocket('ws://' + window.location.host + 'ws/chat/');
-        document.querySelector('#chat-message-input').focus();
-        document.querySelector('#chat-message-input').onkeyup = function(e) {
-            if (e.key === 'Enter') { 
-                document.querySelector('#chat-message-submit').click();
-            }
-        };
-
-        document.querySelector('#chat-message-submit').onclick = function(e) {
-            const messageInputDom = document.querySelector('#chat-message-input');
-            const content = messageInputDom.value;
-            chatSocket.send(JSON.stringify({
-                'content': content
-            }));
-            messageInputDom.value = '';
-        };        
-    </script> -->
-
-
-
-<!-- <script>
-    document.getElementById('chatForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        alert("1");
-        const content = JSON.stringify({'content': content});
-        alert("2");
-        alert(content);
-        alert("3");
-        chatSocket.send(content);
-        alert("4");
-        this.reset();
-        alert("5");
-    });
-</script> -->
-
-
-<!-- <script>
-    document.getElementById('chatForm').addEventListener('submit', function(event) {
-        // alert("Submit"); 
-        const inputs = this.querySelectorAll('input[type="text"], textarea');
-        inputs.forEach(function(input) {
-            input.value = '';
-        });
-    });
-</script> -->
