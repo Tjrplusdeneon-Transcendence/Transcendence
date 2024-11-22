@@ -5,24 +5,24 @@ document.getElementById('loginButton').addEventListener('click', function(event)
 	document.getElementById('chatContainer').style.display = 'block';
 });
 
-// document.getElementById('closeButton').addEventListener('click', function() 
-// {
-//     document.getElementById('loginPanel').classList.add('slide-out');
-//     setTimeout(function() 
-//     {
-//         document.getElementById('loginPanel').style.display = 'none';
-//         document.getElementById('loginPanel').classList.remove('slide-out');
-//     }, 300);
-// });
+document.getElementById('closeButton').addEventListener('click', function() 
+{
+    document.getElementById('loginPanel').classList.add('slide-out');
+    setTimeout(function() 
+    {
+        document.getElementById('loginPanel').style.display = 'none';
+        document.getElementById('loginPanel').classList.remove('slide-out');
+    }, 300);
+});
 
-// document.getElementById('logoutButton').addEventListener('click', function() 
-// {
-//     document.getElementById('signForm').style.display = 'block';
-//     document.getElementById('profileInfo').style.display = 'none';
-//     document.getElementById('gameStats').style.display = 'none';
-// 	document.getElementById('chatContainer').style.display = 'none';
-// 	chatSocket.close();
-// });
+document.getElementById('logoutButton').addEventListener('click', function() 
+{
+    // document.getElementById('signForm').style.display = 'block';
+    // document.getElementById('profileInfo').style.display = 'none';
+    // document.getElementById('gameStats').style.display = 'none';
+	// document.getElementById('chatContainer').style.display = 'none';
+	chatSocket.close();
+});
 
 // function openProfileModal(username, targetElement) 
 // {
