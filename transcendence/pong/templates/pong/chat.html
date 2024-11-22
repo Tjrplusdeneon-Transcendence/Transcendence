@@ -25,8 +25,10 @@
 </div>
 
 <script>
+    console.log("Establishing websocket connection");
     const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/');
-    
+    console.log("Websocket connected");
+
     document.querySelector('#chatBtn').onclick = function(e) {
         const messageInputDom = document.querySelector('#chatForm');
         const message = messageInputDom.value;
