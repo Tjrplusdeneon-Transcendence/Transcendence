@@ -507,21 +507,21 @@ li::after {
     height: 12px;
     background: inherit;
     z-index: -1;
-    transform: rotate(305eg);
+    transform: rotate(305deg);
 }
 
 /* User's message triangle */
 .user-message::after {
     right: -6px;
     top: 10px;
-    linear-gradient(135deg, #FF840000, #FF8400);
+    background: linear-gradient(#FF840000, #FF8400);
 }
 
 /* Other's message triangle */
 .other-message::after {
     left: -6px;
     top: 10px;
-    linear-gradient(135deg, #FF8400, #FF840000);
+    background: linear-gradient(#FF8400, #FF840000);
 }
 
 /* Users profile */
