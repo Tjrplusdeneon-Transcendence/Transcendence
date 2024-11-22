@@ -5,42 +5,29 @@ document.getElementById('loginButton').addEventListener('click', function(event)
 	// document.getElementById('chatContainer').style.display = 'block';
 });
 
-
-
-
-// function attachButtonListeners() {
-//     const signinButton = document.querySelector('#signinButton');
-//     const signupButton = document.querySelector('#signupButton');
+function updateContent(response) {
+    document.getElementById('loginPanel').innerHTML = response.panel_html;
+    document.getElementById('chatSection').innerHTML = response.chat_html;
     
-//     if (signinButton) {
-//         signinButton.addEventListener('click', function() {
-//             console.log("Sign in button clicked");
-//         });
-//     }
+    // Reattach any necessary event listeners or initialize HTMX components
+    htmx.process(document.body);  // Reinitialize HTMX for the updated content
+}
 
-//     if (signupButton) {
-//         signupButton.addEventListener('click', function() {
-//             console.log("Sign up button clicked");
-//         });
-//     }
-// }
-
-document.addEventListener('htmx:afterOnLoad', function(evt) {
-    if (evt.detail.target.id === 'loginPanel') {
-        const response = JSON.parse(evt.detail.xhr.responseText);
-        document.getElementById('loginPanel').innerHTML = response.panel_html;
-        document.getElementById('chatSection').innerHTML = response.chat_html;
-        attachButtonListeners(); // Reattach listeners after content swap
-    }
+document.addEventListener('DOMContentLoaded', function() {
+    attachButtonListeners();
 });
 
-// document.addEventListener('DOMContentLoaded', attachButtonListeners); // Attach listeners on initial load
+document.addEventListener('htmx:afterRequest', function(evt) {
+    const response = JSON.parse(evt.detail.xhr.responseText);
+    updateContent(response);
+});
 
 // document.addEventListener('htmx:afterOnLoad', function(evt) {
 //     if (evt.detail.target.id === 'loginPanel') {
-//             const response = JSON.parse(evt.detail.xhr.responseText);
-//             document.getElementById('loginPanel').innerHTML = response.panel_html;
-//             document.getElementById('chatSection').innerHTML = response.chat_html;
+//         const response = JSON.parse(evt.detail.xhr.responseText);
+//         document.getElementById('loginPanel').innerHTML = response.panel_html;
+//         document.getElementById('chatSection').innerHTML = response.chat_html;
+//         attachButtonListeners(); // Reattach listeners after content swap
 //     }
 // });
 
