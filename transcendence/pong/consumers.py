@@ -26,13 +26,15 @@ class ChatConsumer(WebsocketConsumer):
         event = {
             'type': 'message_handler',
             'message_id': message.id,
+            'user_id': self.user.id,
         }
         async_to_sync(self.channel_layer.group_send)("chat", event)
 
 
     def message_handler(self, event):
         message = Chat.objects.get(id=event['message_id'])
-        html = render_to_string('pong/partials/chat_message.html', context={'message': message})
+        user = User.objects.get(id=event['user_id'])
+        html = render_to_string('pong/partials/chat_message.html', context={'message': message, 'user': user})
         self.send(text_data=html)
 
 class PongConsumer(AsyncWebsocketConsumer):
