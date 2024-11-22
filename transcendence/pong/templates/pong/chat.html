@@ -1,7 +1,7 @@
 <div class="chat-container">
     <h2>Tchat</h2>
     <div class="chat-box" id="chatBox">
-        <ul id="messageList">
+        <ul class="message-list" id="messageList">
             {% for message in chat_messages reversed %}
                 {% if message.author.id == request.user.id %}
                     <li class="user-message">
