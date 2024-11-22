@@ -506,15 +506,27 @@ li::before {
     border-style: solid;
 }
 
+/* User's message triangle */
 .user-message::before {
-    border-color: transparent transparent transparent rgba(212, 0, 255, 0.5);
-    right: -12px;
+    border-color: transparent transparent transparent transparent;
+    background: linear-gradient(135deg, #D400FF, #FF8400);
+    width: 12px;
+    height: 12px;
+    position: absolute;
+    transform: rotate(45deg);
+    right: -6px;
     top: 10px;
 }
 
+/* Other's message triangle */
 .other-message::before {
-    border-color: transparent rgba(255, 132, 0, 0.5) transparent transparent;
-    left: -12px;
+    border-color: transparent transparent transparent transparent;
+    background: linear-gradient(135deg, #FF8400, #D400FF);
+    width: 12px;
+    height: 12px;
+    position: absolute;
+    transform: rotate(45deg);
+    left: -6px;
     top: 10px;
 }
 
