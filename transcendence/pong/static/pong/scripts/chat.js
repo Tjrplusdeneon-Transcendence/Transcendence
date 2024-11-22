@@ -1,16 +1,12 @@
 let chatSocket = null;
 
 function initializeWebSocket() {
-    // Check if a WebSocket connection already exists and is open
-    if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
-        return;
+    // Ensure an existing WebSocket connection is closed
+    if (chatSocket) {
+        chatSocket.close();
     }
-    
-    chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/');
 
-    chatSocket.onopen = function(e) {
-        console.log('WebSocket CONNECT');
-    };
+    chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/');
 
     chatSocket.onmessage = function(e) {
         document.getElementById('messageList').innerHTML += e.data;
@@ -27,19 +23,21 @@ function attachFormSubmitListener() {
     const messageInput = document.querySelector('#chat-message-input');
     const messageSubmit = document.querySelector('#chat-message-submit');
 
-    messageInput.onkeyup = function(e) {
-        if (e.key === 'Enter') {
-            messageSubmit.click();
-        }
-    };
+    if (messageInput && messageSubmit) {
+        messageInput.onkeyup = function(e) {
+            if (e.key === 'Enter') {
+                messageSubmit.click();
+            }
+        };
 
-    messageSubmit.onclick = function(e) {
-        const message = messageInput.value.trim();
-        if (message) {
-            chatSocket.send(JSON.stringify({ 'message': message }));
-            messageInput.value = '';
-        }
-    };
+        messageSubmit.onclick = function(e) {
+            const message = messageInput.value.trim();
+            if (message) {
+                chatSocket.send(JSON.stringify({ 'message': message }));
+                messageInput.value = '';
+            }
+        };
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -48,8 +46,9 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('htmx:afterSwap', function(evt) {
+    // Check if the updated content is the chat section
     if (evt.detail.target.id === 'chatSection') {
-        initializeWebSocket(); // Ensure WebSocket is reinitialized correctly
-        attachFormSubmitListener(); // Reattach event listeners
+        initializeWebSocket();
+        attachFormSubmitListener();
     }
 });

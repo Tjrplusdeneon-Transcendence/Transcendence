@@ -8,9 +8,13 @@ document.getElementById('loginButton').addEventListener('click', function(event)
 function updateContent(response) {
     document.getElementById('loginPanel').innerHTML = response.panel_html;
     document.getElementById('chatSection').innerHTML = response.chat_html;
-    
-    // Reattach any necessary event listeners or initialize HTMX components
-    htmx.process(document.body);  // Reinitialize HTMX for the updated content
+
+    // Reinitialize HTMX for the updated content
+    htmx.process(document.body);
+
+    // Reinitialize WebSocket and event listeners after content update
+    initializeWebSocket();
+    attachFormSubmitListener();
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -21,6 +25,7 @@ document.addEventListener('htmx:afterRequest', function(evt) {
     const response = JSON.parse(evt.detail.xhr.responseText);
     updateContent(response);
 });
+
 
 document.getElementById('closeButton').addEventListener('click', function() 
 {
