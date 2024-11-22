@@ -25,8 +25,13 @@
     const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/');
 
     chatSocket.onmessage = function(e) {
-        document.getElementById('messageList').innerHTML += e.data;
+        const messageList = document.getElementById('messageList');
+        if (messageList) {
+            messageList.innerHTML += e.data;
+            messageList.scrollTop = messageList.scrollHeight;
+        }
     };
+
     
     document.querySelector('#chat-message-input').onkeyup = function(e) {
         if (e.key === 'Enter') {
