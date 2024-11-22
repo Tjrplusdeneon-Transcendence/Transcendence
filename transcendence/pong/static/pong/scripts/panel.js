@@ -7,9 +7,13 @@ document.getElementById('loginButton').addEventListener('click', function(event)
 
 document.addEventListener('htmx:afterOnLoad', function(evt) {
     if (evt.detail.target.id === 'loginPanel') {
-        const response = JSON.parse(evt.detail.xhr.responseText);
-        document.getElementById('loginPanel').innerHTML = response.panel_html;
-        document.getElementById('chatSection').innerHTML = response.chat_html;
+        try {
+            const response = JSON.parse(evt.detail.xhr.responseText);
+            document.getElementById('loginPanel').innerHTML = response.panel_html;
+            document.getElementById('chatSection').innerHTML = response.chat_html;
+        } catch (error) {
+            console.error("Error updating content", error);
+        }
     }
 });
 
