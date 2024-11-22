@@ -1,6 +1,6 @@
 <span id="closeButton">X</span>
 {% if not user.is_authenticated %}
-	<button hx-get="{% url 'signin' %}" hx-target="#sign_form" hx-swap="innerHTML">
+	<button id="loginButton" hx-get="{% url 'signin' %}" hx-target="#sign_form" hx-swap="innerHTML">
 		Sign In
 	</button>
 	<button hx-get="{% url 'signup' %}" hx-target="#sign_form" hx-swap="innerHTML">
@@ -9,7 +9,7 @@
 	<div id="sign_form"></div>
 {% else %}
 	<p>Welcome, {{ request.user }}</p>
-	<button hx-get="{% url 'logout' %}" hx-target="#loginPanel" hx-swap="innerHTML">
+	<button id="logoutButton" hx-get="{% url 'logout' %}" hx-target="#loginPanel" hx-swap="innerHTML">
 		Log Out
 	</button>
 {% endif %}
