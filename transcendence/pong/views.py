@@ -38,6 +38,7 @@ def logout_user(request):
     return render(request, 'pong/partials/panel.html')
 
 def chat(request):
+    print(">>>>> views.chat")
     chat_form = forms.ChatForm()
     # if request.method == 'POST':
     #     chat_form = forms.ChatForm(request.POST)
