@@ -30,11 +30,11 @@
     document.querySelector('#chatBtn').onclick = function(e) {
         const messageInputDom = document.querySelector('#chatForm');
         const message = messageInputDom.value;
-        console.log("MESSAGE:", message);
+        console.log('MESSAGE:', message);
         chatSocket.send(JSON.stringify({
             'message': message
         }));
-        messageInputDom.value = '';
+        // messageInputDom.value = '';
     };        
 </script>
 
