@@ -5,7 +5,7 @@
 	</button>
 	<button hx-get="{% url 'signup' %}" hx-target="#sign_form" hx-swap="innerHTML">
 		Sign Up
-	</button>	
+	</button>
 	<div id="sign_form"></div>
 {% else %}
 	<p>Welcome, {{ request.user }}</p>
