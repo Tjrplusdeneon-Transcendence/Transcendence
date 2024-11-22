@@ -29,9 +29,9 @@
     
     document.querySelector('#chatBtn').onclick = function(e) {
         const messageInputDom = document.querySelector('#chatForm');
-        const content = messageInputDom.value;
+        const message = messageInputDom.value;
         chatSocket.send(JSON.stringify({
-            'content': content
+            'message': message
         }));
         messageInputDom.value = '';
     };        
