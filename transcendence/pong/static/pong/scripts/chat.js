@@ -1,14 +1,16 @@
 let chatSocket = null;
 
-function closeWebSocket() {
-    if (chatSocket) {
-        chatSocket.close();
-        chatSocket = null;  // Reset the chatSocket variable
-    }
-}
-
 function initializeWebSocket() {
+    // Check if a WebSocket connection already exists and is open
+    if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
+        return;
+    }
+    
     chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/');
+
+    chatSocket.onopen = function(e) {
+        console.log('WebSocket CONNECT');
+    };
 
     chatSocket.onmessage = function(e) {
         document.getElementById('messageList').innerHTML += e.data;
@@ -45,12 +47,9 @@ document.addEventListener('DOMContentLoaded', function() {
     attachFormSubmitListener();
 });
 
-document.addEventListener('htmx:afterRequest', function(evt) {
-    const response = JSON.parse(evt.detail.xhr.responseText);
-    // If chat section is updated, reinitialize WebSocket and event listeners
-    if (document.getElementById('chatSection').contains(evt.detail.target)) {
-        closeWebSocket();
-        initializeWebSocket();
-        attachFormSubmitListener();
+document.addEventListener('htmx:afterSwap', function(evt) {
+    if (evt.detail.target.id === 'chatSection') {
+        initializeWebSocket(); // Ensure WebSocket is reinitialized correctly
+        attachFormSubmitListener(); // Reattach event listeners
     }
 });

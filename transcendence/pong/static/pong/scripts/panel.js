@@ -37,7 +37,9 @@ document.getElementById('logoutButton').addEventListener('click', function()
     // document.getElementById('profileInfo').style.display = 'none';
     // document.getElementById('gameStats').style.display = 'none';
 	// document.getElementById('chatContainer').style.display = 'none';
-	chatSocket.close();
+    if (chatSocket) {
+        chatSocket.close();
+    }
 });
 
 function openProfileModal(username, targetElement) 
