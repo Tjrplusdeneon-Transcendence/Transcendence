@@ -280,6 +280,7 @@ body {
     padding: 10px;
     border: none;
     border-radius: 5px;
+    color: #fff;
     background-color: #333;
     transition: background-color 0.3s ease;
 }
@@ -391,6 +392,7 @@ body {
     padding: 10px;
     color: #fcf0e4;
     box-shadow: 0 0 10px rgba(255, 128, 0, 0.5);
+    list-style-type: none;
 }
 
 .chat-box::-webkit-scrollbar {
