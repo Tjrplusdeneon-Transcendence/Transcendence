@@ -18,7 +18,6 @@ class ChatConsumer(WebsocketConsumer):
         async_to_sync(self.channel_layer.group_discard)("chat", self.channel_name) # ws channel leaves the group
 
     def receive(self, text_data):
-        print("DATA RECEIVED FROM CLIENT:", text_data)
         content = (json.loads(text_data))["message"]
         message = Chat.objects.create(
             content = content,
@@ -33,7 +32,6 @@ class ChatConsumer(WebsocketConsumer):
 
     def message_handler(self, event):
         message = Chat.objects.get(id=event['message_id'])
-        print("MESSAGE SENT TO CLIENTS:", message)
         html = render_to_string('pong/partials/chat_message.html', context={'message': message})
         self.send(text_data=html)
 
