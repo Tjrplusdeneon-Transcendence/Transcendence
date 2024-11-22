@@ -8,22 +8,22 @@ document.getElementById('loginButton').addEventListener('click', function(event)
 
 
 
-function attachButtonListeners() {
-    const signinButton = document.querySelector('#signinButton');
-    const signupButton = document.querySelector('#signupButton');
+// function attachButtonListeners() {
+//     const signinButton = document.querySelector('#signinButton');
+//     const signupButton = document.querySelector('#signupButton');
     
-    if (signinButton) {
-        signinButton.addEventListener('click', function() {
-            console.log("Sign in button clicked");
-        });
-    }
+//     if (signinButton) {
+//         signinButton.addEventListener('click', function() {
+//             console.log("Sign in button clicked");
+//         });
+//     }
 
-    if (signupButton) {
-        signupButton.addEventListener('click', function() {
-            console.log("Sign up button clicked");
-        });
-    }
-}
+//     if (signupButton) {
+//         signupButton.addEventListener('click', function() {
+//             console.log("Sign up button clicked");
+//         });
+//     }
+// }
 
 document.addEventListener('htmx:afterOnLoad', function(evt) {
     if (evt.detail.target.id === 'loginPanel') {
@@ -34,7 +34,7 @@ document.addEventListener('htmx:afterOnLoad', function(evt) {
     }
 });
 
-document.addEventListener('DOMContentLoaded', attachButtonListeners); // Attach listeners on initial load
+// document.addEventListener('DOMContentLoaded', attachButtonListeners); // Attach listeners on initial load
 
 // document.addEventListener('htmx:afterOnLoad', function(evt) {
 //     if (evt.detail.target.id === 'loginPanel') {

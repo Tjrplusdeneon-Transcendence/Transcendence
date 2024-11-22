@@ -44,4 +44,7 @@ def logout_user(request):
     logout(request)
     panel_html = render_to_string('pong/partials/panel.html', request=request)
     chat_html = render_to_string('pong/chat.html', request=request)
-    return JsonResponse({'panel_html': panel_html, 'chat_html': chat_html})
+    return JsonResponse({
+        'panel_html': panel_html,
+        'chat_html': chat_html
+        })
