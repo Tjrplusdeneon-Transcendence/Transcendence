@@ -37,14 +37,14 @@ def logout_user(request):
     logout(request)
     return render(request, 'pong/partials/panel.html')
 
-def chat(request):
-    print(">>>>> views.chat")
-    chat_form = forms.ChatForm()
-    # if request.method == 'POST':
-    #     chat_form = forms.ChatForm(request.POST)
-    #     if chat_form.is_valid():
-    #         message = chat_form.save(commit=False)
-    #         message.author = request.user
-    #         message.save()
-    #         return render(request, 'pong/partials/chat_message.html', context={'message': message})
-    return render(request, 'pong/partials/chat.html', context={'chat_form': chat_form})
+# def chat(request):
+#     print(">>>>> views.chat")
+#     chat_form = forms.ChatForm()
+#     if request.method == 'POST':
+#         chat_form = forms.ChatForm(request.POST)
+#         if chat_form.is_valid():
+#             message = chat_form.save(commit=False)
+#             message.author = request.user
+#             message.save()
+#             return render(request, 'pong/partials/chat_message.html', context={'message': message})
+#     return render(request, 'pong/partials/chat.html', context={'chat_form': chat_form})
