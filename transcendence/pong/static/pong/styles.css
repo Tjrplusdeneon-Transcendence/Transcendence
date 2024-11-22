@@ -462,6 +462,7 @@ body {
 .message-list {
     list-style-type: none;
     padding: 0;
+    overflow-y: auto;
 }
 
 .user-message {
