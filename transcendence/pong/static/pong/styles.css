@@ -474,6 +474,8 @@ li {
     max-width: 60%;
     list-style-type: none;
     position: relative;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 /* User's message */
@@ -514,12 +516,12 @@ li::after {
     top: 4px;
     background: linear-gradient(250deg, #F76B31, #FB7915);
 }
-
+    
 /* Other's message triangle */
 .other-message::after {
-    left: -6px;
-    top: 10px;
-    background: linear-gradient(#FF8400, #FF840000);
+    left: -3px;
+    top: 20px;
+    background: linear-gradient(50deg, #FA761B, #F76A32);
 }
 
 /* Users profile */
