@@ -17,7 +17,6 @@
     </div>
     <div class="chat-input">
         <input id="chat-message-input" type="text" placeholder="Type your message..." style="width: 70%;"><br>
-        <!-- <input id= type="button" value="Send"> -->
         <button id="chat-message-submit" name="chatBtn">➤</button>
     </div>
 </div>
@@ -28,7 +27,6 @@
     chatSocket.onmessage = function(e) {
         document.getElementById('chatBox').innerHTML += e.data;
     };
-
     
     document.querySelector('#chat-message-input').onkeyup = function(e) {
         if (e.key === 'Enter') {
