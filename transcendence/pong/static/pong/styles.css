@@ -480,7 +480,7 @@ li {
 
 /* User's message */
 .user-message {
-    background: linear-gradient(135deg, #D400FF, #FF8400);
+    background: linear-gradient(15deg, #D400FF, #FF8400);
     color: white;
     align-self: flex-end;
     text-align: right;
@@ -514,7 +514,7 @@ li::after {
 .user-message::after {
     right: -3px;
     top: 4px;
-    background: linear-gradient(250deg, #F76B31, #FB7915);
+    background: linear-gradient(25deg, #FF872B, #FF6C47);
 }
     
 /* Other's message triangle */
