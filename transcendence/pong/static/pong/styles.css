@@ -500,38 +500,26 @@ li {
 }
 
 /* Chat bubble triangle */
-li::before {
+li::after {
     content: "";
     position: absolute;
-    border-width: 6px;
-    border-style: solid;
-    z-index: 0;  /* Ensure the triangle is below the bubble */
+    width: 12px;
+    height: 12px;
+    background: inherit; /* Inherit gradient */
+    z-index: -1;  /* Ensure the triangle is below the bubble */
+    transform: rotate(45deg);
 }
 
 /* User's message triangle */
-.user-message::before {
-    border-color: transparent transparent transparent transparent;
-    background: #FF8400; /* linear-gradient(135deg, #D400FF, #FF8400); */
-    width: 12px;
-    height: 12px;
-    position: absolute;
-    transform: rotate(45deg);
+.user-message::after {
     right: -6px;
     top: 10px;
-    z-index: 0;  /* Ensure the triangle is below the bubble */
 }
 
 /* Other's message triangle */
-.other-message::before {
-    border-color: transparent transparent transparent transparent;
-    background: #FF8400; /* linear-gradient(135deg, #FF8400, #D400FF); */
-    width: 12px;
-    height: 12px;
-    position: absolute;
-    transform: rotate(45deg);
+.other-message::after {
     left: -6px;
     top: 10px;
-    z-index: 0;  /* Ensure the triangle is below the bubble */
 }
 
 /* Users profile */
