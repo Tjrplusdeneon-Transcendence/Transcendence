@@ -19,8 +19,9 @@ def signin_user(request):
             user = authenticate(username = sign_form.cleaned_data['username'], password = sign_form.cleaned_data['password'],)
             if user is not None:
                 login(request, user)
+                chat_messages = Chat.objects.all()[:20]
                 panel_html = render_to_string('pong/partials/panel.html', request=request)
-                chat_html = render_to_string('pong/chat.html', request=request)
+                chat_html = render_to_string('pong/chat.html', {'chat_messages': chat_messages}, request=request)
                 return JsonResponse({
                     'panel_html': panel_html,
                     'chat_html': chat_html
