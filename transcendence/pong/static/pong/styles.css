@@ -441,6 +441,7 @@ body {
     font-family: 'Press Start 2P', cursive;
     font-size: 12px;
     outline: none;
+    font-family: goodtime;
 }
 
 .chat-input button {
