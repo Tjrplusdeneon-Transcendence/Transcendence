@@ -19,7 +19,6 @@ document.querySelector('#chat-message-submit').onclick = function(e) {
         'message': message
     }));
     messageInputDom.value = '';
-    chatSocket.close();
 };
 
 
