@@ -335,6 +335,9 @@ function gameOverMessage() {
     if (restartButton) {
         restartButton.disabled = false;
     }
+
+    // Enable the "Return to Menu" button
+    document.getElementById('return-menu-btn').disabled = false;
 }
 
 function calculateMissProbability() 
@@ -911,6 +914,9 @@ function startGame() {
             requestAnimationFrame(draw);
         });
     }
+
+    // Disable the "Return to Menu" button
+    document.getElementById('return-menu-btn').disabled = true;
 }
 
 
@@ -1353,29 +1359,24 @@ document.getElementById('start-solo-game-btn').addEventListener('click', functio
     }
 });
 
-document.getElementById('return-menu-btn').addEventListener('click', function() {
-    // Hide rematch and quit buttons
-    document.getElementById('rematch-btn').style.display = 'none';
-    document.getElementById('quit-btn').style.display = 'none';
-
-    // Notify the opponent that the player has left and close the socket connection
-    if (socket && socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify({ type: 'quit' })); // Notify the opponent that the player has left
-        socket.close(); // Close the socket connection
-        resetMatchmakingState(); // Reset matchmaking state
-    }
-
-    // Return to the main menu
+function resetMainMenu() {
+    document.getElementById('mainMenuCanvas').style.display = 'block';
+    document.getElementById('leftSide').style.display = 'flex';
+    document.getElementById('rightSide').style.display = 'flex';
+    document.getElementById('singleplayerButton').style.display = 'block';
+    document.getElementById('multiplayerButton').style.display = 'block';
     document.getElementById('difficulty-menu').style.display = 'none';
     document.getElementById('pongCanvas').style.display = 'none';
     document.getElementById('multiplayer-menu').style.display = 'none';
-    document.getElementById('mainMenuCanvas').style.display = 'block';
-    document.getElementById('leftSide').style.display = 'flex'; // Show the left side
-    document.getElementById('rightSide').style.display = 'flex'; // Show the right side
-    document.getElementById('singleplayerButton').style.display = 'none';
-    document.getElementById('multiplayerButton').style.display = 'none';
+    document.getElementById('start-solo-game-btn').style.display = 'none';
+    document.getElementById('start-multiplayer-btn').style.display = 'none';
     document.getElementById('return-menu-btn').style.display = 'none';
     document.getElementById('go-back-btn').style.display = 'none';
+    document.getElementById('searching-menu').style.display = 'none';
+}
+
+document.getElementById('return-menu-btn').addEventListener('click', function() {
+    resetMainMenu();
 });
 
 let darknessModeActive = false;
