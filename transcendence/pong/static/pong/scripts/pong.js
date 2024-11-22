@@ -1360,6 +1360,10 @@ document.getElementById('start-solo-game-btn').addEventListener('click', functio
 });
 
 function resetMainMenu() {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ type: 'quit' })); // Notify the opponent that the player has left
+        socket.close(); // Close the socket connection when going back
+    }
     document.getElementById('mainMenuCanvas').style.display = 'block';
     document.getElementById('leftSide').style.display = 'flex';
     document.getElementById('rightSide').style.display = 'flex';
@@ -1373,6 +1377,8 @@ function resetMainMenu() {
     document.getElementById('return-menu-btn').style.display = 'none';
     document.getElementById('go-back-btn').style.display = 'none';
     document.getElementById('searching-menu').style.display = 'none';
+    document.getElementById('rematch-btn').style.display = 'none';
+    document.getElementById('quit-btn').style.display = 'none';
 }
 
 document.getElementById('return-menu-btn').addEventListener('click', function() {
