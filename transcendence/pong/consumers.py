@@ -11,7 +11,6 @@ import random
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.user = self.scope['user']
-        print('ID:', self.user.id)
         async_to_sync(self.channel_layer.group_add)("chat", self.channel_name) # ws channel joins the group
         self.accept()
 
@@ -33,6 +32,7 @@ class ChatConsumer(WebsocketConsumer):
 
 
     def message_handler(self, event):
+        print('ID:', event['user_id'])
         message = Chat.objects.get(id=event['message_id'])
         user = User.objects.get(id=event['user_id'])
         html = render_to_string('pong/partials/chat_message.html', context={'message': message, 'user': user})
