@@ -1,9 +1,10 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from . import forms
 from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
 from pong.models import Chat
+from django.template.loader import render_to_string
 
 def index(request):
     chat_messages = Chat.objects.all()[:20]
@@ -18,7 +19,12 @@ def signin_user(request):
             user = authenticate(username = sign_form.cleaned_data['username'], password = sign_form.cleaned_data['password'],)
             if user is not None:
                 login(request, user)
-                return render(request, 'pong/partials/panel.html')
+                panel_html = render_to_string('pong/partials/panel.html', request=request)
+                chat_html = render_to_string('pong/chat.html', request=request)
+                return JsonResponse({
+                    'panel_html': panel_html,
+                    'chat_html': chat_html
+                })
             else:
                 signin_error_message = 'Wrong credentials'
     return render(request, 'pong/partials/signin.html', context={'sign_form': sign_form, 'signin_error_message': signin_error_message})

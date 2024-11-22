@@ -5,6 +5,14 @@ document.getElementById('loginButton').addEventListener('click', function(event)
 	document.getElementById('chatContainer').style.display = 'block';
 });
 
+document.addEventListener('htmx:afterOnLoad', function(evt) {
+    if (evt.detail.target.id === 'loginPanel') {
+        const response = JSON.parse(evt.detail.xhr.responseText);
+        document.getElementById('loginPanel').innerHTML = response.panel_html;
+        document.getElementById('chatSection').innerHTML = response.chat_html;
+    }
+});
+
 document.getElementById('closeButton').addEventListener('click', function() 
 {
     document.getElementById('loginPanel').classList.add('slide-out');
