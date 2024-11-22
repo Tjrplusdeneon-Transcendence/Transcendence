@@ -2,6 +2,7 @@ document.getElementById('loginButton').addEventListener('click', function(event)
 {
     event.preventDefault();
     document.getElementById('loginPanel').style.display = 'block';
+	document.getElementById('chatContainer').style.display = 'block';
 });
 
 document.getElementById('closeButton').addEventListener('click', function() 
@@ -18,7 +19,8 @@ document.getElementById('logoutButton').addEventListener('click', function()
 {
     document.getElementById('loginForm').style.display = 'block';
     document.getElementById('profileInfo').style.display = 'none';
-    document.getElementById('gameStats').style.display = 'none'; 
+    document.getElementById('gameStats').style.display = 'none';
+	document.getElementById('chatContainer').style.display = 'none';
 	chatSocket.close();
 });
 
