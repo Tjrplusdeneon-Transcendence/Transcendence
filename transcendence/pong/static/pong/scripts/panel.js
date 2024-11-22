@@ -16,10 +16,10 @@ document.getElementById('closeButton').addEventListener('click', function()
 
 document.getElementById('logoutButton').addEventListener('click', function() 
 {
-    isLoggedIn = false;
     document.getElementById('loginForm').style.display = 'block';
     document.getElementById('profileInfo').style.display = 'none';
     document.getElementById('gameStats').style.display = 'none'; 
+	chatSocket.close();
 });
 
 function openProfileModal(username, targetElement) 
