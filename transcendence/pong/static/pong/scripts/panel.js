@@ -17,8 +17,7 @@ document.getElementById('closeButton').addEventListener('click', function()
 
 document.getElementById('logoutButton').addEventListener('click', function() 
 {
-	console.log('LOGOUT');
-    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('signForm').style.display = 'block';
     document.getElementById('profileInfo').style.display = 'none';
     document.getElementById('gameStats').style.display = 'none';
 	document.getElementById('chatContainer').style.display = 'none';
