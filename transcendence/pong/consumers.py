@@ -11,6 +11,7 @@ import random
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.user = self.scope['user']
+        print('ID:', self.user.id)
         async_to_sync(self.channel_layer.group_add)("chat", self.channel_name) # ws channel joins the group
         self.accept()
 
