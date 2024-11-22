@@ -469,7 +469,27 @@ body {
 .user-message {
     text-align: right;
     margin-left: auto;
+    list-style-type: none;
+    padding: 10px 15px;
+    margin: 10px 0;
+    max-width: 80%;
+    color: white;
+    border-radius: 15px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.4;
+    background: linear-gradient(135deg, #D400FF, #FF8400);    
 }
+
+.user-message {
+    content: '';
+    position: absolute;
+    bottom: -10px; /* Position below the bubble */
+    left: 20px; /* Position the tail towards the left side */
+    border-width: 10px; /* Size of the triangle */
+    border-style: solid;
+    border-color: transparent transparent #D400FF transparent; /* Match the bubble color */
+  }
 
 .other-message {
     text-align: left;
