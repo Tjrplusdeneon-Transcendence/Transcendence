@@ -97,7 +97,7 @@ document.getElementById('closeProfileModal').addEventListener('click', function(
 
 document.getElementById('addFriendBtn').addEventListener('click', function() 
 {
-    alert('Friend request sent to ' + document.getElementById('profileUsername').textContent);
+    g'Friend request sent to ' + document.getElementById('profileUsername').textContent);
 });
 
 document.getElementById('chatMessage').addEventListener('keydown', function(e) 
