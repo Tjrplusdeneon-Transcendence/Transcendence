@@ -478,20 +478,24 @@ li {
 
 /* User's message */
 .user-message {
-    background-color: #d1e7dd;
-    color: #0f5132;
+    background: linear-gradient(135deg, #D400FF, #FF8400);
+    color: white;
     align-self: flex-end;
     text-align: right;
     margin-left: auto;
+    border: 1px solid transparent;
+    background-clip: padding-box; /* Ensure gradient doesn't cover text */
 }
 
 /* Other's message */
 .other-message {
-    background-color: #f8d7da;
-    color: #842029;
+    background: linear-gradient(135deg, #FF8400, #D400FF);
+    color: white;
     align-self: flex-start;
     text-align: left;
     margin-right: auto;
+    border: 1px solid transparent;
+    background-clip: padding-box; /* Ensure gradient doesn't cover text */
 }
 
 /* Chat bubble triangle */
@@ -503,41 +507,17 @@ li::before {
 }
 
 .user-message::before {
-    border-color: transparent transparent transparent #d1e7dd;
+    border-color: transparent transparent transparent rgba(212, 0, 255, 0.5);
     right: -12px;
     top: 10px;
 }
 
 .other-message::before {
-    border-color: transparent #f8d7da transparent transparent;
+    border-color: transparent rgba(255, 132, 0, 0.5) transparent transparent;
     left: -12px;
     top: 10px;
 }
 
-
-/* .user-message, .other-message {
-    list-style-type: none;
-    padding: 10px 15px;
-    margin: 10px 0;
-    max-width: 80%;
-    color: white;
-    border-radius: 15px;
-    position: relative;
-    font-size: 14px;
-    line-height: 1.4;
-    background: linear-gradient(135deg, #D400FF, #FF8400);
-    word-wrap: break-word;
-}
-
-.user-message {
-    text-align: right;
-    margin-left: auto;
-}
-
-.other-message {
-    text-align: left;
-    margin-right: auto;
-} */
 
 
 /* Users profile */
