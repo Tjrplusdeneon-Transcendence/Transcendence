@@ -474,6 +474,7 @@ li {
     max-width: 60%;
     list-style-type: none;
     position: relative;
+    z-index: 1;  /* Ensure the bubble is above the triangle */
 }
 
 /* User's message */
@@ -504,6 +505,7 @@ li::before {
     position: absolute;
     border-width: 6px;
     border-style: solid;
+    z-index: 0;  /* Ensure the triangle is below the bubble */
 }
 
 /* User's message triangle */
@@ -516,6 +518,7 @@ li::before {
     transform: rotate(45deg);
     right: -6px;
     top: 10px;
+    z-index: 0;  /* Ensure the triangle is below the bubble */
 }
 
 /* Other's message triangle */
@@ -528,6 +531,7 @@ li::before {
     transform: rotate(45deg);
     left: -6px;
     top: 10px;
+    z-index: 0;  /* Ensure the triangle is below the bubble */
 }
 
 /* Users profile */
