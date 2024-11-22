@@ -15,12 +15,12 @@ class SignupForm(UserCreationForm):
 			"username": None,
 		}
 
-class ChatForm(forms.ModelForm):
-	class Meta:
-		model = Chat
-		fields = ('content',)
+# class ChatForm(forms.ModelForm):
+# 	class Meta:
+# 		model = Chat
+# 		fields = ('content',)
 	
-	content = forms.CharField(
-		widget=forms.Textarea(attrs={'placeholder': 'Écrire un message...', 'style': 'width: 80%; height: 2em; resize: none;'}),
-		label='',
-		)
+# 	content = forms.CharField(
+# 		widget=forms.Textarea(attrs={'placeholder': 'Écrire un message...', 'style': 'width: 80%; height: 2em; resize: none;'}),
+# 		label='',
+# 		)

@@ -7,7 +7,8 @@ from pong.models import Chat
 
 def index(request):
     chat_messages = Chat.objects.all()[:10]
-    return render(request, 'pong/index.html', context={'chat_messages': chat_messages, 'chat_form': forms.ChatForm()})
+    return render(request, 'pong/index.html', context={'chat_messages': chat_messages})
+    # return render(request, 'pong/index.html', context={'chat_messages': chat_messages, 'chat_form': forms.ChatForm()})
 
 def signin_user(request):
     sign_form = forms.SigninForm()
