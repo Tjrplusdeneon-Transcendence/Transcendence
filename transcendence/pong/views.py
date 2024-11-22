@@ -46,4 +46,4 @@ def chat(request):
     #         message.author = request.user
     #         message.save()
     #         return render(request, 'pong/partials/chat_message.html', context={'message': message})
-    return render(request, 'pong/partials/chat_form.html', context={'chat_form': chat_form})
+    return render(request, 'pong/partials/chat.html', context={'chat_form': chat_form})

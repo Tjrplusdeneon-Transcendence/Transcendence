@@ -15,7 +15,36 @@
             {% endfor %}
         </ul>
     </div>
-    <input id="chat-message-input" type="text"><br>
+    <div class="chat-input">
+        <form id="chatForm">
+            {% csrf_token %}
+            {{ chat_form }}
+            <button id="chatBtn" name="chatBtn">➤</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/');
+    
+    document.querySelector('#chatBtn').onclick = function(e) {
+        const messageInputDom = document.querySelector('#chatForm');
+        const content = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
+            'content': content
+        }));
+        messageInputDom.value = '';
+    };        
+</script>
+
+<!-- document.querySelector('#chatForm').focus();
+    document.querySelector('#chatForm').onkeyup = function(e) {
+    if (e.key === 'Enter') { 
+        document.querySelector('#chatBtn').click();
+    }
+}; -->
+
+    <!-- <input id="chat-message-input" type="text"><br>
     <input id="chat-message-submit" type="button" value="Send">
     <script>
         const chatSocket = new WebSocket('ws://' + window.location.host + 'ws/chat/');
@@ -34,22 +63,11 @@
             }));
             messageInputDom.value = '';
         };        
-    </script>
+    </script> -->
 
 
-    <!-- <div class="chat-input">
-        <form id="chatForm"
-            hx-ext="ws"
-            ws-connect="/ws/chat"
-            ws-send>
-            {% include 'pong/partials/chat_form.html' %}
-            <button id="chat" name="chat">➤</button>
-        </form>
-    </div>
-</div>
 
-
-<script>
+<!-- <script>
     document.getElementById('chatForm').addEventListener('submit', function(event) {
         event.preventDefault();
         alert("1");
