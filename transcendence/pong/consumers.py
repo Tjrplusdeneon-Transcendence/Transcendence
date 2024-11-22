@@ -18,6 +18,7 @@ class ChatConsumer(WebsocketConsumer):
         async_to_sync(self.channel_layer.group_discard)("chat", self.channel_name) # ws channel leaves the group
 
     def receive(self, text_data):
+        print(text_data)
         content = (json.loads(text_data))["content"]
         message = Chat.objects.create(
             content = content,
