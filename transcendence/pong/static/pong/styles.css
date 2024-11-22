@@ -466,7 +466,7 @@ body {
     padding: 0;
 }
 
-/* .user-message, .other-message {
+.user-message, .other-message {
     list-style-type: none;
     padding: 10px 15px;
     margin: 10px 0;
@@ -478,7 +478,7 @@ body {
     line-height: 1.4;
     background: linear-gradient(135deg, #D400FF, #FF8400);
     word-wrap: break-word;
-} */
+}
 
 .user-message {
     text-align: right;
