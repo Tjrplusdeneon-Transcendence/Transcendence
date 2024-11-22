@@ -791,3 +791,167 @@ body {
 .memory-game-container .card.bot-match {
     border-color: orange;
 }
+
+#multiplayer-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+#multiplayer-menu button {
+    border: none;
+    padding: 10px 30px;
+    margin: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 200px;
+    border-radius: 5px;
+    background: linear-gradient(135deg, #00ffea, #ff00fb);
+    color: white;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+#multiplayer-menu button:hover {
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.7), 0 0 40px rgba(0, 255, 234, 0.7);
+    transform: scale(1.1);
+}
+
+#go-back-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    height: 100%;
+    padding: 10px;
+}
+
+#go-back-btn {
+    border: none;
+    padding: 10px 30px;
+    margin: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 200px;
+    border-radius: 5px;
+    background: linear-gradient(135deg, #00ffea, #ff00fb);
+    color: white;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+#go-back-btn:hover {
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.7), 0 0 40px rgba(0, 255, 234, 0.7);
+    transform: scale(1.1);
+}
+
+#searching-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+#searching-btn {
+    border: none;
+    padding: 10px 30px;
+    margin: 10px;
+    cursor: not-allowed;
+    font-size: 16px;
+    width: 200px;
+    border-radius: 5px;
+    background: linear-gradient(135deg, #00ffea, #ff00fb);
+    color: white;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+#searching-btn.active {
+    cursor: pointer;
+    background: linear-gradient(135deg, #00ffea, #ff00fb);
+}
+
+#searching-btn.active:hover {
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.7), 0 0 40px rgba(0, 255, 234, 0.7);
+    transform: scale(1.1);
+}
+
+
+
+/* .main-menu-button {
+    position: absolute;
+    width: 40%;
+    height: 20%;
+    background: linear-gradient(135deg, #00ffea, #ff00fb);
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 18px;
+    text-align: center;
+    line-height: 2.5;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.main-menu-button:hover {
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.7), 0 0 40px rgba(0, 255, 234, 0.7);
+    transform: scale(1.1);
+} */
+
+/* #singleplayerButton {
+    left: 10%;
+    top: 40%;
+}
+
+#multiplayerButton {
+    right: 10%;
+    top: 40%;
+} */
+
+#mainMenuCanvas {
+    width: 100%;
+    height: auto;
+    background-color: #1a1a1a;
+    position: relative;
+}
+
+.main-menu-side {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#leftSide {
+    left: 0;
+    background-color: #1a1a1a;
+}
+
+#rightSide {
+    right: 0;
+    background-color: #1a1a1a;
+}
+
+#leftSide:hover {
+    background-color: #00FFFF;
+}
+
+#rightSide:hover {
+    background-color: #ff00fb;
+}
