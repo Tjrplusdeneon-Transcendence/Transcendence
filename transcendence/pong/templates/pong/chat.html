@@ -3,7 +3,7 @@
     <div class="chat-box" id="chatBox">
         <ul>
             {% for message in chat_messages reversed %}
-                {% if message.author is request.user %}
+                {% if message.author.id == request.user.id %}
                     <li class="user-message">
                         {{ message.content }}
                     </li>
