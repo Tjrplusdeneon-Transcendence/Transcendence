@@ -536,7 +536,8 @@ li {
     border: 1px solid transparent;
     background-clip: padding-box; /* Ensure gradient doesn't cover text */
     display: block;
-    max-width: fit-content;
+    max-width: 75%;
+    width: fit-content;
 }
 
 /* Specific styles for user messages */
@@ -545,40 +546,38 @@ li {
     align-self: flex-end; /* Align the bubble to the right */
     margin-left: auto;
     text-align: end;
-    max-width: 75%;
 }
 
 /* Specific styles for other messages */
 .other-message {
     background: linear-gradient(135deg, #FF8400, #D400FF);
     align-self: flex-start;
-    max-width: 75%;
     margin-top: 0px;
 }
 
 /* Chat bubble triangle */
-.user-message::after, .other-message::after {
+/* .user-message::after, .other-message::after {
     content: "";
     position: absolute;
     width: 10px;
     height: 15px;
     background: inherit;
     transform: rotate(200deg);
-}
+} */
 
 /* User's message triangle */
-.user-message::after {
+/* .user-message::after {
     right: -3px;
     top: 4px;
     background: linear-gradient(25deg, #FF872B, #FF6C47);
-}
+} */
     
 /* Other's message triangle */
-.other-message::after {
+/* .other-message::after {
     left: -3px;
     top: 20px;
     background: linear-gradient(50deg, #FA761B, #F76A32);
-}
+} */
 
 /* Users profile */
 .synthwave-modal {
