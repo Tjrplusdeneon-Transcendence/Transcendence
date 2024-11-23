@@ -48,7 +48,8 @@ class ChatConsumer(WebsocketConsumer):
 
     def invite_handler(self, event):
         player = User.objects.get(id=event['player_id'])
-        html = render_to_string('pong/partials/chat_message.html', context={'message': 'Play a game with me', 'user': self.user})
+        message = 
+        html = render_to_string('pong/partials/chat_message.html', context={'message': message, 'user': self.user})
         self.send(text_data=html)
 
     def message_handler(self, event):
