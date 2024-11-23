@@ -34,12 +34,14 @@ class ChatConsumer(WebsocketConsumer):
             author_id = data['ban']
             try:
                 author = User.objects.get(id=author_id)
+                print("BANNING AUTHOR:", author.username)
                 self.user.banned_users.add(author)
             except User.DoesNotExist:
                 pass
             
     def message_handler(self, event):
         message = Chat.objects.get(id=event['message_id'])
+        print("TEST AUTHOR:", message.author.username)
         if message.author not in self.user.banned_users.all():
             html = render_to_string('pong/partials/chat_message.html', context={'message': message, 'user': self.user})
             self.send(text_data=html)
