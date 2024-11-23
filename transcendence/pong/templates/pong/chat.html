@@ -15,7 +15,7 @@
                             <button class="ban-button" author-id="{{ message.author.id }}" title="Ban user">🚫</button>
                             <button class="invite-button" user-id="{{ user.id }}" author-id="{{ message.author.id }}" title="Invite user">🕹️</button>
                         </div>
-                        <span class="other-message">{{ message.content }}</span>
+                        <span class="other-message">{{ message.content|safe }}</span>
                     </li>
                     {% endif %}
             {% endfor %}
