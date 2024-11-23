@@ -19,7 +19,6 @@ class ChatConsumer(WebsocketConsumer):
 
     def receive(self, text_data):
         data = json.loads(text_data)
-        print("DATA=>", data)
         if 'message' in data:
             content = data["message"]
             message = Chat.objects.create(
@@ -32,18 +31,15 @@ class ChatConsumer(WebsocketConsumer):
             }
             async_to_sync(self.channel_layer.group_send)("chat", event)
         elif 'ban' in data:
-            print('HERE =>', data)
             author_id = data['ban']
             try:
                 author = User.objects.get(id=author_id)
-                print("BANNING AUTHOR:", author.username)
                 self.user.banned_users.add(author)
             except User.DoesNotExist:
                 pass
             
     def message_handler(self, event):
         message = Chat.objects.get(id=event['message_id'])
-        print("TEST AUTHOR:", message.author.username)
         if message.author not in self.user.banned_users.all():
             html = render_to_string('pong/partials/chat_message.html', context={'message': message, 'user': self.user})
             self.send(text_data=html)
