@@ -11,7 +11,7 @@
                 {% else %}
                     <li class="other-message">
                         {{ message.author }}: {{ message.content }}
-                        <button class="ban-button" data-author="{{ message.author.id }}">X</button>
+                        <button class="bi bi-ban" data-author="{{ message.author.id }}"></button>
                     </li>
                 {% endif %}
             {% endfor %}
