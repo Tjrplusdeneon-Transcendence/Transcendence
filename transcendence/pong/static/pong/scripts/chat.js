@@ -11,7 +11,7 @@ function initializeWebSocket() {
     // Ensure an existing WebSocket connection is closed
     closeWebSocket();
 
-    chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/');
+    chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat');
 
     chatSocket.onmessage = function(e) {
         document.getElementById('messageList').innerHTML += e.data;
