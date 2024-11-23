@@ -534,13 +534,16 @@ li {
     text-align: left; /* Align text to the left inside the bubble */
     border: 1px solid transparent;
     background-clip: padding-box; /* Ensure gradient doesn't cover text */
-    display: inline-block; /* Ensure the bubble size adjusts to text */
+    display: block;
+    max-width: fit-content;
 }
 
 /* Specific styles for user messages */
 .user-message {
     background: linear-gradient(15deg, #D400FF, #FF8400);
     align-self: flex-end; /* Align the bubble to the right */
+    margin-left: auto;
+    text-align: end;
 }
 
 /* Specific styles for other messages */
