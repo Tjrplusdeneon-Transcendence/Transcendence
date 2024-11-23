@@ -9,10 +9,13 @@
                         {{ message.content }}
                     </li>
                 {% else %}
-                    <li class="other-message">
-                        {{ message.author }}: {{ message.content }}
-                        <button class="ban-button" data-author="{{ message.author.id }}">🚫</button>                        
-                    </li>
+                <li class="other-message">
+                    <span class="message-bubble">{{ message.content }}</span>
+                    <div class="message-meta">
+                        <span class="message-author">{{ message.author }}</span>
+                        <button class="ban-button" data-author="{{ message.author.id }}">🚫</button>
+                    </div>
+                </li>
                 {% endif %}
             {% endfor %}
         </ul>

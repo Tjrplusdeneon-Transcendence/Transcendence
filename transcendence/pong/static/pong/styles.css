@@ -424,6 +424,7 @@ body {
     pointer-events: auto;
 }
 
+
 .chat-input {
     display: flex;
     align-items: center;
@@ -468,6 +469,38 @@ body {
 }
 
 /* General chat bubble styles */
+
+.message-bubble {
+    display: inline-block;
+    padding: 10px;
+    border-radius: 15px;
+    background-color: #f0f0f0;
+    margin-bottom: 5px;
+}
+
+.message-meta {
+    font-size: 0.8em;
+    color: #888;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ban-button {
+    background: none;
+    border: none;
+    color: #ff0000;
+    cursor: pointer;
+    font-size: 1em;
+    padding: 0;
+}
+
+.ban-button:hover {
+    color: #cc0000;
+}
+
+
+
 li {
     padding: 10px;
     margin: 5px 0;
