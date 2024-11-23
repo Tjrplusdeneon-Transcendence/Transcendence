@@ -40,7 +40,9 @@ class ChatConsumer(WebsocketConsumer):
                 pass
         elif 'invite' in data:
             sender_id = data['sender']
+            print('sender_id: ', sender_id)
             player_id = data['invite']
+            print('player_id: ', player_id)
             event = {
                 'type': 'invite_handler',
                 'sender_id': sender_id,
