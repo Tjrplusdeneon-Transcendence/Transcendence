@@ -60,4 +60,4 @@ def increase_wins(request):
     user = request.user
     user.wins += 1
     user.save()
-    return JsonResponse({'status': 'success', 'wins': user.wins})
+    return render(request, 'pong/partials/panel.html')
