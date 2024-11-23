@@ -518,6 +518,7 @@ li {
     flex-direction: column;
     align-items: flex-start;
     margin: 10px 0;
+    clear: both; /* Ensure each message starts on a new line */
 }
 
 /* User's message */
@@ -530,27 +531,27 @@ li {
     word-wrap: break-word;
     overflow-wrap: break-word;
     background: linear-gradient(15deg, #D400FF, #FF8400);
+    font-size: 14px;
     color: white;
     align-self: flex-end;
     text-align: left; /* Align text to the left inside the bubble */
     margin-left: auto;
     border: 1px solid transparent;
     background-clip: padding-box; /* Ensure gradient doesn't cover text */
-    /* display: inline-block; Ensure the bubble size adjusts to text */
-    float: right; /* Align the bubble to the right */
+    display: inline-block; /* Ensure the bubble size adjusts to text */
 }
-
 
 /* Other's message */
 .other-message {
     padding: 0 10px; /* Adjust padding to prevent overflow */
     margin: 0px 0; /* Adjust margin for better spacing */
     border-radius: 10px;
-    /* Removed max-width */
+    max-width: 60%; /* Ensure the bubble doesn't exceed 60% of the chat box width */
     position: relative;
     word-wrap: break-word;
     overflow-wrap: break-word;
     background: linear-gradient(135deg, #FF8400, #D400FF);
+    font-size: 14px;
     color: white;
     align-self: flex-start;
     text-align: left;
@@ -559,7 +560,7 @@ li {
     background-clip: padding-box; /* Ensure gradient doesn't cover text */
     padding: 10px;
     position: relative;
-    display: inline;
+    display: inline-block; /* Ensure the bubble size adjusts to text */
 }
 
 /* Chat bubble triangle */
