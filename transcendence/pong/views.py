@@ -6,6 +6,9 @@ from django.conf import settings
 from pong.models import Chat
 from django.template.loader import render_to_string
 
+def view_404(request, exception=None):
+    return redirect('index')
+
 def index(request):
     chat_messages = Chat.objects.all()[:20]
     return render(request, 'pong/index.html', context={'chat_messages': chat_messages})
