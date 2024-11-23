@@ -246,7 +246,7 @@ function drawBall(posX = x, posY = y, opacity = 1)
 
 function gameOverMessage() {
     // Clear any previous game over message
-    // if in online match, activate rematch and quit buttons
+    // if in online match, activate rematch and quit buttons'
     if (isMatchmaking) {
         document.getElementById('rematch-btn').disabled = false;
         document.getElementById('quit-btn').disabled = false;
@@ -688,11 +688,17 @@ function draw(currentTime) {
     if (x + dx * deltaTime < ballRadius) {
         winner = LocalMultiplayer ? 'Player 2' : (isAIEnabled ? 'AI' : 'Player 2');
         gameRunning = false;
+        if (isTournament) {
+            endGameTournament();
+        } 
         gameOverMessage();
         return;
     } else if (x + dx * deltaTime > canvas.width - ballRadius) {
         winner = 'Player 1';
         gameRunning = false;
+        if (isTournament) {
+            endGameTournament();
+        }
         gameOverMessage();
         return;
     }
@@ -918,6 +924,38 @@ function startGame() {
         isAIEnabled = false;
 
         document.getElementById('pongCanvas').style.display = 'block';
+        gameRunning = true;
+        x = canvas.width / 2;
+        y = canvas.height / 2;
+        lastTime = 0;
+
+        drawInitialGameState();
+
+        showReadyAnimation(() => {
+            requestAnimationFrame(draw);
+        });
+    } else if (isTournament) {
+        // Set up the game for local multiplayer in tournament mode
+        LocalMultiplayer = true;
+        playerRole = 'player1';
+        paddleY1 = (canvas.height - paddleHeight) / 2;
+        paddleY2 = (canvas.height - paddleHeight) / 2;
+        x = canvas.width / 2;
+        y = canvas.height / 2;
+
+        const angle = Math.random() * Math.PI / 4 - Math.PI / 8;
+        const speed = Math.sqrt(difficultySettings[currentDifficulty].dx * difficultySettings[currentDifficulty].dx + difficultySettings[currentDifficulty].dy * difficultySettings[currentDifficulty].dy);
+        dx = -Math.abs(speed * Math.cos(angle));
+        dy = speed * Math.sin(angle);
+
+        document.getElementById('difficulty-menu').style.display = 'none';
+        document.getElementById('pongCanvas').style.display = 'block';
+
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+        }
+        cancelAnimation = false;
+
         gameRunning = true;
         x = canvas.width / 2;
         y = canvas.height / 2;
@@ -1204,13 +1242,17 @@ document.getElementById('local-btn').addEventListener('click', function()
 });
 
 document.getElementById('go-back-btn').addEventListener('click', function() {
-    if (document.getElementById('searching-menu').style.display === 'flex' || inLocal === true) {
+    if (document.getElementById('searching-menu').style.display === 'flex' || inLocal === true || isTournament === true) {
         document.getElementById('searching-menu').style.display = 'none';
         document.getElementById('multiplayer-menu').style.display = 'flex';
         if (socket && socket.readyState === WebSocket.OPEN) {
             socket.send(JSON.stringify({ type: 'quit' })); // Notify the opponent that the player has left
             socket.close(); // Close the socket connection when going back
         }
+        document.getElementById('tournamentSetup').style.display = 'none';
+        document.getElementById('startTournamentBtn').style.display = 'none';
+        document.getElementById('playerInputs').innerHTML = ''; // Clear player inputs
+        document.getElementById('playerCount').textContent = 'Select Players Nicknames (0/8)';
         document.getElementById('start-solo-game-btn').style.display = 'none';
         document.getElementById('pongCanvas').style.display = 'none'; // Hide the game canvas
         document.getElementById('difficulty-menu').style.display = 'none';
@@ -1219,6 +1261,9 @@ document.getElementById('go-back-btn').addEventListener('click', function() {
         document.getElementById('go-back-btn').textContent = 'Return to Menu'; // Change button text to "Return to Menu"
         LocalMultiplayer = false;
         inLocal = false;
+        isTournament = false;
+        // remove tournament buttons
+        // document.getElementById('
     } else {
         document.getElementById('multiplayer-menu').style.display = 'none';
         document.getElementById('difficulty-menu').style.display = 'none';
@@ -1526,4 +1571,192 @@ function toggleDarknessMode(currentTime) {
             lastVisibilityToggleTime = currentTime;
         }
     }
+}
+
+// Tournament Mode
+
+let players = [];
+let currentMatch = 0;
+let tournamentStage = 'Quarter-Finals';
+let tournamentMatches = [];
+let tournamentWinner = '';
+let isTournament = false;
+
+document.getElementById('tournament-btn').addEventListener('click', function() {
+    // Hide the multiplayer options menu
+    isTournament = true;
+    document.getElementById('multiplayer-menu').style.display = 'none';
+
+    // Display the tournament setup
+    document.getElementById('tournamentSetup').style.display = 'block';
+    document.getElementById('playerCount').textContent = 'Select Players Nicknames (0/8)';
+    players = [];
+    currentMatch = 0;
+    tournamentStage = 'Quarter-Finals';
+    tournamentMatches = [];
+    tournamentWinner = '';
+    document.getElementById('playerInputs').innerHTML = '<label for="player1">Player 1: </label><input type="text" id="player1" name="player1">';
+    document.getElementById('startTournamentBtn').style.display = 'none';
+    document.getElementById('return-menu-btn').style.display = 'none'; // Hide the "Return to Menu" button
+    document.getElementById('go-back-btn').textContent = 'Go Back'; // Reset button text to "Go Back"
+});
+
+document.getElementById('addPlayerBtn').addEventListener('click', function() {
+    const playerInput = document.getElementById(`player${players.length + 1}`);
+    if (playerInput && playerInput.value.trim() !== '') {
+        players.push(playerInput.value.trim());
+        document.getElementById('playerCount').textContent = `Select Players Nicknames (${players.length}/8)`;
+        if (players.length < 8) {
+            const nextPlayer = players.length + 1;
+            document.getElementById('playerInputs').innerHTML = `<label for="player${nextPlayer}">Player ${nextPlayer}: </label><input type="text" id="player${nextPlayer}" name="player${nextPlayer}">`;
+        }
+        if (players.length >= 2) {
+            document.getElementById('startTournamentBtn').style.display = 'block';
+            document.getElementById('startTournamentBtn').textContent = `Start with ${players.length} players`;
+        }
+    }
+});
+
+document.getElementById('startTournamentBtn').addEventListener('click', function() {
+    // Fill remaining slots with AI
+    while (players.length < 8) {
+        players.push(`AI ${players.length + 1}`);
+    }
+
+    // Create tournament matches
+    tournamentMatches = [
+        { stage: 'Quarter-Finals', match: 1, player1: players[0], player2: players[1] },
+        { stage: 'Quarter-Finals', match: 2, player1: players[2], player2: players[3] },
+        { stage: 'Quarter-Finals', match: 3, player1: players[4], player2: players[5] },
+        { stage: 'Quarter-Finals', match: 4, player1: players[6], player2: players[7] },
+        { stage: 'Semi-Finals', match: 1, player1: '', player2: '' },
+        { stage: 'Semi-Finals', match: 2, player1: '', player2: '' },
+        { stage: 'Finals', match: 1, player1: '', player2: '' }
+    ];
+
+    // Hide the tournament setup and show the first match
+    document.getElementById('tournamentSetup').style.display = 'none';
+    document.getElementById('startTournamentBtn').style.display = 'none'; // Hide the "Start with X players" button
+    document.getElementById('tournamentMatch').style.display = 'block';
+    showNextMatch();
+});
+
+document.getElementById('goBackBtn').addEventListener('click', function() {
+    // Go back to the multiplayer options menu
+    document.getElementById('tournamentSetup').style.display = 'none';
+    document.getElementById('multiplayer-menu').style.display = 'flex';
+});
+
+document.getElementById('startMatchBtn').addEventListener('click', function() {
+    // Start the local match between the two players
+    document.getElementById('tournamentMatch').style.display = 'none';
+    document.getElementById('pongCanvas').style.display = 'block';
+    LocalMultiplayer = true;
+    playerRole = 'player1';
+    startGame();
+    //show winner and match type (quarter-finals, semi-finals, finals)
+});
+
+document.getElementById('proceedBtn').addEventListener('click', function() {
+    // Proceed to the next match
+    document.getElementById('pongCanvas').style.display = 'none';
+    document.getElementById('proceedBtn').style.display = 'none';
+    showNextMatch();
+});
+
+document.getElementById('goBackToMenuBtn').addEventListener('click', function() {
+    // Go back to the multiplayer options menu
+    document.getElementById('tournamentWinner').style.display = 'none';
+    document.getElementById('multiplayer-menu').style.display = 'flex';
+});
+
+function showNextMatch() {
+    while (currentMatch < tournamentMatches.length) {
+        const match = tournamentMatches[currentMatch];
+        if (match.player1.startsWith('AI') && match.player2.startsWith('AI')) {
+            // Both players are AI, randomly select a winner
+            const winner = Math.random() < 0.5 ? match.player1 : match.player2;
+            updateTournamentMatches(match, winner);
+            currentMatch++;
+        } else {
+            // At least one player is a human, show the match preparation screen
+            document.getElementById('tournamentStage').textContent = `${match.stage} (${match.match}/${match.stage === 'Quarter-Finals' ? 4 : match.stage === 'Semi-Finals' ? 2 : 1})`;
+            document.getElementById('matchup').textContent = `${match.player1} VS. ${match.player2}`;
+            document.getElementById('startMatchBtn').style.display = 'block';
+            document.getElementById('tournamentMatch').style.display = 'block';
+            currentMatch++;
+            return;
+        }
+    }
+
+    // Tournament is over, show the winner
+    document.getElementById('tournamentMatch').style.display = 'none';
+    document.getElementById('tournamentWinner').style.display = 'block';
+    document.getElementById('winnerMessage').textContent = `${tournamentWinner} Wins! Congratulations!!!`;
+}
+
+function updateTournamentMatches(match, winner) {
+    if (match.stage === 'Quarter-Finals') {
+        if (match.match === 1) tournamentMatches[4].player1 = winner;
+        if (match.match === 2) tournamentMatches[4].player2 = winner;
+        if (match.match === 3) tournamentMatches[5].player1 = winner;
+        if (match.match === 4) tournamentMatches[5].player2 = winner;
+    } else if (match.stage === 'Semi-Finals') {
+        if (match.match === 1) tournamentMatches[6].player1 = winner;
+        if (match.match === 2) tournamentMatches[6].player2 = winner;
+    } else if (match.stage === 'Finals') {
+        tournamentWinner = winner;
+    }
+}
+
+function startTournamentGame() {
+    // Initialize game state
+    isMatchmaking = false;
+    document.getElementById('pongCanvas').style.pointerEvents = 'auto';
+    document.getElementById('difficulty-menu').style.display = 'none';
+    document.getElementById('pongCanvas').style.display = 'block';
+
+    const startButton = document.getElementById('start-solo-game-btn');
+    startButton.textContent = 'Restart Game';
+
+    startButton.removeEventListener('click', startGame);
+    startButton.addEventListener('click', restartPong);
+
+    gameRunning = true;
+    requestAnimationFrame(draw);
+}
+
+function endGameTournament() {
+    document.getElementById('proceedBtn').style.display = 'block';
+    document.getElementById('proceedBtn').textContent = 'Proceed to Next Match';
+    // Determine the winner and update the tournament matches
+    const match = tournamentMatches[currentMatch - 1];
+    const winner = determineWinner(match.player1, match.player2);
+    if (match.stage === 'Quarter-Finals') {
+        if (match.match === 1) tournamentMatches[4].player1 = winner;
+        if (match.match === 2) tournamentMatches[4].player2 = winner;
+        if (match.match === 3) tournamentMatches[5].player1 = winner;
+        if (match.match === 4) tournamentMatches[5].player2 = winner;
+    } else if (match.stage === 'Semi-Finals') {
+        if (match.match === 1) tournamentMatches[6].player1 = winner;
+        if (match.match === 2) tournamentMatches[6].player2 = winner;
+    } else if (match.stage === 'Finals') {
+        tournamentWinner = winner;
+    }
+
+    // Hide the game canvas and show the proceed button
+    // Check if the tournament is over
+    if (currentMatch >= tournamentMatches.length) {
+        isTournament = false;
+        document.getElementById('pongCanvas').style.display = 'none';
+        document.getElementById('tournamentMatch').style.display = 'none';
+        document.getElementById('tournamentWinner').style.display = 'block';
+        document.getElementById('winnerMessage').textContent = `${tournamentWinner} Wins! Congratulations!!!`;
+    }
+}
+
+function determineWinner(player1, player2) {
+    // Implement the logic to determine the winner of the match
+    // For now, we'll randomly select a winner
+    return Math.random() < 0.5 ? player1 : player2;
 }
