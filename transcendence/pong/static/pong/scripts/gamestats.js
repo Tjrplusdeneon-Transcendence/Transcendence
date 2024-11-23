@@ -1,6 +1,6 @@
 function increaseWins() {
     const csrfToken = document.querySelector('body').getAttribute('hx-headers').match(/"X-CSRFToken": "([^"]+)"/)[1];
-    fetch('/increase-wins/', {
+    fetch('/increase_wins/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -18,7 +18,7 @@ function increaseWins() {
 
 function increaseLosses() {
     const csrfToken = document.querySelector('body').getAttribute('hx-headers').match(/"X-CSRFToken": "([^"]+)"/)[1];
-    fetch('/increase-losses/', {
+    fetch('/increase_losses/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ function increaseLosses() {
 
 function increaseGamesPlayed() {
     const csrfToken = document.querySelector('body').getAttribute('hx-headers').match(/"X-CSRFToken": "([^"]+)"/)[1];
-    fetch('/increase-games_played/', {
+    fetch('/increase_games_played/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
