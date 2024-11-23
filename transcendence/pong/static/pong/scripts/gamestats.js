@@ -1,4 +1,5 @@
 function increaseWins() {
+    alert("WINS FCT");
     const csrfToken = document.querySelector('body').getAttribute('hx-headers').match(/"X-CSRFToken": "([^"]+)"/)[1];
     fetch('/increase-wins/', {
         method: 'POST',
@@ -11,6 +12,7 @@ function increaseWins() {
 }
 
 function increaseLosses() {
+    alert("LOSSES FCT");
     const csrfToken = document.querySelector('body').getAttribute('hx-headers').match(/"X-CSRFToken": "([^"]+)"/)[1];
     fetch('/increase-increase_losses/', {
         method: 'POST',
