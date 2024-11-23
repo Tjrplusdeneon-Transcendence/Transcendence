@@ -523,13 +523,14 @@ li {
 
 /* Common styles for messages */
 .message {
-    padding: 10px; /* Ensure some padding inside the bubble */
+    padding: 5px; /* Ensure some padding inside the bubble */
     margin: 10px 0; /* Adjust margin for better spacing */
     border-radius: 10px;
     max-width: 60%; /* Ensure the bubble doesn't exceed 60% of the chat box width */
     position: relative;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    font-size: 14px;
     color: white;
     text-align: left; /* Align text to the left inside the bubble */
     border: 1px solid transparent;
@@ -544,12 +545,15 @@ li {
     align-self: flex-end; /* Align the bubble to the right */
     margin-left: auto;
     text-align: end;
+    max-width: 75%;
 }
 
 /* Specific styles for other messages */
 .other-message {
     background: linear-gradient(135deg, #FF8400, #D400FF);
     align-self: flex-start;
+    max-width: 75%;
+    margin-top: 0px;
 }
 
 /* Chat bubble triangle */
