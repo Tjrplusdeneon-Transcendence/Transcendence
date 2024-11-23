@@ -49,7 +49,7 @@ function attachFormSubmitListener() {
 function attachBanButtonListener() {
     document.querySelectorAll('.ban-button').forEach(button => {
         button.onclick = function(e) {
-            const authorId = e.target.getAttribute('data-author');
+            const authorId = e.target.getAttribute('author-id');
             if (authorId) {
                 chatSocket.send(JSON.stringify({ 'ban': authorId }));
             }
@@ -60,8 +60,10 @@ function attachBanButtonListener() {
 function attachInviteButtonListener() {
     document.querySelectorAll('.invite-button').forEach(button => {
         button.onclick = function(e) {
-            const senderId = user.id;
-            const authorId = e.target.getAttribute('data-author');
+            const senderId = document.body.getAttribute('user-id');
+            const authorId = e.target.getAttribute('author-id');
+            console.log("senderId", senderId);
+            console.log("authorId", authorId);
             if (authorId) {
                 chatSocket.send(JSON.stringify({ 'invite': authorId, 'sender': senderId }));
             }
