@@ -46,11 +46,15 @@ function attachFormSubmitListener() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    initializeWebSocket();
-    attachFormSubmitListener();
+    if (document.getElementById('chatContainer')) {
+        initializeWebSocket();
+        attachFormSubmitListener();
+    }
 });
 
 document.addEventListener('htmx:afterSwap', function(evt) {
+    if (evt.detail.target.id === 'chatSection') {
         initializeWebSocket();
         attachFormSubmitListener();
+    }
 });

@@ -16,9 +16,11 @@ document.addEventListener('htmx:afterRequest', function(evt) {
     htmx.process(document.body);
 
     // Reinitialize WebSocket and event listeners after content update
-    initializeWebSocket();
-    attachFormSubmitListener();
-    attachButtonListeners(); 
+    if (document.getElementById('chatContainer')) {
+        initializeWebSocket();
+        attachFormSubmitListener();
+        attachButtonListeners(); 
+    }
 });
 
 document.addEventListener('DOMContentLoaded', function() {
