@@ -6,6 +6,7 @@ class User(AbstractUser):
 	games_played = models.fields.IntegerField(default=0)
 	wins = models.fields.IntegerField(default=0)
 	losses = models.fields.IntegerField(default=0)
+	banned_users = models.ManyToManyField('self', symmetrical=False, related_name='banned_by')
 	
 	def __str__(self):
 		return self.username

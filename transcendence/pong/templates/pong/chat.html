@@ -10,7 +10,9 @@
                     </li>
                 {% else %}
                     <li class="other-message">
-                        {{ message.author }}: {{ message.content }}
+                        <span>{{ message.author }}</span>
+                        <span>x</span>
+                        <span>{{ message.content }}</span>
                     </li>
                 {% endif %}
             {% endfor %}
