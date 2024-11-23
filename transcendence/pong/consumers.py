@@ -11,20 +11,21 @@ import random
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.user = self.scope['user']
-        async_to_sync(self.channel_layer.group_add)("chat", self.channel_name) # ws channel joins the group
+        async_to_sync(self.channel_layer.group_add)(f"user_{self.user.id}", self.channel_name)  # Add user to their unique group
+        async_to_sync(self.channel_layer.group_add)("chat", self.channel_name)  # Add user to the chat group
         self.accept()
 
     def disconnect(self, close_code):
-        async_to_sync(self.channel_layer.group_discard)("chat", self.channel_name) # ws channel leaves the group
+        async_to_sync(self.channel_layer.group_discard)(f"user_{self.user.id}", self.channel_name)  # Remove user from their unique group
+        async_to_sync(self.channel_layer.group_discard)("chat", self.channel_name)  # Remove user from the chat group
 
     def receive(self, text_data):
         data = json.loads(text_data)
-        print('DATA: ', data)
         if 'message' in data:
             content = data["message"]
             message = Chat.objects.create(
-                content = content,
-                author = self.user
+                content=content,
+                author=self.user
             )
             event = {
                 'type': 'message_handler',
@@ -45,7 +46,7 @@ class ChatConsumer(WebsocketConsumer):
                 'type': 'invite_handler',
                 'sender_id': sender_id,
             }
-            async_to_sync(self.channel_layer.group_send)(f"user_{player_id}", event)
+            async_to_sync(self.channel_layer.group_send)(f"user_{player_id}", event)  # Send invite event to the player's group
 
     def invite_handler(self, event):
         sender = User.objects.get(id=event['sender_id'])
@@ -61,6 +62,7 @@ class ChatConsumer(WebsocketConsumer):
         if message.author not in self.user.banned_users.all():
             html = render_to_string('pong/partials/chat_message.html', context={'message': message, 'user': self.user})
             self.send(text_data=html)
+
 
 class PongConsumer(AsyncWebsocketConsumer):
     players_waiting = []
