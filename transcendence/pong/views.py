@@ -55,20 +55,18 @@ def logout_user(request):
         'chat_html': chat_html
         })
 
-# @login_required
-# @require_POST
+@login_required
+@require_POST
 def increase_wins(request):
-    print("WINS.view")
     user = request.user
     user.wins += 1
     user.save()
-    return render(request, 'pong/partials/panel.html')
+    return render(request, 'pong/partials/panel.html', context={'user': user})
 
-# @login_required
-# @require_POST
+@login_required
+@require_POST
 def increase_losses(request):
-    print("LOSSES.view")
     user = request.user
     user.losses += 1
     user.save()
-    return render(request, 'pong/partials/panel.html')
+    return render(request, 'pong/partials/panel.html', context={'user': user})
