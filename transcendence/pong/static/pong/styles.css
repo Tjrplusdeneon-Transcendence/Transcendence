@@ -471,8 +471,7 @@ body {
   font-size: 8px;
 }
 
-/* Buttons in tchat messages */
-
+/* Buttons in chat messages */
 .ban-button {
     background: none;
     border: none;
@@ -506,6 +505,7 @@ body {
     cursor: pointer;
     font-size: 1.2em; /* Adjust size as needed */
     padding: 0;
+    display: inline;
 }
 
 .join-game-btn:hover {
@@ -525,7 +525,7 @@ li {
     padding: 0 10px; /* Adjust padding to prevent overflow */
     margin: 10px 0; /* Adjust margin for better spacing */
     border-radius: 10px;
-    max-width: 60%;
+    /* Removed max-width */
     position: relative;
     word-wrap: break-word;
     overflow-wrap: break-word;
@@ -544,7 +544,7 @@ li {
     padding: 0 10px; /* Adjust padding to prevent overflow */
     margin: 0px 0; /* Adjust margin for better spacing */
     border-radius: 10px;
-    max-width: 60%;
+    /* Removed max-width */
     position: relative;
     word-wrap: break-word;
     overflow-wrap: break-word;
@@ -557,6 +557,7 @@ li {
     background-clip: padding-box; /* Ensure gradient doesn't cover text */
     padding: 10px;
     position: relative;
+    display: inline;
 }
 
 /* Chat bubble triangle */
@@ -582,7 +583,6 @@ li {
     top: 20px;
     background: linear-gradient(50deg, #FA761B, #F76A32);
 }
-
 
 /* Users profile */
 .synthwave-modal {
