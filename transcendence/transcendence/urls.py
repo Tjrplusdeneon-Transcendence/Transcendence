@@ -26,4 +26,4 @@ urlpatterns = [
     path('logout/', views.logout_user, name='logout'),
 ]
 
-handler404 = 'myapp.views.view_404'
+handler404 = 'pong.views.view_404'
