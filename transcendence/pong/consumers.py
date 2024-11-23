@@ -40,20 +40,18 @@ class ChatConsumer(WebsocketConsumer):
                 pass
         elif 'invite' in data:
             sender_id = data['sender']
-            print('sender_id: ', sender_id)
             player_id = data['invite']
-            print('player_id: ', player_id)
             event = {
                 'type': 'invite_handler',
                 'sender_id': sender_id,
             }
-            async_to_sync(self.channel_layer.group_send)("chat", event)
+            async_to_sync(self.channel_layer.group_send)(f"user_{player_id}", event)
 
     def invite_handler(self, event):
         sender = User.objects.get(id=event['sender_id'])
         message = {
             'author': sender,
-            'content': "You have been invited to a game", 
+            'content': "Play with me",
         }
         html = render_to_string('pong/partials/chat_message.html', context={'message': message, 'user': self.user})
         self.send(text_data=html)
