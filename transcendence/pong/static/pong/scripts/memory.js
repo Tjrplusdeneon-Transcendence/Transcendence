@@ -136,25 +136,6 @@ function showHintCard() {
     }
 }
 
-function notshowHintCard() {
-    hintActive = true; // Bloquer les actions
-    const unmatchedCards = cards.filter(card => !card.matched);
-    
-    if (unmatchedCards.length > 0) {
-        const randomIndex = Math.floor(Math.random() * unmatchedCards.length);
-        const randomCard = unmatchedCards[randomIndex];
-        const cardElement = document.querySelector(`[data-index='${cards.indexOf(randomCard)}']`);
-
-        cardElement.classList.add('hint');
-        revealCard(cardElement);
-        setTimeout(() => {
-            cardElement.classList.remove('hint');
-            hideCard(cardElement);
-            hintActive = false; // Réactiver les actions après l'aide
-        }, 1000);
-    }
-}
-
 function displayCards() {
     gameContainer.innerHTML = ''; // Effacer l'affichage existant
     cards.forEach((card, index) => {
@@ -190,21 +171,6 @@ function onCardClick(cardElement)
         flippedCards.push(cardElement);
         if (flippedCards.length === 2) 
             checkForMatch();
-    }
-}
-
-function notonCardClick(cardElement) {
-    if (hintActive || isAnimating || cardElement.classList.contains('matched') || flippedCards.length === 2) {
-        return; // Bloque les interactions pendant l'affichage de l'aide ou l'animation
-    }
-
-    if (!cardElement.classList.contains('flipped')) {
-        revealCard(cardElement);
-        flippedCards.push(cardElement);
-        if (flippedCards.length === 2) {
-            isAnimating = true; // Bloquer d'autres clics pendant la vérification
-            setTimeout(checkForMatch, 500); // Vérification après un délai
-        }
     }
 }
 
