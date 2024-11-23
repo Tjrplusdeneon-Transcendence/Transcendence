@@ -18,22 +18,31 @@ class ChatConsumer(WebsocketConsumer):
         async_to_sync(self.channel_layer.group_discard)("chat", self.channel_name) # ws channel leaves the group
 
     def receive(self, text_data):
-        content = (json.loads(text_data))["message"]
-        message = Chat.objects.create(
-            content = content,
-            author = self.user
-        )
-        event = {
-            'type': 'message_handler',
-            'message_id': message.id,
-        }
-        async_to_sync(self.channel_layer.group_send)("chat", event)
-
-
+        data = json.loads(text_data)
+        if 'message' in data:
+            content = data["message"]
+            message = Chat.objects.create(
+                content = content,
+                author = self.user
+            )
+            event = {
+                'type': 'message_handler',
+                'message_id': message.id,
+            }
+            async_to_sync(self.channel_layer.group_send)("chat", event)
+        elif 'ban' in data:
+            author_id = data['ban']
+            try:
+                author = User.objects.get(id=author_id)
+                self.user.banned_users.add(author)
+            except User.DoesNotExist:
+                pass
+            
     def message_handler(self, event):
         message = Chat.objects.get(id=event['message_id'])
-        html = render_to_string('pong/partials/chat_message.html', context={'message': message, 'user': self.user})
-        self.send(text_data=html)
+        if message.author not in self.user.banned_users.all():
+            html = render_to_string('pong/partials/chat_message.html', context={'message': message, 'user': self.user})
+            self.send(text_data=html)
 
 class PongConsumer(AsyncWebsocketConsumer):
     players_waiting = []

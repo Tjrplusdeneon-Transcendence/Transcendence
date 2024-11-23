@@ -45,10 +45,22 @@ function attachFormSubmitListener() {
     }
 }
 
+function attachBanButtonListener() {
+    document.querySelectorAll('.ban-button').forEach(button => {
+        button.onclick = function(e) {
+            const authorId = e.target.getAttribute('data-author');
+            if (authorId) {
+                chatSocket.send(JSON.stringify({ 'ban': authorId }));
+            }
+        };
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('chatContainer')) {
         initializeWebSocket();
         attachFormSubmitListener();
+        attachBanButtonListener();
     }
 });
 
@@ -56,5 +68,6 @@ document.addEventListener('htmx:afterSwap', function(evt) {
     if (evt.detail.target.id === 'chatSection') {
         initializeWebSocket();
         attachFormSubmitListener();
+        attachBanButtonListener();
     }
 });

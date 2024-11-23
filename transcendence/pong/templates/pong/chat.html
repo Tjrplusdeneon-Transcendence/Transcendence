@@ -10,9 +10,8 @@
                     </li>
                 {% else %}
                     <li class="other-message">
-                        <span>{{ message.author }}</span>
-                        <span>x</span>
-                        <span>{{ message.content }}</span>
+                        {{ message.author }}: {{ message.content }}
+                        <button class="ban-button" data-author="{{ message.author.id }}">X</button>
                     </li>
                 {% endif %}
             {% endfor %}
