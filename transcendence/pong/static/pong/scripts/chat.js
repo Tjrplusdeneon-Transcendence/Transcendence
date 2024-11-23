@@ -1,10 +1,15 @@
 let chatSocket = null;
 
-function initializeWebSocket() {
-    // Ensure an existing WebSocket connection is closed
+function closeWebSocket() {
     if (chatSocket) {
         chatSocket.close();
+        chatSocket = null; // Reset the chatSocket variable
     }
+}
+
+function initializeWebSocket() {
+    // Ensure an existing WebSocket connection is closed
+    closeWebSocket();
 
     chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/');
 
@@ -46,9 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('htmx:afterSwap', function(evt) {
-    // Check if the updated content is the chat section
-    if (evt.detail.target.id === 'chatSection') {
         initializeWebSocket();
         attachFormSubmitListener();
-    }
 });

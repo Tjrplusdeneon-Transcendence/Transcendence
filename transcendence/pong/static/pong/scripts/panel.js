@@ -1,11 +1,14 @@
-document.getElementById('loginButton').addEventListener('click', function(event) 
-{
+document.getElementById('loginButton').addEventListener('click', function(event) {
     event.preventDefault();
     document.getElementById('loginPanel').style.display = 'block';
-	// document.getElementById('chatContainer').style.display = 'block';
 });
 
-function updateContent(response) {
+document.addEventListener('DOMContentLoaded', function() {
+    attachButtonListeners();
+});
+
+document.addEventListener('htmx:afterRequest', function(evt) {
+    const response = JSON.parse(evt.detail.xhr.responseText);
     document.getElementById('loginPanel').innerHTML = response.panel_html;
     document.getElementById('chatSection').innerHTML = response.chat_html;
 
@@ -15,17 +18,31 @@ function updateContent(response) {
     // Reinitialize WebSocket and event listeners after content update
     initializeWebSocket();
     attachFormSubmitListener();
-}
+    attachButtonListeners(); 
+});
 
 document.addEventListener('DOMContentLoaded', function() {
-    attachButtonListeners();
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', function() {
+            closeWebSocket();
+        });
+    }
 });
 
+// Attach the listener for the logout button after content updates
 document.addEventListener('htmx:afterRequest', function(evt) {
-    const response = JSON.parse(evt.detail.xhr.responseText);
-    updateContent(response);
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', function() {
+            closeWebSocket();
+        });
+    }
 });
 
+// document.getElementById('profileInfo').style.display = 'none';
+// document.getElementById('gameStats').style.display = 'none';
+// document.getElementById('chatContainer').style.display = 'none';
 
 document.getElementById('closeButton').addEventListener('click', function() 
 {
@@ -37,15 +54,6 @@ document.getElementById('closeButton').addEventListener('click', function()
     }, 300);
 });
 
-document.getElementById('logoutButton').addEventListener('click', function() 
-{
-    // document.getElementById('profileInfo').style.display = 'none';
-    // document.getElementById('gameStats').style.display = 'none';
-	// document.getElementById('chatContainer').style.display = 'none';
-    if (chatSocket) {
-        chatSocket.close();
-    }
-});
 
 function openProfileModal(username, targetElement) 
 {
