@@ -521,8 +521,8 @@ li {
     clear: both; /* Ensure each message starts on a new line */
 }
 
-/* User's message */
-.user-message {
+/* Common styles for messages */
+.message {
     padding: 10px; /* Ensure some padding inside the bubble */
     margin: 10px 0; /* Adjust margin for better spacing */
     border-radius: 10px;
@@ -530,31 +530,23 @@ li {
     position: relative;
     word-wrap: break-word;
     overflow-wrap: break-word;
-    background: linear-gradient(15deg, #D400FF, #FF8400);
     color: white;
-    align-self: flex-end; /* Align the bubble to the right */
     text-align: left; /* Align text to the left inside the bubble */
     border: 1px solid transparent;
     background-clip: padding-box; /* Ensure gradient doesn't cover text */
     display: inline-block; /* Ensure the bubble size adjusts to text */
 }
 
-/* Other's message */
+/* Specific styles for user messages */
+.user-message {
+    background: linear-gradient(15deg, #D400FF, #FF8400);
+    align-self: flex-end; /* Align the bubble to the right */
+}
+
+/* Specific styles for other messages */
 .other-message {
-    padding: 10px; /* Ensure some padding inside the bubble */
-    margin: 10px 0; /* Adjust margin for better spacing */
-    border-radius: 10px;
-    max-width: 60%; /* Ensure the bubble doesn't exceed 60% of the chat box width */
-    position: relative;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
     background: linear-gradient(135deg, #FF8400, #D400FF);
-    color: white;
     align-self: flex-start;
-    text-align: left;
-    border: 1px solid transparent;
-    background-clip: padding-box; /* Ensure gradient doesn't cover text */
-    display: inline-block; /* Ensure the bubble size adjusts to text */
 }
 
 /* Chat bubble triangle */
@@ -580,7 +572,6 @@ li {
     top: 20px;
     background: linear-gradient(50deg, #FA761B, #F76A32);
 }
-
 
 /* Users profile */
 .synthwave-modal {
