@@ -52,7 +52,7 @@ class ChatConsumer(WebsocketConsumer):
         sender = User.objects.get(id=event['sender_id'])
         message = {
             'author': sender,
-            'content': 'Play with me <button>🕹️</button>',
+            'content': "Play with me <button class='join-game-btn' id='join-game-btn'>🕹️</button>",
         }
         html = render_to_string('pong/partials/chat_message.html', context={'message': message, 'user': self.user})
         self.send(text_data=html)
