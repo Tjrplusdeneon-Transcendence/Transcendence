@@ -471,6 +471,7 @@ body {
   font-size: 8px;
 }
 
+/* Buttons in chat messages */
 .ban-button {
     background: none;
     border: none;
@@ -497,77 +498,62 @@ body {
     color: #27ae60;
 }
 
+.join-game-btn {
+    background: none;
+    border: none;
+    color: #2ecc71; /* Set the color to green */
+    cursor: pointer;
+    font-size: 1.2em; /* Adjust size as needed */
+    padding: 0;
+    display: inline;
+}
+
+.join-game-btn:hover {
+    color: #27ae60; /* Change to a darker green on hover, adjust as needed */
+}
+
 li {
     list-style-type: none;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     margin: 10px 0;
+    clear: both; /* Ensure each message starts on a new line */
 }
 
-/* User's message */
-.user-message {
-    padding: 0 10px; /* Adjust padding to prevent overflow */
+/* Common styles for messages */
+.message {
+    padding: 5px; /* Ensure some padding inside the bubble */
     margin: 10px 0; /* Adjust margin for better spacing */
     border-radius: 10px;
-    max-width: 60%;
+    max-width: 60%; /* Ensure the bubble doesn't exceed 60% of the chat box width */
     position: relative;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    font-size: 14px;
+    color: white;
+    text-align: left; /* Align text to the left inside the bubble */
+    border: 1px solid transparent;
+    background-clip: padding-box; /* Ensure gradient doesn't cover text */
+    display: block;
+    max-width: 75%;
+    width: fit-content;
+}
+
+/* Specific styles for user messages */
+.user-message {
     background: linear-gradient(15deg, #D400FF, #FF8400);
-    color: white;
-    align-self: flex-end;
-    text-align: right;
+    align-self: flex-end; /* Align the bubble to the right */
     margin-left: auto;
-    border: 1px solid transparent;
-    background-clip: padding-box; /* Ensure gradient doesn't cover text */
-    padding: 10px;
+    text-align: end;
 }
 
-/* Other's message */
+/* Specific styles for other messages */
 .other-message {
-    padding: 0 10px; /* Adjust padding to prevent overflow */
-    margin: 0px 0; /* Adjust margin for better spacing */
-    border-radius: 10px;
-    max-width: 60%;
-    position: relative;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
     background: linear-gradient(135deg, #FF8400, #D400FF);
-    color: white;
     align-self: flex-start;
-    text-align: left;
-    margin-right: auto;
-    border: 1px solid transparent;
-    background-clip: padding-box; /* Ensure gradient doesn't cover text */
-    padding: 10px;
-    position: relative;
+    margin-top: 0px;
 }
-
-/* Chat bubble triangle */
-.user-message::after, .other-message::after {
-    content: "";
-    position: absolute;
-    width: 10px;
-    height: 15px;
-    background: inherit;
-    transform: rotate(200deg);
-}
-
-/* User's message triangle */
-.user-message::after {
-    right: -3px;
-    top: 4px;
-    background: linear-gradient(25deg, #FF872B, #FF6C47);
-}
-    
-/* Other's message triangle */
-.other-message::after {
-    left: -3px;
-    top: 20px;
-    background: linear-gradient(50deg, #FA761B, #F76A32);
-}
-
 
 /* Users profile */
 .synthwave-modal {

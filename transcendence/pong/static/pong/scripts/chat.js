@@ -11,7 +11,7 @@ function initializeWebSocket() {
     // Ensure an existing WebSocket connection is closed
     closeWebSocket();
 
-    chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/');
+    chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat');
 
     chatSocket.onmessage = function(e) {
         document.getElementById('messageList').innerHTML += e.data;
@@ -19,6 +19,7 @@ function initializeWebSocket() {
         chatBox.scrollTop = chatBox.scrollHeight;
         attachBanButtonListener();
         attachInviteButtonListener();
+        attachJoinGameButtonListener();
     };
 
     chatSocket.onclose = function(e) {
@@ -70,12 +71,21 @@ function attachInviteButtonListener() {
     });
 }
 
+function attachJoinGameButtonListener() {
+    document.querySelectorAll('.join-game-btn').forEach(button => {
+        button.onclick = function(e) {
+            alert("Joining game...");  // Placeholder action, replace with your logic
+        };
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('chatContainer')) {
         initializeWebSocket();
         attachFormSubmitListener();
         attachBanButtonListener();
         attachInviteButtonListener();
+        attachJoinGameButtonListener();
     }
 });
 
@@ -85,5 +95,6 @@ document.addEventListener('htmx:afterSwap', function(evt) {
         attachFormSubmitListener();
         attachBanButtonListener();
         attachInviteButtonListener();
+        attachJoinGameButtonListener();
     }
 });

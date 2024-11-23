@@ -1,5 +1,5 @@
 {% if message.author.id == user.id %}
-	<li class="user-message">
+	<li class="message user-message">
 		{{ message.content }}
 	</li>
 {% else %}
@@ -7,8 +7,8 @@
 		<div class="message-meta">
 			<span class="message-author">{{ message.author }}</span>
 			<button class="ban-button" author-id="{{ message.author.id }}" title="Ban user">🚫</button>
-			<button class="invite-button" user-id="{{ user.id }}" author-id="{{ message.author.id }}" title="Invite user">➕</button>
+			<button class="invite-button" user-id="{{ user.id }}" author-id="{{ message.author.id }}" title="Invite user">🕹️</button>
 		</div>
-		<span class="other-message">{{ message.content }}</span>
+		<span class="message other-message">{{ message.content|safe }}</span>
 	</li>
 {% endif %}
