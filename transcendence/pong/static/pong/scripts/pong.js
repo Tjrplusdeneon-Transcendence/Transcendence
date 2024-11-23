@@ -48,7 +48,8 @@ let dy = difficultySettings[currentDifficulty].dy;
 
 let upPressed = false;
 let downPressed = false;
-
+let wPressed = false;
+let sPressed = false;
 
 let playerRole = null;
 
@@ -172,8 +173,21 @@ document.addEventListener('keydown', (event) => {
         mouseBlocked = false; // Unblock mouse movement
         keyboardActive = true; // Disable mouse interactions
         paddleDirection = 1; // Moving up
-    } else if (event.key === 'ArrowDown') {
+    }
+    else if (event.key === 'w' && LocalMultiplayer){
+        wPressed = true;
+        mouseBlocked = false; // Unblock mouse movement
+        keyboardActive = true; // Disable mouse interactions
+        paddleDirection = 1; // Moving up
+    } 
+    else if (event.key === 'ArrowDown') {
         downPressed = true;
+        mouseBlocked = false; // Unblock mouse movement
+        keyboardActive = true; // Disable mouse interactions
+        paddleDirection = -1; // Moving down
+    }
+    else if (event.key === 's' && LocalMultiplayer){
+        sPressed = true;
         mouseBlocked = false; // Unblock mouse movement
         keyboardActive = true; // Disable mouse interactions
         paddleDirection = -1; // Moving down
@@ -186,9 +200,19 @@ document.addEventListener('keyup', (event) => {
         if (!downPressed) {
             paddleDirection = 0; // No movement
         }
+    } else if (event.key === 'w') {
+        wPressed = false;
+        if (!sPressed) {
+            paddleDirection = 0; // No movement
+        }
     } else if (event.key === 'ArrowDown') {
         downPressed = false;
         if (!upPressed) {
+            paddleDirection = 0; // No movement
+        }
+    } else if (event.key === 's') {
+        sPressed = false;
+        if (!wPressed) {
             paddleDirection = 0; // No movement
         }
     }
@@ -468,6 +492,8 @@ function moveAI(deltaTime)
 const angleAdjustmentUp = 0.2;
 const angleAdjustmentDown = -0.2;
 
+
+
 function checkPaddleCollision(deltaTime) {
     if (dx < 0 && x + dx * deltaTime < paddleWidth + ballRadius) {
         let futureY = y + dy * deltaTime;
@@ -520,7 +546,6 @@ let previousPaddleY2 = [];
 let previousBallPositions = [];
 
 const maxAfterImages = 20;
-
 function draw(currentTime) {
     if (!lastTime) lastTime = currentTime;
     
@@ -575,28 +600,16 @@ function draw(currentTime) {
 
     let paddleMoved = false;
 
-    if (playerRole === 'player1') {
-        if (upPressed) {
+    if (LocalMultiplayer) {
+        // Local multiplayer controls
+        if (wPressed) {
             paddleY1 -= playerSpeed * deltaTime;
             paddleMoved = true;
         }
-        if (downPressed) {
+        if (sPressed) {
             paddleY1 += playerSpeed * deltaTime;
             paddleMoved = true;
         }
-
-        if (paddleY1 < 0) {
-            paddleY1 = 0;
-        }
-        if (paddleY1 > canvas.height - paddleHeight) {
-            paddleY1 = canvas.height - paddleHeight;
-        }
-
-        if (paddleMoved) {
-            console.log(`Player 1 sending paddle position: ${paddleY1}`);
-            sendPaddlePosition(paddleY1);
-        }
-    } else if (playerRole === 'player2') {
         if (upPressed) {
             paddleY2 -= playerSpeed * deltaTime;
             paddleMoved = true;
@@ -606,16 +619,53 @@ function draw(currentTime) {
             paddleMoved = true;
         }
 
-        if (paddleY2 < 0) {
-            paddleY2 = 0;
-        }
-        if (paddleY2 > canvas.height - paddleHeight) {
-            paddleY2 = canvas.height - paddleHeight;
-        }
+        // Ensure paddles stay within the canvas
+        paddleY1 = Math.max(0, Math.min(paddleY1, canvas.height - paddleHeight));
+        paddleY2 = Math.max(0, Math.min(paddleY2, canvas.height - paddleHeight));
+    } else {
+        // Online multiplayer controls
+        if (playerRole === 'player1') {
+            if (upPressed) {
+                paddleY1 -= playerSpeed * deltaTime;
+                paddleMoved = true;
+            }
+            if (downPressed) {
+                paddleY1 += playerSpeed * deltaTime;
+                paddleMoved = true;
+            }
 
-        if (paddleMoved) {
-            console.log(`Player 2 sending paddle position: ${paddleY2}`);
-            sendPaddlePosition(paddleY2);
+            if (paddleY1 < 0) {
+                paddleY1 = 0;
+            }
+            if (paddleY1 > canvas.height - paddleHeight) {
+                paddleY1 = canvas.height - paddleHeight;
+            }
+
+            if (paddleMoved) {
+                console.log(`Player 1 sending paddle position: ${paddleY1}`);
+                sendPaddlePosition(paddleY1);
+            }
+        } else if (playerRole === 'player2') {
+            if (upPressed) {
+                paddleY2 -= playerSpeed * deltaTime;
+                paddleMoved = true;
+            }
+            if (downPressed) {
+                paddleY2 += playerSpeed * deltaTime;
+                paddleMoved = true;
+            }
+
+            if (paddleY2 < 0) {
+                paddleY2 = 0;
+            }
+            if (paddleY2 > canvas.height - paddleHeight) {
+                paddleY2 = canvas.height - paddleHeight;
+            }
+
+            if (paddleMoved) {
+                console.log(`Player 2 sending paddle position: ${paddleY2}`);
+                sendPaddlePosition(paddleY2);
+            }
         }
     }
 
@@ -626,7 +676,7 @@ function draw(currentTime) {
     dx = Math.min(Math.max(dx, -maxSpeed), maxSpeed);
     dy = Math.min(Math.max(dy, -maxSpeed), maxSpeed);
 
-    if (isAIEnabled) {
+    if (!LocalMultiplayer && isAIEnabled) {
         if (!firstHit)
             aiLastScanTime += deltaTime;
         aiDecision(aiLastScanTime);
@@ -636,7 +686,7 @@ function draw(currentTime) {
     checkPaddleCollision(deltaTime);
 
     if (x + dx * deltaTime < ballRadius) {
-        winner = isAIEnabled ? 'AI' : 'Player 2';
+        winner = LocalMultiplayer ? 'Player 2' : (isAIEnabled ? 'AI' : 'Player 2');
         gameRunning = false;
         gameOverMessage();
         return;
@@ -667,8 +717,10 @@ function draw(currentTime) {
         previousBallPositions.pop();
     }
 
-    // Send game state to the other player
-    sendGameState();
+    // Send game state to the other player if not in local multiplayer mode
+    if (!LocalMultiplayer) {
+        sendGameState();
+    }
 
     if (gameRunning)
         requestAnimationFrame(draw);
@@ -1105,6 +1157,22 @@ document.getElementById('start-solo-game-btn').addEventListener('click', functio
     startGame();
 });
 
+
+// document.getElementById('start-local-multiplayer-btn').addEventListener('click', function() {
+//     isMatchmaking = false;
+//     document.getElementById('pongCanvas').style.pointerEvents = 'auto';
+//     const selectedDifficulty = document.getElementById('difficultySelect').value;
+//     currentDifficulty = selectedDifficulty;
+//     document.getElementById('difficulty-menu').style.display = 'none';
+//     document.getElementById('pongCanvas').style.display = 'block';
+
+//     const startButton = document.getElementById('start-solo-game-btn');
+//     startButton.textContent = 'Restart Game';
+
+//     startButton.removeEventListener('click', startGame);
+//     startButton.addEventListener('click', restartPong);
+// });
+
 let socket;
 let bothPlayersReady = false;
 let playerReady = false;
@@ -1119,15 +1187,38 @@ document.getElementById('start-multiplayer-btn').addEventListener('click', funct
     document.getElementById('go-back-btn').style.display = 'inline-block';
 });
 
+let inLocal = false;
+let LocalMultiplayer = false;
+
+document.getElementById('local-btn').addEventListener('click', function() 
+{
+    inLocal = true;
+    LocalMultiplayer = true;
+    isMatchmaking = false;
+    document.getElementById('multiplayer-menu').style.display = 'none';
+    document.getElementById('difficulty-menu').style.display = 'block';
+    document.getElementById('return-menu-btn').style.display = 'none';
+    document.getElementById('go-back-btn').textContent = 'Go Back'; // Reset button text to "Go Back"
+    document.getElementById('start-solo-game-btn').style.display = 'block';
+    document.getElementById('start-solo-game-btn').textContent = 'Start Game'; // Change button text to "Start Game"
+});
+
 document.getElementById('go-back-btn').addEventListener('click', function() {
-    if (document.getElementById('searching-menu').style.display === 'flex') {
+    if (document.getElementById('searching-menu').style.display === 'flex' || inLocal === true) {
         document.getElementById('searching-menu').style.display = 'none';
         document.getElementById('multiplayer-menu').style.display = 'flex';
-        socket.send(JSON.stringify({ type: 'quit' })); // Notify the opponent that the player has left
-        socket.close(); // Close the socket connection when going back
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({ type: 'quit' })); // Notify the opponent that the player has left
+            socket.close(); // Close the socket connection when going back
+        }
+        document.getElementById('start-solo-game-btn').style.display = 'none';
+        document.getElementById('pongCanvas').style.display = 'none'; // Hide the game canvas
+        document.getElementById('difficulty-menu').style.display = 'none';
         resetMatchmakingState(); // Reset matchmaking state
         document.getElementById('go-back-btn').style.display = 'inline-block'; // Ensure go-back button is visible
         document.getElementById('go-back-btn').textContent = 'Return to Menu'; // Change button text to "Return to Menu"
+        LocalMultiplayer = false;
+        inLocal = false;
     } else {
         document.getElementById('multiplayer-menu').style.display = 'none';
         document.getElementById('difficulty-menu').style.display = 'none';
