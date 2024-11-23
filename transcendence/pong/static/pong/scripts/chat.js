@@ -17,6 +17,7 @@ function initializeWebSocket() {
         document.getElementById('messageList').innerHTML += e.data;
         const chatBox = document.getElementById('chatBox');
         chatBox.scrollTop = chatBox.scrollHeight;
+        attachBanButtonListener();
     };
 
     chatSocket.onclose = function(e) {
