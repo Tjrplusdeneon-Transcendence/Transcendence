@@ -1,3 +1,4 @@
+<span id="closeButton">X</span>
 <form hx-post="{% url 'signin' %}" hx-target="#loginPanel" hx-swap="innerHTML">
 	{% csrf_token %}
 	{{ sign_form.as_p }}

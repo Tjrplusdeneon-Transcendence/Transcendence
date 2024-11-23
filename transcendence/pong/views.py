@@ -1,13 +1,14 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from . import forms
 from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
 from pong.models import Chat
+from django.template.loader import render_to_string
 
 def index(request):
-    chat_messages = Chat.objects.all()[:10]
-    return render(request, 'pong/index.html', context={'chat_messages': chat_messages, 'chat_form': forms.ChatForm()})
+    chat_messages = Chat.objects.all()[:20]
+    return render(request, 'pong/index.html', context={'chat_messages': chat_messages})
 
 def signin_user(request):
     sign_form = forms.SigninForm()
@@ -18,7 +19,13 @@ def signin_user(request):
             user = authenticate(username = sign_form.cleaned_data['username'], password = sign_form.cleaned_data['password'],)
             if user is not None:
                 login(request, user)
-                return render(request, 'pong/partials/panel.html')
+                chat_messages = Chat.objects.all()[:20]
+                panel_html = render_to_string('pong/partials/panel.html', request=request)
+                chat_html = render_to_string('pong/chat.html', {'chat_messages': chat_messages}, request=request)
+                return JsonResponse({
+                    'panel_html': panel_html,
+                    'chat_html': chat_html
+                })
             else:
                 signin_error_message = 'Wrong credentials'
     return render(request, 'pong/partials/signin.html', context={'sign_form': sign_form, 'signin_error_message': signin_error_message})
@@ -35,15 +42,9 @@ def signup_user(request):
 
 def logout_user(request):
     logout(request)
-    return render(request, 'pong/partials/panel.html')
-
-def chat(request):
-    chat_form = forms.ChatForm()
-    # if request.method == 'POST':
-    #     chat_form = forms.ChatForm(request.POST)
-    #     if chat_form.is_valid():
-    #         message = chat_form.save(commit=False)
-    #         message.author = request.user
-    #         message.save()
-    #         return render(request, 'pong/partials/chat_message.html', context={'message': message})
-    return render(request, 'pong/partials/chat_form.html', context={'chat_form': chat_form})
+    panel_html = render_to_string('pong/partials/panel.html', request=request)
+    chat_html = render_to_string('pong/chat.html', request=request)
+    return JsonResponse({
+        'panel_html': panel_html,
+        'chat_html': chat_html
+        })
