@@ -1,4 +1,3 @@
-{% load static %}
 {% if user.is_authenticated %}
 <div class="chat-container" id="chatContainer">
     <h2>Tchat</h2>
@@ -22,6 +21,4 @@
         <button id="chat-message-submit" name="chatBtn">➤</button>
     </div>
 </div>
-
-<script src="{% static 'pong/scripts/chat.js' %}"></script>
 {% endif %}
