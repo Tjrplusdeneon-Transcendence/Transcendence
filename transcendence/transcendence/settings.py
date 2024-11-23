@@ -148,3 +148,7 @@ AUTH_USER_MODEL = 'pong.User'
 LOGIN_URL = 'index'
 
 LOGIN_REDIRECT_URL = 'index'
+
+X_FRAME_OPTIONS = 'ALLOWALL'
+
+STATICFILES_DIRS = [BASE_DIR / "static"]
