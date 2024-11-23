@@ -1,5 +1,4 @@
 function increaseWins() {
-    alert("WINS FCT");
     const csrfToken = document.querySelector('body').getAttribute('hx-headers').match(/"X-CSRFToken": "([^"]+)"/)[1];
     fetch('/increase-wins/', {
         method: 'POST',
@@ -8,19 +7,30 @@ function increaseWins() {
             'X-CSRFToken': csrfToken  // Use the CSRF token retrieved from hx-headers
         },
         body: JSON.stringify({})
+    }).then(response => {
+        if (response.ok) {
+            response.text().then(html => {
+                document.getElementById('gameStats').innerHTML = html;
+            });
+        }
     });
 }
 
 function increaseLosses() {
-    alert("LOSSES FCT");
     const csrfToken = document.querySelector('body').getAttribute('hx-headers').match(/"X-CSRFToken": "([^"]+)"/)[1];
-    fetch('/increase_losses/', {
+    fetch('/increase-losses/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-CSRFToken': csrfToken  // Use the CSRF token retrieved from hx-headers
         },
         body: JSON.stringify({})
+    }).then(response => {
+        if (response.ok) {
+            response.text().then(html => {
+                document.getElementById('gameStats').innerHTML = html;
+            });
+        }
     });
 }
 
