@@ -68,6 +68,7 @@ def increase_games_played(request):
 def increase_wins(request):
     user = request.user
     user.wins += 1
+    user.score += 1
     user.save()
     return render(request, 'pong/partials/panel.html', context={'user': user})
 
@@ -76,5 +77,6 @@ def increase_wins(request):
 def increase_losses(request):
     user = request.user
     user.losses += 1
+    user.score -= 1
     user.save()
     return render(request, 'pong/partials/panel.html', context={'user': user})
