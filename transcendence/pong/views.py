@@ -45,7 +45,6 @@ def signup_user(request):
             return render(request, 'pong/partials/panel.html')
     return render(request, 'pong/partials/signup.html', context={'sign_form': sign_form})
 
-@login_required
 def logout_user(request):
     logout(request)
     panel_html = render_to_string('pong/partials/panel.html', request=request)
