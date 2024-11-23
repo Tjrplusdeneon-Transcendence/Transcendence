@@ -1,3 +1,4 @@
+{% load static %}
 <span id="closeButton">X</span>
 {% if not user.is_authenticated %}
 	<button id="signinButton" hx-get="{% url 'signin' %}" hx-target="#sign_form" hx-swap="innerHTML">
