@@ -195,7 +195,17 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
             </div>
             <div class="modal-body">
-                <!-- Difficulty selector -->
+                <!-- New Main Menu Canvas -->
+                <canvas id="mainMenuCanvas" width="640" height="480" style="background-color: #1a1a1a;"></canvas>
+                <div 
+                    id="leftSide" class="main-menu-side">–Singleplayer
+                    <button id="singleplayerButton-memory" class="main-menu-button"></button>
+                </div>
+                <div 
+                    id="rightSide" class="main-menu-side">–Multiplayer
+                    <button id="multiplayerButton-memory" class="main-menu-button"></button>
+                </div>
+                <!-- Difficulty selector /!\ ATTENTION A BIEN LE CACHER-->
                 <div id="difficulty-menu-m" class="difficulty-menu-m mb-3">
                     <label for="memoryDifficultySelect" class="form-label">Select Difficulty:</label>
                     <select id="memoryDifficultySelect" class="form-select">
@@ -203,12 +213,34 @@
                         <option value="medium" selected>Medium</option>
                         <option value="hard">Hard</option>
                     </select>
+                <!--GAME-->
                 </div>
                     <div id="memory-game-container" class="memory-game-container"></div>
                 </div>
+                <!-- New multiplayer menu -->
+                <div id="multiplayer-menu-memory" style="display: none;">
+                    <button id="local-btn-memory" class="btn btn-primary">Local</button>
+                    <button id="tournament-btn-memory" class="btn btn-primary">Tournament</button>
+                    <button id="online-btn-memory" class="btn btn-primary">Online</button>
+                </div>
+                <!-- New searching for opponent menu -->
+                <div id="searching-menu-memory" style="display: none;">
+                    <button id="searching-btn-memory" class="btn btn-primary" disabled>Searching for opponent...</button>
+                </div>
             <div class="modal-footer">
+                <!--BOUTONS A ENLEVER APRES INTEGRATION DU MEMORY-->
                 <button type="button" class="btn btn-primary" id="start-memory-game-btn">Solo Game</button>
                 <button type="button" class="btn btn-primary" id="start-memory-game-btn">Matchmaking</button>
+
+                <!--New footer button-->
+                <button type="button" class="btn btn-primary" id="start-solo-game-btn-memo" style="display: none;">Solo Game</button>
+                <button type="button" class="btn btn-primary" id="start-local-multiplayer-btn-memo" style="display: none;">Local Multiplayer</button>
+                <button type="button" class="btn btn-primary" id="start-multiplayer-btn-memo" style="display: none;">Multiplayer</button>
+                <button type="button" class="btn btn-primary" id="rematch-btn-memo" style="display: none;" disabled>Rematch</button>
+                <button type="button" class="btn btn-primary" id="quit-btn-memo" style="display: none;" disabled>Quit</button>
+                <button type="button" class="btn btn-primary" id="go-back-btn-memo" style="display: none;">Go Back</button>
+                <button type="button" class="btn btn-primary" id="return-menu-btn-memo" style="display: none;">Return to Menu</button>
+            </div>
             </div>
         </div>
     </div>
