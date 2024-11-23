@@ -19,6 +19,7 @@ class ChatConsumer(WebsocketConsumer):
 
     def receive(self, text_data):
         data = json.loads(text_data)
+        print("DATA=>", data)
         if 'message' in data:
             content = data["message"]
             message = Chat.objects.create(
@@ -31,6 +32,7 @@ class ChatConsumer(WebsocketConsumer):
             }
             async_to_sync(self.channel_layer.group_send)("chat", event)
         elif 'ban' in data:
+            print('HERE =>', data)
             author_id = data['ban']
             try:
                 author = User.objects.get(id=author_id)
