@@ -57,6 +57,14 @@ def logout_user(request):
 
 @login_required
 @require_POST
+def increase_games_played(request):
+    user = request.user
+    user.games_played += 1
+    user.save()
+    return render(request, 'pong/partials/panel.html', context={'user': user})
+
+@login_required
+@require_POST
 def increase_wins(request):
     user = request.user
     user.wins += 1

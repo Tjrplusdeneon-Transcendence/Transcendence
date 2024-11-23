@@ -10,7 +10,7 @@ function increaseWins() {
     }).then(response => {
         if (response.ok) {
             response.text().then(html => {
-                document.getElementById('gameStats').innerHTML = html;
+                document.getElementById('panel').innerHTML = html; // Update the entire panel
             });
         }
     });
@@ -28,11 +28,30 @@ function increaseLosses() {
     }).then(response => {
         if (response.ok) {
             response.text().then(html => {
-                document.getElementById('gameStats').innerHTML = html;
+                document.getElementById('panel').innerHTML = html; // Update the entire panel
             });
         }
     });
 }
+
+function increaseGamesPlayed() {
+    const csrfToken = document.querySelector('body').getAttribute('hx-headers').match(/"X-CSRFToken": "([^"]+)"/)[1];
+    fetch('/increase-games_played/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken  // Use the CSRF token retrieved from hx-headers
+        },
+        body: JSON.stringify({})
+    }).then(response => {
+        if (response.ok) {
+            response.text().then(html => {
+                document.getElementById('panel').innerHTML = html; // Update the entire panel
+            });
+        }
+    });
+}
+
 
 // let gamesPlayed = 0;
 // let wins = 0;
