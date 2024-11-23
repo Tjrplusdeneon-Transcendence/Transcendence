@@ -61,3 +61,11 @@ def increase_wins(request):
     user.wins += 1
     user.save()
     return render(request, 'pong/partials/panel.html')
+
+@login_required
+@require_POST
+def increase_losses(request):
+    user = request.user
+    user.losses += 1
+    user.save()
+    return render(request, 'pong/partials/panel.html')

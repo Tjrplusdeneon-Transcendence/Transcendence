@@ -263,6 +263,7 @@ function gameOverMessage() {
             mainColor = '#ff00fb';
             secondaryText = 'AI Wins';
             secondaryColor = '#00FFFF';
+            increaseLosses();
         } else {
             mainText = 'VICTORY!';
             mainColor = '#00FFFF';
