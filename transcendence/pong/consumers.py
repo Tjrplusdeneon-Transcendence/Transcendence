@@ -37,7 +37,19 @@ class ChatConsumer(WebsocketConsumer):
                 self.user.banned_users.add(author)
             except User.DoesNotExist:
                 pass
-            
+        elif 'invite' in data:
+            player_id = data['invite']
+            event = {
+                'type': 'invite_handler',
+                'player_id': player_id,
+            }
+            async_to_sync(self.channel_layer.group_send)("chat", event)
+
+    def invite_handler(self, event):
+        player = User.objects.get(id=event['player_id'])
+        html = render_to_string('pong/partials/chat_message.html', context={'message': 'Play a game with me', 'user': self.user})
+        self.send(text_data=html)
+
     def message_handler(self, event):
         message = Chat.objects.get(id=event['message_id'])
         if message.author not in self.user.banned_users.all():

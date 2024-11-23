@@ -57,11 +57,23 @@ function attachBanButtonListener() {
     });
 }
 
+function attachInviteButtonListener() {
+    document.querySelectorAll('.invite-button').forEach(button => {
+        button.onclick = function(e) {
+            const authorId = e.target.getAttribute('data-author');
+            if (authorId) {
+                chatSocket.send(JSON.stringify({ 'invite': authorId }));
+            }
+        };
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('chatContainer')) {
         initializeWebSocket();
         attachFormSubmitListener();
         attachBanButtonListener();
+        attachInviteButtonListener();
     }
 });
 
@@ -70,5 +82,6 @@ document.addEventListener('htmx:afterSwap', function(evt) {
         initializeWebSocket();
         attachFormSubmitListener();
         attachBanButtonListener();
+        attachInviteButtonListener();
     }
 });
