@@ -25,3 +25,5 @@ urlpatterns = [
 	path('signup/', views.signup_user, name='signup'),
     path('logout/', views.logout_user, name='logout'),
 ]
+
+handler404 = 'myapp.views.view_404'
