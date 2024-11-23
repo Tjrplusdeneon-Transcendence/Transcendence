@@ -971,7 +971,6 @@ function startGame() {
 
     // Disable the "Return to Menu" button
     document.getElementById('return-menu-btn').disabled = true;
-    increaseGamesPlayed();
 }
 
 
@@ -1284,6 +1283,7 @@ document.getElementById('online-btn').addEventListener('click', function() {
             document.getElementById('return-menu-btn').style.display = 'inline-block';
             document.getElementById('return-menu-btn').disabled = true; // Disable the "Return to Menu" button during the match
             initializeGameState(data.initial_state);
+            increaseGamesPlayed();
             startGame();
             resetMatchmakingState(); // Reset matchmaking state after the game starts
             document.getElementById('rematch-btn').disabled = true;
@@ -1445,6 +1445,7 @@ function hideMenu() {
 }
 
 document.getElementById('start-solo-game-btn').addEventListener('click', function () {
+    increaseGamesPlayed();
     if (this.textContent === 'Start Game') {
         hideMenu(); // Masquer le menu pour lancer la partie
         startGame();

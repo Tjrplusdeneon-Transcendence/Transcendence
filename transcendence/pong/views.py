@@ -58,7 +58,6 @@ def logout_user(request):
 @login_required
 @require_POST
 def increase_games_played(request):
-    print("PLAYED")
     user = request.user
     user.games_played += 1
     user.save()
@@ -67,7 +66,6 @@ def increase_games_played(request):
 @login_required
 @require_POST
 def increase_wins(request):
-    print("WINS")
     user = request.user
     user.wins += 1
     user.save()
@@ -76,7 +74,6 @@ def increase_wins(request):
 @login_required
 @require_POST
 def increase_losses(request):
-    print("LOSSES")
     user = request.user
     user.losses += 1
     user.save()
