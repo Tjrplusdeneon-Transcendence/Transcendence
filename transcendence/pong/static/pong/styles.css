@@ -555,30 +555,6 @@ li {
     margin-top: 0px;
 }
 
-/* Chat bubble triangle */
-/* .user-message::after, .other-message::after {
-    content: "";
-    position: absolute;
-    width: 10px;
-    height: 15px;
-    background: inherit;
-    transform: rotate(200deg);
-} */
-
-/* User's message triangle */
-/* .user-message::after {
-    right: -3px;
-    top: 4px;
-    background: linear-gradient(25deg, #FF872B, #FF6C47);
-} */
-    
-/* Other's message triangle */
-/* .other-message::after {
-    left: -3px;
-    top: 20px;
-    background: linear-gradient(50deg, #FA761B, #F76A32);
-} */
-
 /* Users profile */
 .synthwave-modal {
     background: linear-gradient(135deg, #1e1e1e, #2b2b2b);
