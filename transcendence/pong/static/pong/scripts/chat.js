@@ -61,6 +61,8 @@ function attachBanButtonListener() {
 function attachInviteButtonListener() {
     document.querySelectorAll('.invite-button').forEach(button => {
         button.onclick = function(e) {
+            const senderId = document.body.getAttribute('user-id');
+            const authorId = e.target.getAttribute('author-id');
             if (authorId) {
                 chatSocket.send(JSON.stringify({ 'invite': authorId, 'sender': senderId }));
             }
