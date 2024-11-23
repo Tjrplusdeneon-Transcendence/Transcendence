@@ -358,7 +358,7 @@ body {
     color: #ffffff;
 }
 
-/* Tchat */
+/* Tchat */ 
 .chat-container {
     position: absolute;
     top: 10%;
@@ -923,35 +923,50 @@ body {
     position: relative;
 }
 
+
+
 .main-menu-side {
     position: absolute;
-    width: 50%;
-    height: 100%;
-    top: 0;
+    width: 49%;
+    height: 90%;
+    top: 50;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Press Start 2P', cursive;
     font-size: 24px;
     color: white;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    border: 2px solid transparent;
+    box-sizing: border-box;
 }
 
 #leftSide {
     left: 0;
     background-color: #1a1a1a;
+    border-right: 1px solid #333; /* Séparation visuelle au centre */
 }
 
 #rightSide {
     right: 0;
     background-color: #1a1a1a;
+    border-left: 1px solid #333;
 }
 
 #leftSide:hover {
-    background-color: #00FFFF;
+    background-color: rgba(0, 255, 255, 0.1);
+    box-shadow: inset 0 0 20px #00FFFF, 0 0 20px #00FFFF; /* Limite l'effet d'ombre */
+    border-color: #00FFFF;
 }
 
 #rightSide:hover {
-    background-color: #ff00fb;
+    background-color: rgba(255, 0, 251, 0.1);
+    box-shadow: inset 0 0 20px #FF00FB, 0 0 20px #FF00FB;
+    border-color: #FF00FB;
+}
+
+#leftSide:hover, #rightSide:hover {
+    transform: scale(1.03); /* Légère croissance au survol */
 }
