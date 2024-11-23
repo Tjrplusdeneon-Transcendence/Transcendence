@@ -424,7 +424,6 @@ body {
     pointer-events: auto;
 }
 
-
 .chat-input {
     display: flex;
     align-items: center;
@@ -469,7 +468,6 @@ body {
 }
 
 /* General chat bubble styles */
-
 .message-bubble {
     display: inline-block;
     padding: 10px;
@@ -478,12 +476,14 @@ body {
     margin-bottom: 5px;
 }
 
+/* Message meta styles for author and ban button */
 .message-meta {
     font-size: 0.8em;
     color: #888;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: -10px; /* Adjust as needed to position below the bubble */
 }
 
 .ban-button {
@@ -498,8 +498,6 @@ body {
 .ban-button:hover {
     color: #cc0000;
 }
-
-
 
 li {
     padding: 10px;
@@ -532,6 +530,8 @@ li {
     margin-right: auto;
     border: 1px solid transparent;
     background-clip: padding-box; /* Ensure gradient doesn't cover text */
+    padding: 10px 10px 20px 10px; /* Add extra padding at the bottom to fit the meta info */
+    position: relative;
 }
 
 /* Chat bubble triangle */
