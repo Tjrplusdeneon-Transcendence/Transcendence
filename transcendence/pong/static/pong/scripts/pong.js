@@ -972,7 +972,6 @@ function startGame() {
     // Disable the "Return to Menu" button
     document.getElementById('return-menu-btn').disabled = true;
     increaseGamesPlayed();
-    alert("Increase Games Played");
 }
 
 
