@@ -467,6 +467,10 @@ body {
     padding: 0;
 }
 
+.message-meta {
+  font-size: 8px;
+}
+
 .ban-button {
     background: none;
     border: none;
@@ -510,7 +514,7 @@ li {
 /* Other's message */
 .other-message {
     padding: 0 10px; /* Adjust padding to prevent overflow */
-    margin: 10px 0; /* Adjust margin for better spacing */
+    margin: 0px 0; /* Adjust margin for better spacing */
     border-radius: 10px;
     max-width: 60%;
     position: relative;
