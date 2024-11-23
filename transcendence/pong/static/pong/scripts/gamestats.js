@@ -14,7 +14,7 @@ function increaseWins() {
 function increaseLosses() {
     alert("LOSSES FCT");
     const csrfToken = document.querySelector('body').getAttribute('hx-headers').match(/"X-CSRFToken": "([^"]+)"/)[1];
-    fetch('/increase-increase_losses/', {
+    fetch('/increase_losses/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
