@@ -488,30 +488,15 @@ li {
     margin: 10px 0;
 }
 
-/* General chat bubble styles */
-.other-message {
-    display: inline-block;
-    padding: 10px;
-    border-radius: 15px;
-    background-color: #f0f0f0;
-    margin-top: 5px;
-    max-width: 100%; /* Adjust width to prevent overflow */
-    color: black;
-}
-
-/* Message meta styles for author and ban button */
-.message-meta {
-    font-size: 0.8em;
-    color: #888;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%; /* Ensure meta info spans the full width */
-    margin-bottom: 5px; /* Space between meta info and bubble */
-}
-
 /* User's message */
 .user-message {
+    padding: 0 10px; /* Adjust padding to prevent overflow */
+    margin: 10px 0; /* Adjust margin for better spacing */
+    border-radius: 10px;
+    max-width: 60%;
+    position: relative;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
     background: linear-gradient(15deg, #D400FF, #FF8400);
     color: white;
     align-self: flex-end;
@@ -520,6 +505,26 @@ li {
     border: 1px solid transparent;
     background-clip: padding-box; /* Ensure gradient doesn't cover text */
     padding: 10px;
+}
+
+/* Other's message */
+.other-message {
+    padding: 0 10px; /* Adjust padding to prevent overflow */
+    margin: 10px 0; /* Adjust margin for better spacing */
+    border-radius: 10px;
+    max-width: 60%;
+    position: relative;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    background: linear-gradient(135deg, #FF8400, #D400FF);
+    color: white;
+    align-self: flex-start;
+    text-align: left;
+    margin-right: auto;
+    border: 1px solid transparent;
+    background-clip: padding-box; /* Ensure gradient doesn't cover text */
+    padding: 10px;
+    position: relative;
 }
 
 /* Chat bubble triangle */
