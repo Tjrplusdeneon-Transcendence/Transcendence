@@ -14,8 +14,3 @@ class SignupForm(UserCreationForm):
 		help_texts = {
 			"username": None,
 		}
-
-class ChatForm(forms.ModelForm):
-	class Meta:
-		model = Chat
-		fields = ('content',)

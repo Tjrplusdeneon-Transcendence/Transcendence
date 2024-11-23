@@ -1,47 +1,29 @@
-<div class="chat-container">
+{% if user.is_authenticated %}
+<div class="chat-container" id="chatContainer">
     <h2>Tchat</h2>
     <div class="chat-box" id="chatBox">
-        <ul>
+        <ul class="message-list" id="messageList">
             {% for message in chat_messages reversed %}
-                {% if message.author is request.user %}
-                    <li class="flex justify-end mb-4">
-                        {{ message.author }}: {{ message.content }}
+                {% if message.author.id == request.user.id %}
+                    <li class="user-message">
+                        {{ message.content }}
                     </li>
                 {% else %}
-                <div>
-                    {{ message.author }}: {{ message.content }}
-                </li>            
-                {% endif %}
+                    <li>
+                        <div class="message-meta">
+                            <span class="message-author">{{ message.author }}</span>
+                            <button class="ban-button" author-id="{{ message.author.id }}" title="Ban user">🚫</button>
+                            <button class="invite-button" user-id="{{ user.id }}" author-id="{{ message.author.id }}" title="Invite user">➕</button>
+                        </div>
+                        <span class="other-message">{{ message.content }}</span>
+                    </li>
+                    {% endif %}
             {% endfor %}
         </ul>
-    </div>
+    </div>    
     <div class="chat-input">
-        <!-- <input type="text" id="chatMessage" placeholder="Écrire un message..." /> -->
-        <form
-            hx-ext="ws"
-            ws-connect="/ws/chat"
-            ws-send>
-            {% include 'pong/partials/chat_form.html' %}
-            <button id="chat" name="chat" >➤</button>
-        </form>
+        <input id="chat-message-input" type="text" placeholder="Type your message..." style="width: 70%;" maxlength="50"><br>
+        <button id="chat-message-submit" name="chatBtn">➤</button>
     </div>
 </div>
-
-<script>
-    document.getElementById('chat').addEventListener('submit', function(event) {
-        // You could perform additional actions here (e.g., validation)
-        // If everything is valid, submit the form via HTMX
-
-        // Trigger HTMX to submit the form (this will automatically send via WebSocket)
-        // htmx.trigger("#chatForm", "submit");
-
-                // Reset the text inputs inside the form after sending
-                const form = document.getElementById('chatForm');
-        const inputs = form.querySelectorAll('input[type="text"], textarea');
-        
-        // Reset all text-based input fields
-        inputs.forEach(function(input) {
-            input.value = '';  // Clear the input field
-        });
-    });
-</script>
+{% endif %}

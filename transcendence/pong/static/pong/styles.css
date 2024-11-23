@@ -242,6 +242,7 @@ body {
     right: 0;
     width: 320px;
     height: 100vh;
+    color: #fff;
     background-color: #212121;
     padding: 20px;
     box-shadow: -5px 0 5px -5px rgba(0, 0, 0, 0.2);
@@ -279,6 +280,7 @@ body {
     padding: 10px;
     border: none;
     border-radius: 5px;
+    color: #fff;
     background-color: #333;
     transition: background-color 0.3s ease;
 }
@@ -358,7 +360,7 @@ body {
     color: #ffffff;
 }
 
-/* Tchat */ 
+/* Chat */
 .chat-container {
     position: absolute;
     top: 10%;
@@ -390,6 +392,7 @@ body {
     padding: 10px;
     color: #fcf0e4;
     box-shadow: 0 0 10px rgba(255, 128, 0, 0.5);
+    list-style-type: none;
 }
 
 .chat-box::-webkit-scrollbar {
@@ -438,6 +441,7 @@ body {
     font-family: 'Press Start 2P', cursive;
     font-size: 12px;
     outline: none;
+    font-family: goodtime;
 }
 
 .chat-input button {
@@ -458,6 +462,113 @@ body {
     transform: scale(1.1);
 }
 
+.message-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.message-meta {
+  font-size: 8px;
+}
+
+.ban-button {
+    background: none;
+    border: none;
+    color: #ff0000;
+    cursor: pointer;
+    font-size: 1em;
+    padding: 0;
+}
+
+.ban-button:hover {
+    color: #cc0000;
+}
+
+.invite-button {
+    background: none;
+    border: none;
+    color: #2ecc71; 
+    cursor: pointer;
+    font-size: 1em;
+    padding: 0;
+}
+
+.invite-button:hover {
+    color: #27ae60;
+}
+
+li {
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 10px 0;
+}
+
+/* User's message */
+.user-message {
+    padding: 0 10px; /* Adjust padding to prevent overflow */
+    margin: 10px 0; /* Adjust margin for better spacing */
+    border-radius: 10px;
+    max-width: 60%;
+    position: relative;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    background: linear-gradient(15deg, #D400FF, #FF8400);
+    color: white;
+    align-self: flex-end;
+    text-align: right;
+    margin-left: auto;
+    border: 1px solid transparent;
+    background-clip: padding-box; /* Ensure gradient doesn't cover text */
+    padding: 10px;
+}
+
+/* Other's message */
+.other-message {
+    padding: 0 10px; /* Adjust padding to prevent overflow */
+    margin: 0px 0; /* Adjust margin for better spacing */
+    border-radius: 10px;
+    max-width: 60%;
+    position: relative;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    background: linear-gradient(135deg, #FF8400, #D400FF);
+    color: white;
+    align-self: flex-start;
+    text-align: left;
+    margin-right: auto;
+    border: 1px solid transparent;
+    background-clip: padding-box; /* Ensure gradient doesn't cover text */
+    padding: 10px;
+    position: relative;
+}
+
+/* Chat bubble triangle */
+.user-message::after, .other-message::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 15px;
+    background: inherit;
+    transform: rotate(200deg);
+}
+
+/* User's message triangle */
+.user-message::after {
+    right: -3px;
+    top: 4px;
+    background: linear-gradient(25deg, #FF872B, #FF6C47);
+}
+    
+/* Other's message triangle */
+.other-message::after {
+    left: -3px;
+    top: 20px;
+    background: linear-gradient(50deg, #FA761B, #F76A32);
+}
+
+
 /* Users profile */
 .synthwave-modal {
     background: linear-gradient(135deg, #1e1e1e, #2b2b2b);
@@ -466,7 +577,6 @@ body {
     padding: 10px;
     border-radius: 8px;
     color: white;
-    z-index: 999;
     pointer-events: auto;
     width: 200px; 
 }
