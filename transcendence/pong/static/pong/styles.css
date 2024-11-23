@@ -469,14 +469,21 @@ body {
 
 /* General chat bubble styles */
 .message-bubble {
-    display: inline-block;
+    background: linear-gradient(135deg, #FF8400, #D400FF);
+    color: white;
+    align-self: flex-start;
+    text-align: left;
+    margin-right: auto;
+    border: 1px solid transparent;
+    background-clip: padding-box; /* Ensure gradient doesn't cover text */
     padding: 10px;
-    border-radius: 15px;
-    background-color: #f0f0f0;
-    margin-bottom: 5px;
-    max-width: calc(100% - 30px); /* Adjust width to prevent overflow */
+    position: relative;
 }
-
+.message-bubble::after {
+    left: -3px;
+    top: 20px;
+    background: linear-gradient(50deg, #FA761B, #F76A32);
+}
 /* Message meta styles for author and ban button */
 .message-meta {
     font-size: 0.8em;
@@ -524,17 +531,18 @@ li {
 }
 
 /* Other's message */
-.other-message {
+/* .other-message {
     background: linear-gradient(135deg, #FF8400, #D400FF);
     color: white;
     align-self: flex-start;
     text-align: left;
     margin-right: auto;
     border: 1px solid transparent;
-    background-clip: padding-box; /* Ensure gradient doesn't cover text */
+    background-clip: padding-box;
     padding: 10px;
     position: relative;
-}
+} 
+*/
 
 /* Chat bubble triangle */
 li::after {
@@ -554,11 +562,11 @@ li::after {
 }
     
 /* Other's message triangle */
-.other-message::after {
+/* .other-message::after {
     left: -3px;
     top: 20px;
     background: linear-gradient(50deg, #FA761B, #F76A32);
-}
+} */
 
 
 /* Users profile */
