@@ -9,14 +9,14 @@
                         {{ message.content }}
                     </li>
                 {% else %}
-                <li class="other-message">
-                    <div class="message-meta">
-                        <span class="message-author">{{ message.author }}</span>
-                        <button class="ban-button" data-author="{{ message.author.id }}" title="Ban user">🚫</button>
-                    </div>
-                    <span class="message-bubble">{{ message.content }}</span>
-                </li>                
-                {% endif %}
+                    <li class="other-message">
+                        <div class="message-meta">
+                            <span class="message-author">{{ message.author }}</span>
+                            <button class="ban-button" data-author="{{ message.author.id }}" title="Ban user">🚫</button>
+                        </div>
+                        <span class="message-bubble">{{ message.content }}</span>
+                    </li>                
+                    {% endif %}
             {% endfor %}
         </ul>
     </div>    
@@ -26,3 +26,4 @@
     </div>
 </div>
 {% endif %}
+

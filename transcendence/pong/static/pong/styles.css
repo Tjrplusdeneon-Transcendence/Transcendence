@@ -474,6 +474,7 @@ body {
     border-radius: 15px;
     background-color: #f0f0f0;
     margin-bottom: 5px;
+    max-width: calc(100% - 30px); /* Adjust width to prevent overflow */
 }
 
 /* Message meta styles for author and ban button */
@@ -483,7 +484,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: -10px; /* Adjust as needed to position below the bubble */
+    margin-bottom: 5px; /* Space between meta info and bubble */
 }
 
 .ban-button {
@@ -500,8 +501,8 @@ body {
 }
 
 li {
-    padding: 10px;
-    margin: 5px 0;
+    padding: 0 10px; /* Adjust padding to prevent overflow */
+    margin: 10px 0; /* Adjust margin for better spacing */
     border-radius: 10px;
     max-width: 60%;
     list-style-type: none;
@@ -519,6 +520,7 @@ li {
     margin-left: auto;
     border: 1px solid transparent;
     background-clip: padding-box; /* Ensure gradient doesn't cover text */
+    padding: 10px;
 }
 
 /* Other's message */
@@ -530,7 +532,7 @@ li {
     margin-right: auto;
     border: 1px solid transparent;
     background-clip: padding-box; /* Ensure gradient doesn't cover text */
-    padding: 10px 10px 20px 10px; /* Add extra padding at the bottom to fit the meta info */
+    padding: 10px;
     position: relative;
 }
 
@@ -557,6 +559,7 @@ li::after {
     top: 20px;
     background: linear-gradient(50deg, #FA761B, #F76A32);
 }
+
 
 /* Users profile */
 .synthwave-modal {
