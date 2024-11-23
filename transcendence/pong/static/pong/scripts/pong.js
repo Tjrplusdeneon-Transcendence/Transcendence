@@ -268,6 +268,7 @@ function gameOverMessage() {
             mainColor = '#00FFFF';
             secondaryText = 'You Win';
             secondaryColor = '#ff00fb';
+            increaseWins();
         }
     } else {
         if (winner === 'Player 1') {

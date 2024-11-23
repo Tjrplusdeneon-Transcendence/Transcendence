@@ -1,7 +1,6 @@
  
 <!-- <div id="profileInfo" style="display: none;">
     <img src="{% static 'pong/images/profile-picture.jpg' %}" alt="Profile Picture" class="profile-picture" />
-    <button id="logoutButton">Logout</button>
     <div id="gameStats" style="display: none;">
         <h2>Game Statistics</h2>
         <p>Games played: <span id="gamesPlayed">{{ user.games_played }}</span></p>
