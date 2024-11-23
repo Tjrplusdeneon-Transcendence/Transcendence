@@ -3,8 +3,11 @@
 		{{ message.content }}
 	</li>
 {% else %}
-	<li class="other-message">
-		{{ message.author }}: {{ message.content }}
-		<button class="ban-button" data-author="{{ message.author.id }}">🚫</button>
+	<li>
+		<div class="message-meta">
+			<span class="message-author">{{ message.author }}</span>
+			<button class="ban-button" data-author="{{ message.author.id }}" title="Ban user">🚫</button>
+		</div>
+		<span class="other-message">{{ message.content }}</span>
 	</li>
 {% endif %}
