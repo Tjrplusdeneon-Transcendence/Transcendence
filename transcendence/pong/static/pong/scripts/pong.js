@@ -688,14 +688,12 @@ function draw(currentTime) {
     if (x + dx * deltaTime < ballRadius) {
         winner = LocalMultiplayer ? 'Player 2' : (isAIEnabled ? 'AI' : 'Player 2');
         gameRunning = false;
-        alert("increase losses");
         increaseLosses();
         gameOverMessage();
         return;
     } else if (x + dx * deltaTime > canvas.width - ballRadius) {
         winner = 'Player 1';
         gameRunning = false;
-        alert("increase wins");
         increaseWins();
         gameOverMessage();
         return;

@@ -45,6 +45,7 @@ def signup_user(request):
             return render(request, 'pong/partials/panel.html')
     return render(request, 'pong/partials/signup.html', context={'sign_form': sign_form})
 
+@login_required
 def logout_user(request):
     logout(request)
     panel_html = render_to_string('pong/partials/panel.html', request=request)
@@ -54,8 +55,8 @@ def logout_user(request):
         'chat_html': chat_html
         })
 
-@login_required
-@require_POST
+# @login_required
+# @require_POST
 def increase_wins(request):
     print("WINS.view")
     user = request.user
@@ -63,8 +64,8 @@ def increase_wins(request):
     user.save()
     return render(request, 'pong/partials/panel.html')
 
-@login_required
-@require_POST
+# @login_required
+# @require_POST
 def increase_losses(request):
     print("LOSSES.view")
     user = request.user
