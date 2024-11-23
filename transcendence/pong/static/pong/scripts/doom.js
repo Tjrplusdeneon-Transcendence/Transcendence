@@ -35,25 +35,6 @@ document.getElementById("start-doom-game-btn").addEventListener("click", () => {
     document.getElementById("doom-game-container").style.display = "block";
 });
 
-// // Bouton pour quitter doom Game
-// document.getElementById("btn-close").addEventListener("click", () => {
-//     // Cache doom Game et réaffiche le carrousel
-//     document.getElementById("doom-game-container").style.display = "none";
-//     document.getElementById("carouselIndicators").style.display = "block";
-// });
-
-// document.addEventListener("DOMContentLoaded", function () {
-//     // Sélectionne la modale de DOOM
-//     const doomModal = document.getElementById("doomModal");
-//     if (doomModal) {
-//         // Ajoute un gestionnaire pour l'événement de fermeture
-//         doomModal.addEventListener("hidden.bs.modal", function () {
-//             // Redirige vers la section des choix de jeux ou effectue une action
-//             document.getElementById("carouselIndicators").scrollIntoView({ behavior: "smooth" });
-//         });
-//     }
-// });
-
 document.addEventListener("DOMContentLoaded", function () {
     // Sélectionne la modale de DOOM
     const doomModal = document.getElementById("doomModal");
