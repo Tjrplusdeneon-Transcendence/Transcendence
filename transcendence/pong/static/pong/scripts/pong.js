@@ -48,7 +48,8 @@ let dy = difficultySettings[currentDifficulty].dy;
 
 let upPressed = false;
 let downPressed = false;
-
+let wPressed = false;
+let sPressed = false;
 
 let playerRole = null;
 
@@ -172,8 +173,21 @@ document.addEventListener('keydown', (event) => {
         mouseBlocked = false; // Unblock mouse movement
         keyboardActive = true; // Disable mouse interactions
         paddleDirection = 1; // Moving up
-    } else if (event.key === 'ArrowDown') {
+    }
+    else if (event.key === 'w' && LocalMultiplayer){
+        wPressed = true;
+        mouseBlocked = false; // Unblock mouse movement
+        keyboardActive = true; // Disable mouse interactions
+        paddleDirection = 1; // Moving up
+    } 
+    else if (event.key === 'ArrowDown') {
         downPressed = true;
+        mouseBlocked = false; // Unblock mouse movement
+        keyboardActive = true; // Disable mouse interactions
+        paddleDirection = -1; // Moving down
+    }
+    else if (event.key === 's' && LocalMultiplayer){
+        sPressed = true;
         mouseBlocked = false; // Unblock mouse movement
         keyboardActive = true; // Disable mouse interactions
         paddleDirection = -1; // Moving down
@@ -186,9 +200,19 @@ document.addEventListener('keyup', (event) => {
         if (!downPressed) {
             paddleDirection = 0; // No movement
         }
+    } else if (event.key === 'w') {
+        wPressed = false;
+        if (!sPressed) {
+            paddleDirection = 0; // No movement
+        }
     } else if (event.key === 'ArrowDown') {
         downPressed = false;
         if (!upPressed) {
+            paddleDirection = 0; // No movement
+        }
+    } else if (event.key === 's') {
+        sPressed = false;
+        if (!wPressed) {
             paddleDirection = 0; // No movement
         }
     }
@@ -222,6 +246,12 @@ function drawBall(posX = x, posY = y, opacity = 1)
 
 function gameOverMessage() {
     // Clear any previous game over message
+    // if in online match, activate rematch and quit buttons
+    if (isMatchmaking) {
+        document.getElementById('rematch-btn').disabled = false;
+        document.getElementById('quit-btn').disabled = false;
+        document.getElementById('return-menu-btn').disabled = false;
+    }
     context.clearRect(canvas.width / 2 - 250, canvas.height / 2 - 100, 500, 150);
     isRestarting = false;
 
@@ -265,6 +295,7 @@ function gameOverMessage() {
                 secondaryColor = '#00FFFF';
             }
         }
+        document.getElementById('return-menu-btn').style.display = 'inline-block';
     }
 
     let mainFontSize = 1;
@@ -328,6 +359,9 @@ function gameOverMessage() {
     if (restartButton) {
         restartButton.disabled = false;
     }
+
+    // Enable the "Return to Menu" button
+    document.getElementById('return-menu-btn').disabled = false;
 }
 
 function calculateMissProbability() 
@@ -458,6 +492,8 @@ function moveAI(deltaTime)
 const angleAdjustmentUp = 0.2;
 const angleAdjustmentDown = -0.2;
 
+
+
 function checkPaddleCollision(deltaTime) {
     if (dx < 0 && x + dx * deltaTime < paddleWidth + ballRadius) {
         let futureY = y + dy * deltaTime;
@@ -510,77 +546,70 @@ let previousPaddleY2 = [];
 let previousBallPositions = [];
 
 const maxAfterImages = 20;
-
-
 function draw(currentTime) {
     if (!lastTime) lastTime = currentTime;
     
     let deltaTime = Math.max((currentTime - lastTime) / 1000, 0.001);
     lastTime = currentTime;
 
-    context.clearRect(0, 0, canvas.width, canvas.height);
+    // Vérifier le mode obscurité
+    toggleDarknessMode(currentTime);
 
-    // Draw after images for paddles
-    if (playerRole === 'player1') {
-        for (let i = 0; i < previousPaddleY1.length; i++) {
-            drawPaddle(0, previousPaddleY1[i], '#00FFFF', '#00FFFF', 0.1 * (1 - i / maxAfterImages));
+    // Si le mode obscurité est actif et que les éléments sont invisibles, afficher un écran noir
+    if (darknessModeActive && !elementsVisible) {
+        context.fillStyle = 'black';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+    } else {
+        // Afficher les éléments normalement
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (playerRole === 'player1') {
+            for (let i = 0; i < previousPaddleY1.length; i++) {
+                drawPaddle(0, previousPaddleY1[i], '#00FFFF', '#00FFFF', 0.1 * (1 - i / maxAfterImages));
+            }
+            for (let i = 0; i < previousPaddleY2.length; i++) {
+                drawPaddle(canvas.width - paddleWidth, previousPaddleY2[i], '#ff00fb', '#ff00fb', 0.1 * (1 - i / maxAfterImages));
+            }
+        } else if (playerRole === 'player2') {
+            for (let i = 0; i < previousPaddleY2.length; i++) {
+                drawPaddle(0, previousPaddleY2[i], '#00FFFF', '#00FFFF', 0.1 * (1 - i / maxAfterImages));
+            }
+            for (let i = 0; i < previousPaddleY1.length; i++) {
+                drawPaddle(canvas.width - paddleWidth, previousPaddleY1[i], '#ff00fb', '#ff00fb', 0.1 * (1 - i / maxAfterImages));
+            }
         }
-        for (let i = 0; i < previousPaddleY2.length; i++) {
-            drawPaddle(canvas.width - paddleWidth, previousPaddleY2[i], '#ff00fb', '#ff00fb', 0.1 * (1 - i / maxAfterImages));
+    
+        // Draw after images for the ball
+        for (let i = 0; i < previousBallPositions.length; i++) {
+            const pos = previousBallPositions[i];
+            const ballX = playerRole === 'player2' ? canvas.width - pos.x : pos.x;
+            drawBall(ballX, pos.y, 0.1 * (1 - i / maxAfterImages));
         }
-    } else if (playerRole === 'player2') {
-        for (let i = 0; i < previousPaddleY2.length; i++) {
-            drawPaddle(0, previousPaddleY2[i], '#00FFFF', '#00FFFF', 0.1 * (1 - i / maxAfterImages));
+    
+        // Draw paddles based on player role
+        if (playerRole === 'player1') {
+            drawPaddle(0, paddleY1, '#00FFFF', '#00FFFF'); // Player 1 sees themselves as blue on the left
+            drawPaddle(canvas.width - paddleWidth, paddleY2, '#ff00fb', '#ff00fb'); // Player 1 sees Player 2 as purple on the right
+        } else if (playerRole === 'player2') {
+            drawPaddle(0, paddleY2, '#00FFFF', '#00FFFF'); // Player 2 sees themselves as blue on the left
+            drawPaddle(canvas.width - paddleWidth, paddleY1, '#ff00fb', '#ff00fb'); // Player 2 sees Player 1 as purple on the right
         }
-        for (let i = 0; i < previousPaddleY1.length; i++) {
-            drawPaddle(canvas.width - paddleWidth, previousPaddleY1[i], '#ff00fb', '#ff00fb', 0.1 * (1 - i / maxAfterImages));
-        }
+        let ballX = playerRole === 'player2' ? canvas.width - x : x;
+        drawBall(ballX, y);
     }
-
-    // Draw after images for the ball
-    for (let i = 0; i < previousBallPositions.length; i++) {
-        const pos = previousBallPositions[i];
-        const ballX = playerRole === 'player2' ? canvas.width - pos.x : pos.x;
-        drawBall(ballX, pos.y, 0.1 * (1 - i / maxAfterImages));
-    }
-
-    // Draw paddles based on player role
-    if (playerRole === 'player1') {
-        drawPaddle(0, paddleY1, '#00FFFF', '#00FFFF'); // Player 1 sees themselves as blue on the left
-        drawPaddle(canvas.width - paddleWidth, paddleY2, '#ff00fb', '#ff00fb'); // Player 1 sees Player 2 as purple on the right
-    } else if (playerRole === 'player2') {
-        drawPaddle(0, paddleY2, '#00FFFF', '#00FFFF'); // Player 2 sees themselves as blue on the left
-        drawPaddle(canvas.width - paddleWidth, paddleY1, '#ff00fb', '#ff00fb'); // Player 2 sees Player 1 as purple on the right
-    }
-
-    // Mirror ball position for Player 2
-    let ballX = playerRole === 'player2' ? canvas.width - x : x;
-    drawBall(ballX, y);
 
     let paddleMoved = false;
 
-    if (playerRole === 'player1') {
-        if (upPressed) {
+    if (LocalMultiplayer) {
+        // Local multiplayer controls
+        if (wPressed) {
             paddleY1 -= playerSpeed * deltaTime;
             paddleMoved = true;
         }
-        if (downPressed) {
+        if (sPressed) {
             paddleY1 += playerSpeed * deltaTime;
             paddleMoved = true;
         }
-
-        if (paddleY1 < 0) {
-            paddleY1 = 0;
-        }
-        if (paddleY1 > canvas.height - paddleHeight) {
-            paddleY1 = canvas.height - paddleHeight;
-        }
-
-        if (paddleMoved) {
-            console.log(`Player 1 sending paddle position: ${paddleY1}`);
-            sendPaddlePosition(paddleY1);
-        }
-    } else if (playerRole === 'player2') {
         if (upPressed) {
             paddleY2 -= playerSpeed * deltaTime;
             paddleMoved = true;
@@ -590,16 +619,53 @@ function draw(currentTime) {
             paddleMoved = true;
         }
 
-        if (paddleY2 < 0) {
-            paddleY2 = 0;
-        }
-        if (paddleY2 > canvas.height - paddleHeight) {
-            paddleY2 = canvas.height - paddleHeight;
-        }
+        // Ensure paddles stay within the canvas
+        paddleY1 = Math.max(0, Math.min(paddleY1, canvas.height - paddleHeight));
+        paddleY2 = Math.max(0, Math.min(paddleY2, canvas.height - paddleHeight));
+    } else {
+        // Online multiplayer controls
+        if (playerRole === 'player1') {
+            if (upPressed) {
+                paddleY1 -= playerSpeed * deltaTime;
+                paddleMoved = true;
+            }
+            if (downPressed) {
+                paddleY1 += playerSpeed * deltaTime;
+                paddleMoved = true;
+            }
 
-        if (paddleMoved) {
-            console.log(`Player 2 sending paddle position: ${paddleY2}`);
-            sendPaddlePosition(paddleY2);
+            if (paddleY1 < 0) {
+                paddleY1 = 0;
+            }
+            if (paddleY1 > canvas.height - paddleHeight) {
+                paddleY1 = canvas.height - paddleHeight;
+            }
+
+            if (paddleMoved) {
+                console.log(`Player 1 sending paddle position: ${paddleY1}`);
+                sendPaddlePosition(paddleY1);
+            }
+        } else if (playerRole === 'player2') {
+            if (upPressed) {
+                paddleY2 -= playerSpeed * deltaTime;
+                paddleMoved = true;
+            }
+            if (downPressed) {
+                paddleY2 += playerSpeed * deltaTime;
+                paddleMoved = true;
+            }
+
+            if (paddleY2 < 0) {
+                paddleY2 = 0;
+            }
+            if (paddleY2 > canvas.height - paddleHeight) {
+                paddleY2 = canvas.height - paddleHeight;
+            }
+
+            if (paddleMoved) {
+                console.log(`Player 2 sending paddle position: ${paddleY2}`);
+                sendPaddlePosition(paddleY2);
+            }
         }
     }
 
@@ -610,7 +676,7 @@ function draw(currentTime) {
     dx = Math.min(Math.max(dx, -maxSpeed), maxSpeed);
     dy = Math.min(Math.max(dy, -maxSpeed), maxSpeed);
 
-    if (isAIEnabled) {
+    if (!LocalMultiplayer && isAIEnabled) {
         if (!firstHit)
             aiLastScanTime += deltaTime;
         aiDecision(aiLastScanTime);
@@ -620,7 +686,7 @@ function draw(currentTime) {
     checkPaddleCollision(deltaTime);
 
     if (x + dx * deltaTime < ballRadius) {
-        winner = isAIEnabled ? 'AI' : 'Player 2';
+        winner = LocalMultiplayer ? 'Player 2' : (isAIEnabled ? 'AI' : 'Player 2');
         gameRunning = false;
         gameOverMessage();
         return;
@@ -651,8 +717,10 @@ function draw(currentTime) {
         previousBallPositions.pop();
     }
 
-    // Send game state to the other player
-    sendGameState();
+    // Send game state to the other player if not in local multiplayer mode
+    if (!LocalMultiplayer) {
+        sendGameState();
+    }
 
     if (gameRunning)
         requestAnimationFrame(draw);
@@ -802,8 +870,15 @@ function drawInitialGameState() {
 }
 
 function startGame() {
+    // Récupérer les options sélectionnées
+    const selectedDifficulty = document.getElementById('difficultySelect').value;
+    currentDifficulty = selectedDifficulty;
+    
+    const paddleSizeInput = document.getElementById('paddle-size').value;
+    paddleHeight = parseInt(paddleSizeInput, 10);
+    
     // Reinitialize game state
-    const restartButton = isMatchmaking ? document.getElementById('start-matchmaking-btn') : document.getElementById('start-solo-game-btn');
+    const restartButton = isMatchmaking ? document.getElementById('start-multiplayer-btn') : document.getElementById('start-solo-game-btn');
     
     if (restartButton) {
         restartButton.disabled = false;
@@ -830,6 +905,9 @@ function startGame() {
         // Directly start the game without showing the restart button or difficulty menu
         document.getElementById('difficulty-menu').style.display = 'none';
         document.getElementById('pongCanvas').style.display = 'block';
+
+        // Hide the multiplayer menu
+        document.getElementById('multiplayer-menu').style.display = 'none';
 
         if (animationFrameId) {
             cancelAnimationFrame(animationFrameId);
@@ -886,13 +964,36 @@ function startGame() {
 
         showReadyAnimation(() => {
             requestAnimationFrame(draw);
-            });
-        };
- }
+        });
+    }
+
+    // Disable the "Return to Menu" button
+    document.getElementById('return-menu-btn').disabled = true;
+}
 
 
 function restartPong() {
-    startGame();
+        // Garder les paramètres actuels de taille et de difficulté
+        const selectedDifficulty = currentDifficulty;
+        const paddleSize = paddleHeight;
+    
+        // Réinitialiser l'état du jeu
+        firstHit = true;
+        aiHits = 0;
+        paddleY1 = (canvas.height - paddleHeight) / 2;
+        paddleY2 = (canvas.height - paddleHeight) / 2;
+        x = canvas.width / 2;
+        y = canvas.height / 2;
+        dx = difficultySettings[selectedDifficulty].dx;
+        dy = difficultySettings[selectedDifficulty].dy;
+    
+        // Réinitialiser l'affichage
+        gameRunning = false;
+        winner = '';
+        aiTargetY = canvas.height / 2 - paddleHeight / 2;
+    
+        // Démarrer directement la partie avec les paramètres actuels
+        startGame();
 }
 
 // document.getElementById('start-solo-game-btn').addEventListener('click', function() {
@@ -994,6 +1095,51 @@ function restartPong() {
 
 document.getElementById('pongCanvas').style.display = 'none'; 
 
+// New Main Menu Buttons
+document.getElementById('singleplayerButton').addEventListener('click', function() {
+    document.getElementById('mainMenuCanvas').style.display = 'none';
+    document.getElementById('singleplayerButton').style.display = 'none';
+    document.getElementById('multiplayerButton').style.display = 'none';
+    document.getElementById('difficulty-menu').style.display = 'block';
+    document.getElementById('pongCanvas').style.display = 'none'; // Ensure the game canvas is hidden
+    document.getElementById('start-solo-game-btn').style.display = 'block';
+    document.getElementById('start-solo-game-btn').textContent = 'Start Game'; // Change button text to "Start Game"
+    document.getElementById('return-menu-btn').style.display = 'block';
+});
+
+document.getElementById('multiplayerButton').addEventListener('click', function() {
+    document.getElementById('mainMenuCanvas').style.display = 'none';
+    document.getElementById('singleplayerButton').style.display = 'none';
+    document.getElementById('multiplayerButton').style.display = 'none';
+    document.getElementById('multiplayer-menu').style.display = 'flex';
+    document.getElementById('go-back-btn').style.display = 'inline-block';
+    document.getElementById('go-back-btn').textContent = 'Return to Menu'; // Change button text to "Return to Menu"
+});
+
+document.getElementById('leftSide').addEventListener('click', function() {
+    document.getElementById('mainMenuCanvas').style.display = 'none';
+    document.getElementById('leftSide').style.display = 'none';
+    document.getElementById('rightSide').style.display = 'none';
+    document.getElementById('singleplayerButton').style.display = 'none';
+    document.getElementById('multiplayerButton').style.display = 'none';
+    document.getElementById('difficulty-menu').style.display = 'block';
+    document.getElementById('pongCanvas').style.display = 'none'; // Ensure the game canvas is hidden
+    document.getElementById('start-solo-game-btn').style.display = 'block';
+    document.getElementById('start-solo-game-btn').textContent = 'Start Game'; // Change button text to "Start Game"
+    document.getElementById('return-menu-btn').style.display = 'block';
+});
+
+document.getElementById('rightSide').addEventListener('click', function() {
+    document.getElementById('mainMenuCanvas').style.display = 'none';
+    document.getElementById('leftSide').style.display = 'none';
+    document.getElementById('rightSide').style.display = 'none';
+    document.getElementById('singleplayerButton').style.display = 'none';
+    document.getElementById('multiplayerButton').style.display = 'none';
+    document.getElementById('multiplayer-menu').style.display = 'flex';
+    document.getElementById('go-back-btn').style.display = 'inline-block';
+    document.getElementById('go-back-btn').textContent = 'Return to Menu'; // Change button text to "Return to Menu"
+});
+
 document.getElementById('start-solo-game-btn').addEventListener('click', function() {
     isMatchmaking = false;
     document.getElementById('pongCanvas').style.pointerEvents = 'auto';
@@ -1011,10 +1157,91 @@ document.getElementById('start-solo-game-btn').addEventListener('click', functio
     startGame();
 });
 
-let socket;
 
-document.getElementById('start-matchmaking-btn').addEventListener('click', function() {
+// document.getElementById('start-local-multiplayer-btn').addEventListener('click', function() {
+//     isMatchmaking = false;
+//     document.getElementById('pongCanvas').style.pointerEvents = 'auto';
+//     const selectedDifficulty = document.getElementById('difficultySelect').value;
+//     currentDifficulty = selectedDifficulty;
+//     document.getElementById('difficulty-menu').style.display = 'none';
+//     document.getElementById('pongCanvas').style.display = 'block';
+
+//     const startButton = document.getElementById('start-solo-game-btn');
+//     startButton.textContent = 'Restart Game';
+
+//     startButton.removeEventListener('click', startGame);
+//     startButton.addEventListener('click', restartPong);
+// });
+
+let socket;
+let bothPlayersReady = false;
+let playerReady = false;
+let rematchRequested = false;
+
+document.getElementById('start-multiplayer-btn').addEventListener('click', function() {
+    document.getElementById('difficulty-menu').style.display = 'none';
+    document.getElementById('pongCanvas').style.display = 'none';
+    document.getElementById('multiplayer-menu').style.display = 'flex';
+    document.getElementById('start-solo-game-btn').style.display = 'none';
+    document.getElementById('start-multiplayer-btn').style.display = 'none';
+    document.getElementById('go-back-btn').style.display = 'inline-block';
+});
+
+let inLocal = false;
+let LocalMultiplayer = false;
+
+document.getElementById('local-btn').addEventListener('click', function() 
+{
+    inLocal = true;
+    LocalMultiplayer = true;
+    isMatchmaking = false;
+    document.getElementById('multiplayer-menu').style.display = 'none';
+    document.getElementById('difficulty-menu').style.display = 'block';
+    document.getElementById('return-menu-btn').style.display = 'none';
+    document.getElementById('go-back-btn').textContent = 'Go Back'; // Reset button text to "Go Back"
+    document.getElementById('start-solo-game-btn').style.display = 'block';
+    document.getElementById('start-solo-game-btn').textContent = 'Start Game'; // Change button text to "Start Game"
+});
+
+document.getElementById('go-back-btn').addEventListener('click', function() {
+    if (document.getElementById('searching-menu').style.display === 'flex' || inLocal === true) {
+        document.getElementById('searching-menu').style.display = 'none';
+        document.getElementById('multiplayer-menu').style.display = 'flex';
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({ type: 'quit' })); // Notify the opponent that the player has left
+            socket.close(); // Close the socket connection when going back
+        }
+        document.getElementById('start-solo-game-btn').style.display = 'none';
+        document.getElementById('pongCanvas').style.display = 'none'; // Hide the game canvas
+        document.getElementById('difficulty-menu').style.display = 'none';
+        resetMatchmakingState(); // Reset matchmaking state
+        document.getElementById('go-back-btn').style.display = 'inline-block'; // Ensure go-back button is visible
+        document.getElementById('go-back-btn').textContent = 'Return to Menu'; // Change button text to "Return to Menu"
+        LocalMultiplayer = false;
+        inLocal = false;
+    } else {
+        document.getElementById('multiplayer-menu').style.display = 'none';
+        document.getElementById('difficulty-menu').style.display = 'none';
+        document.getElementById('pongCanvas').style.display = 'none'; // Hide the game canvas
+        document.getElementById('mainMenuCanvas').style.display = 'block';
+        document.getElementById('leftSide').style.display = 'flex'; // Show the left side
+        document.getElementById('rightSide').style.display = 'flex'; // Show the right side
+        document.getElementById('singleplayerButton').style.display = 'none';
+        document.getElementById('multiplayerButton').style.display = 'none';
+        document.getElementById('go-back-btn').style.display = 'none'; // Hide go-back button when returning to main menu
+        document.getElementById('go-back-btn').textContent = 'Go Back'; // Reset button text to "Go Back"
+    }
+});
+
+document.getElementById('online-btn').addEventListener('click', function() {
     isMatchmaking = true;
+
+    document.getElementById('multiplayer-menu').style.display = 'none';
+    document.getElementById('searching-menu').style.display = 'flex';
+    document.getElementById('go-back-btn').style.display = 'inline-block';
+    document.getElementById('go-back-btn').textContent = 'Go Back'; // Change button text to "Go Back"
+    document.getElementById('return-menu-btn').style.display = 'none'; // Hide the "Return to Menu" button on the online menu
+
 
     const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
     const host = window.location.host; // Includes hostname and port (if present)
@@ -1034,9 +1261,47 @@ document.getElementById('start-matchmaking-btn').addEventListener('click', funct
         const data = JSON.parse(event.data);
         if (data.type === 'match_found') {
             playerRole = data.player;
+            document.getElementById('searching-btn').textContent = 'Start Match';
+            document.getElementById('searching-btn').disabled = false;
+            document.getElementById('searching-btn').classList.add('active');
+        } else if (data.type === 'player_ready') {
+            if (data.player !== playerRole) {
+                bothPlayersReady = true;
+                document.getElementById('searching-btn').textContent = 'Start Match';
+                document.getElementById('searching-btn').disabled = false;
+                document.getElementById('searching-btn').classList.add('active');
+            }
         } else if (data.type === 'start_game') {
+            // Hide the searching menu and go-back button, show rematch and quit buttons
+            document.getElementById('searching-menu').style.display = 'none';
+            document.getElementById('go-back-btn').style.display = 'none';
+            document.getElementById('rematch-btn').style.display = 'inline-block';
+            document.getElementById('quit-btn').style.display = 'inline-block';
+            document.getElementById('quit-btn').textContent = 'Quit Match'; // Change button text to "Quit Match"
+            document.getElementById('return-menu-btn').style.display = 'inline-block';
+            document.getElementById('return-menu-btn').disabled = true; // Disable the "Return to Menu" button during the match
             initializeGameState(data.initial_state);
             startGame();
+            resetMatchmakingState(); // Reset matchmaking state after the game starts
+            document.getElementById('rematch-btn').disabled = true;
+            document.getElementById('quit-btn').disabled = true;
+        } else if (data.type === 'opponent_left') {
+            document.getElementById('searching-btn').textContent = 'Opponent has left the match';
+            document.getElementById('searching-btn').disabled = true;
+            document.getElementById('searching-btn').classList.remove('active');
+            document.getElementById('rematch-btn').textContent = 'Opponent has left the match';
+            document.getElementById('rematch-btn').disabled = true;
+            document.getElementById('quit-btn').disabled = false;
+        } else if (data.type === 'rematch') {
+            if (data.player !== playerRole) {
+                bothPlayersReady = true;
+                document.getElementById('rematch-btn').textContent = 'Opponent wants a rematch';
+                document.getElementById('rematch-btn').disabled = false;
+                document.getElementById('quit-btn').disabled = false;
+            }
+            if (rematchRequested && bothPlayersReady) {
+                socket.send(JSON.stringify({ type: 'start_game' }));
+            }
         } else if (data.type === 'game_update') {
             // Update game state with received data
             x = data.state.ball_position[0];
@@ -1053,6 +1318,10 @@ document.getElementById('start-matchmaking-btn').addEventListener('click', funct
                 console.log(`Player 2 received paddle position: ${data.position}`);
                 paddleY2 = data.position;
             }
+        } else if (data.type === 'game_over') {
+            // Enable rematch and quit buttons at the end of the match
+            endGame();
+            document.getElementById('return-menu-btn').disabled = false; // Enable the "Return to Menu" button at the end of the match
         }
     };
 
@@ -1065,6 +1334,37 @@ document.getElementById('start-matchmaking-btn').addEventListener('click', funct
     };
 });
 
+document.getElementById('searching-btn').addEventListener('click', function() {
+    if (this.textContent === 'Start Match') {
+        this.textContent = 'Waiting for opponent...';
+        this.disabled = true;
+        playerReady = true;
+        socket.send(JSON.stringify({ type: 'player_ready', player: playerRole }));
+        if (bothPlayersReady) {
+            socket.send(JSON.stringify({ type: 'start_game' }));
+        }
+    }
+});
+
+document.getElementById('rematch-btn').addEventListener('click', function() {
+    this.textContent = 'Waiting for opponent...';
+    this.disabled = true;
+    rematchRequested = true;
+    socket.send(JSON.stringify({ type: 'rematch', player: playerRole }));
+});
+
+document.getElementById('quit-btn').addEventListener('click', function() {
+    socket.send(JSON.stringify({ type: 'quit' }));
+    resetMatchmakingState();
+    document.getElementById('multiplayer-menu').style.display = 'flex';
+    document.getElementById('rematch-btn').style.display = 'none';
+    document.getElementById('quit-btn').style.display = 'none';
+    document.getElementById('pongCanvas').style.display = 'none'; // Hide the game canvas
+    document.getElementById('go-back-btn').style.display = 'none'; // Hide the "Go Back" button
+    document.getElementById('return-menu-btn').style.display = 'inline-block'; // Ensure "Return to Menu" button is visible
+    document.getElementById('return-menu-btn').disabled = false; // Enable the "Return to Menu" button
+});
+
 function initializeGameState(initialState) {
     x = initialState.ball_position[0];
     y = initialState.ball_position[1];
@@ -1074,6 +1374,24 @@ function initializeGameState(initialState) {
     dy = initialState.dy;
     playerSpeed = initialState.player_speed;
     aiSpeed = initialState.ai_speed;
+}
+
+function resetMatchmakingState() {
+    bothPlayersReady = false;
+    playerReady = false;
+    rematchRequested = false;
+    document.getElementById('searching-btn').textContent = 'Searching for opponent...';
+    document.getElementById('searching-btn').disabled = true;
+    document.getElementById('searching-btn').classList.remove('active');
+    document.getElementById('rematch-btn').textContent = 'Rematch';
+    document.getElementById('rematch-btn').disabled = true;
+    document.getElementById('quit-btn').disabled = true;
+}
+
+function endGame() {
+    // Enable rematch and quit buttons at the end of the match
+    document.getElementById('rematch-btn').disabled = false;
+    document.getElementById('quit-btn').disabled = false;
 }
 
 function sendGameState() {
@@ -1099,5 +1417,113 @@ function sendPaddlePosition(position) {
             player: playerRole,
             position: position
         }));
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const paddleSizeInput = document.getElementById("paddle-size");
+    const paddleSizeDisplay = document.getElementById("paddle-size-display");
+
+    paddleSizeInput.addEventListener("input", function () {
+        paddleHeight = parseInt(paddleSizeInput.value, 10); // Met à jour la hauteur globale du paddle
+        paddleSizeDisplay.textContent = paddleHeight; // Met à jour l'affichage
+    });
+});
+
+function showMenu() {
+    document.getElementById('difficulty-menu').style.display = 'block';
+    document.getElementById('pongCanvas').style.display = 'none';
+    document.getElementById('start-solo-game-btn').textContent = 'Start Game';
+}
+
+function hideMenu() {
+    document.getElementById('difficulty-menu').style.display = 'none';
+    document.getElementById('pongCanvas').style.display = 'block';
+}
+
+document.getElementById('start-solo-game-btn').addEventListener('click', function () {
+    if (this.textContent === 'Start Game') {
+        hideMenu(); // Masquer le menu pour lancer la partie
+        startGame();
+    } else if (this.textContent === 'Restart Game') {
+        restartPong();
+    }
+});
+
+function resetMainMenu() {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ type: 'quit' })); // Notify the opponent that the player has left
+        socket.close(); // Close the socket connection when going back
+    }
+    document.getElementById('mainMenuCanvas').style.display = 'block';
+    document.getElementById('leftSide').style.display = 'flex';
+    document.getElementById('rightSide').style.display = 'flex';
+    document.getElementById('singleplayerButton').style.display = 'block';
+    document.getElementById('multiplayerButton').style.display = 'block';
+    document.getElementById('difficulty-menu').style.display = 'none';
+    document.getElementById('pongCanvas').style.display = 'none';
+    document.getElementById('multiplayer-menu').style.display = 'none';
+    document.getElementById('start-solo-game-btn').style.display = 'none';
+    document.getElementById('start-multiplayer-btn').style.display = 'none';
+    document.getElementById('return-menu-btn').style.display = 'none';
+    document.getElementById('go-back-btn').style.display = 'none';
+    document.getElementById('searching-menu').style.display = 'none';
+    document.getElementById('rematch-btn').style.display = 'none';
+    document.getElementById('quit-btn').style.display = 'none';
+}
+
+document.getElementById('return-menu-btn').addEventListener('click', function() {
+    resetMainMenu();
+});
+
+let darknessModeActive = false;
+let darknessModeTimer = 0;
+let darknessDuration = 12000; // Durée totale du mode obscurité (en ms)
+let visibilityToggleInterval = 500; // Temps avant de changer entre visible/invisible (en ms)
+let elementsVisible = true; // Indique si les paddles et la balle sont visibles
+let lastVisibilityToggleTime = 0; // Temps du dernier basculement
+
+// Référence à la case à cocher
+const darknessToggleCheckbox = document.getElementById('darknessToggle');
+
+// Variable pour suivre si le mode obscurité est activé
+let darknessModeEnabled = false;
+
+// Mettre à jour l'état du mode obscurité lorsque la case est cochée/décochée
+darknessToggleCheckbox.addEventListener('change', () => {
+    darknessModeEnabled = darknessToggleCheckbox.checked;
+});
+
+function toggleDarknessMode(currentTime) {
+    // Vérifier si la fonctionnalité est activée
+    if (!darknessModeEnabled) {
+        darknessModeActive = false;
+        return;
+    }
+
+    if (!darknessModeActive && Math.random() < 0.0006) 
+    { 
+        // Probabilité faible2 de déclencher
+        darknessModeActive = true;
+        darknessModeTimer = currentTime;
+        elementsVisible = true; // Commencer avec les éléments visibles
+        lastVisibilityToggleTime = currentTime;
+    }
+
+    if (darknessModeActive) {
+        const elapsed = currentTime - darknessModeTimer;
+
+        // Si la durée totale du mode obscurité est écoulée, désactiver
+        if (elapsed >= darknessDuration) {
+            darknessModeActive = false;
+            context.clearRect(0, 0, canvas.width, canvas.height); // Nettoyer la scène
+            return;
+        }
+
+        // Alterner entre visible et invisible en fonction de l'intervalle
+        if (currentTime - lastVisibilityToggleTime >= visibilityToggleInterval) {
+            elementsVisible = !elementsVisible; // Bascule l'état
+            lastVisibilityToggleTime = currentTime;
+        }
     }
 }
