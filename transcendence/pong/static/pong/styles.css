@@ -1080,3 +1080,76 @@ li {
 #leftSide:hover, #rightSide:hover {
     transform: scale(1.03); /* Légère croissance au survol */
 }
+
+
+
+
+
+
+
+/* Styles pour le conteneur principal */
+#gamecustom-blackout, #paddle-size {
+    color: #00ffff; 
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+/* Style pour les labels */
+#gamecustom-blackout label, label[for="paddle-size"] {
+    display: block;
+    color: #ff00fb; 
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+/* Style pour la checkbox */
+#darknessToggle {
+    accent-color: #00ffff; 
+    transform: scale(1.3); 
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+/* Style pour le curseur de la barre de réglage */
+#paddle-size {
+    -webkit-appearance: none; 
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(90deg, #ff00fb, #00ffff);
+    border-radius: 10px;
+    outline: none;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
+}
+
+#paddle-size:hover {
+    opacity: 1;
+    box-shadow: 0 0 25px rgba(255, 0, 251, 0.9);
+}
+
+/* Curseur de la barre de réglage */
+#paddle-size::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #00ffff; 
+    border: 2px solid #ff00fb;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.9);
+}
+
+#paddle-size::-webkit-slider-thumb:hover {
+    background: #ff00fb; 
+    box-shadow: 0 0 25px rgba(255, 0, 251, 0.9);
+}
+
+/* Style pour afficher la taille actuelle de la raquette */
+#paddle-size-display {
+    display: inline-block;
+    font-size: 18px;
+    margin-top: 5px;
+    color: #00ffff;
+    text-shadow: 0 0 10px #00ffff;
+}

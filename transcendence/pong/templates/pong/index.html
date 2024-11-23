@@ -153,7 +153,6 @@
                             <input type="checkbox" id="darknessToggle"> Enable Darkness Mode
                         </label>
                     </div>
-                    <!-- Paddle size selector -->
                     <label for="paddle-size">Paddle Size:</label>
                     <input type="range" id="paddle-size" min="50" max="200" value="100">
                     <span id="paddle-size-display">100</span>
@@ -173,7 +172,7 @@
                     <button id="searching-btn" class="btn btn-primary" disabled>Searching for opponent...</button>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div id="pong-footer" class="modal-footer">
                 <button type="button" class="btn btn-primary" id="start-solo-game-btn" style="display: none;">Solo Game</button>
                 <button type="button" class="btn btn-primary" id="start-local-multiplayer-btn" style="display: none;">Local Multiplayer</button>
                 <button type="button" class="btn btn-primary" id="start-multiplayer-btn" style="display: none;">Multiplayer</button>
@@ -275,4 +274,25 @@
 <script src="{% static 'pong/scripts/gamestats.js' %}"></script>
 <script src="{% static 'pong/scripts/pong.js' %}"></script>
 <script src="{% static 'pong/scripts/memory.js' %}"></script>
+
+<script>
+	// Fonction pour vérifier si le menu principal est visible
+	function toggleFooterVisibility() {
+		const footer = document.getElementById('pong-footer');
+		const leftSide = document.getElementById('leftSide');
+		const rightSide = document.getElementById('rightSide');
+	
+		// Vérifie si le menu principal est visible
+		if (leftSide && rightSide && window.getComputedStyle(leftSide).display !== 'none' && window.getComputedStyle(rightSide).display !== 'none') {
+			footer.style.display = 'none';  // Cache le footer
+		} else {
+			footer.style.display = 'flex';  // Affiche le footer
+		}
+	}
+	
+	// Exécute la fonction lors du chargement de la page et à chaque changement de menu
+	document.addEventListener('DOMContentLoaded', toggleFooterVisibility);
+	document.addEventListener('click', toggleFooterVisibility);
+</script>
+	
 {% endblock content %}
