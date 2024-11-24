@@ -17,24 +17,25 @@ let defaultDifficulty = 'medium';
 let attempts = 0; 
 let shuffleAttempts = 0;
 
-document.getElementById('start-memory-game-btn').addEventListener('click', () => {
+document.getElementById('start-solo-game-btn-memo').addEventListener('click', () => {
     defaultDifficulty = document.getElementById('memoryDifficultySelect').value;
     
     document.getElementById('difficulty-menu-m').style.display = 'none';
-    document.getElementById('gamecustom-shuffle').style.display = 'none';
-    document.getElementById('gamecustom-hint').style.display = 'none';
+    document.getElementById('return-menu-btn-memo').style.display = 'none';
+    //document.getElementById('gamecustom-shuffle').style.display = 'none';
+    //document.getElementById('gamecustom-hint').style.display = 'none';
     gameContainer.style.display = 'grid';
 
     startMemory();
 });
 
-document.getElementById('shuffleToggle').addEventListener('change', function() {
+/*document.getElementById('shuffleToggle').addEventListener('change', function() {
     shuffleModeEnabled = this.checked; 
 });
 
 document.getElementById('hintToggle').addEventListener('change', function() {
     hintModeEnabled = this.checked; 
-});
+});*/
 
 function startMemory() 
 {
@@ -45,12 +46,11 @@ function startMemory()
     if (isMemoryGameAIEnabled)
         botMoveTimeout = setTimeout(botMove, 1000);
 
-    const startButton = document.getElementById('start-memory-game-btn');
-    startButton.textContent = 'Restart Game';
+    const startButton = document.getElementById('start-solo-game-btn-memo');
+    startButton.textContent = 'Go back';
 
     startButton.removeEventListener('click', startMemory);
     startButton.addEventListener('click', restartMemory);
-    document.getElementById('memory-matchmaking-btn').style.display = 'none';
 }
 
 function resetMemory() 
@@ -321,11 +321,12 @@ function restartMemory()
     resetMemory();
     gameContainer.style.display = 'none';
     document.getElementById('difficulty-menu-m').style.display = 'block';
-    document.getElementById('gamecustom-shuffle').style.display = 'block';
-    document.getElementById('gamecustom-hint').style.display = 'block';
-    document.getElementById('memory-matchmaking-btn').style.display = 'block';
+    //document.getElementById('gamecustom-shuffle').style.display = 'block';
+    //document.getElementById('gamecustom-hint').style.display = 'block';
+    //document.getElementById('memory-matchmaking-btn').style.display = 'block';
 
-    const startButton = document.getElementById('start-memory-game-btn');
+    const startButton = document.getElementById('start-solo-game-btn-memo');
+    document.getElementById('return-menu-btn-memo').style.display = 'block';
     startButton.textContent = 'Start Game';
 
     startButton.removeEventListener('click', restartMemory);

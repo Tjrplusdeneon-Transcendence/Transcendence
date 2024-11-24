@@ -191,20 +191,20 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="memoryModalLabel">Memory Game</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+                <button id="closeModalM" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
             </div>
             <div class="modal-body">
                 <!-- New Main Menu Canvas -->
-                <canvas id="mainMenuCanvas" width="640" height="480" style="background-color: #1a1a1a;"></canvas>
+                <canvas id="mainMenuCanvas-memory" width="640" height="480" style="background-color: #1a1a1a;"></canvas>
                 <div 
-                    id="leftSide" class="main-menu-side">–Singleplayer
+                    id="leftSideM" class="main-menu-side">–Singleplayer
                     <button id="singleplayerButton-memory" class="main-menu-button"></button>
                 </div>
                 <div 
-                    id="rightSide" class="main-menu-side">–Multiplayer
+                    id="rightSideM" class="main-menu-side">–Multiplayer
                     <button id="multiplayerButton-memory" class="main-menu-button"></button>
                 </div>
-                <!-- Difficulty selector /!\ ATTENTION A BIEN LE CACHER-->
+                <!-- Difficulty selector -->
                 <div id="difficulty-menu-m" class="difficulty-menu-m mb-3">
                     <label for="memoryDifficultySelect" class="form-label">Select Difficulty:</label>
                     <select id="memoryDifficultySelect" class="form-select">
@@ -226,11 +226,7 @@
                 <div id="searching-menu-memory" style="display: none;">
                     <button id="searching-btn-memory" class="btn btn-primary" disabled>Searching for opponent...</button>
                 </div>
-            <div class="modal-footer">
-                <!--BOUTONS A ENLEVER APRES INTEGRATION DU MEMORY-->
-                <button type="button" class="btn btn-primary" id="start-memory-game-btn">Solo Game</button>
-                <button type="button" class="btn btn-primary" id="start-memory-game-btn">Matchmaking</button>
-
+            <div id="memory-footer" class="modal-footer">
                 <!--New footer button-->
                 <button type="button" class="btn btn-primary" id="start-solo-game-btn-memo" style="display: none;">Solo Game</button>
                 <button type="button" class="btn btn-primary" id="start-local-multiplayer-btn-memo" style="display: none;">Local Multiplayer</button>
@@ -274,6 +270,8 @@
 <script src="{% static 'pong/scripts/gamestats.js' %}"></script>
 <script src="{% static 'pong/scripts/pong.js' %}"></script>
 <script src="{% static 'pong/scripts/memory.js' %}"></script>
+<script src="{% static 'pong/scripts/menu.js' %}"></script>
+
 
 <script>
 	// Fonction pour vérifier si le menu principal est visible
@@ -281,12 +279,22 @@
 		const footer = document.getElementById('pong-footer');
 		const leftSide = document.getElementById('leftSide');
 		const rightSide = document.getElementById('rightSide');
+
+        const footerM = document.getElementById('memory-footer');
+		const leftSideM = document.getElementById('leftSideM');
+		const rightSideM = document.getElementById('rightSideM');
 	
 		// Vérifie si le menu principal est visible
 		if (leftSide && rightSide && window.getComputedStyle(leftSide).display !== 'none' && window.getComputedStyle(rightSide).display !== 'none') {
 			footer.style.display = 'none';  // Cache le footer
 		} else {
 			footer.style.display = 'flex';  // Affiche le footer
+		}
+
+        if (leftSideM && rightSideM && window.getComputedStyle(leftSideM).display !== 'none' && window.getComputedStyle(rightSideM).display !== 'none') {
+			footerM.style.display = 'none';  // Cache le footer
+		} else {
+			footerM.style.display = 'flex';  // Affiche le footer
 		}
 	}
 	
