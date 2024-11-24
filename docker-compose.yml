@@ -9,6 +9,7 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
     restart: always
+
   web:
     depends_on:
       - db
@@ -24,9 +25,25 @@ services:
       - .env
     restart: always
 
+  nginx:
+    depends_on:
+      - web
+    container_name: nginx
+    build: ./nginx
+    ports:
+      - "8443:80"
+    volumes:
+      - ./app/static:/usr/src/app/static
+    networks:
+      - transcendence
+    restart: always
+
 networks:
   transcendence:
     driver: bridge
 
 volumes:
   db:
+
+
+
