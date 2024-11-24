@@ -8,6 +8,12 @@ import re
 import math
 import random
 
+from asgiref.sync import async_to_sync
+from channels.generic.websocket import WebsocketConsumer
+from django.template.loader import render_to_string
+from .models import User, Chat
+import json
+
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.user = self.scope['user']
@@ -58,8 +64,11 @@ class ChatConsumer(WebsocketConsumer):
 
     def info_handler(self, event):
         other = User.objects.get(id=event['other_id'])
-        html = render_to_string('pong/partials/panel.html', context={'user': self.user,'other': other})
-        self.send(text_data=html)
+        html = render_to_string('pong/partials/panel.html', context={'user': self.user, 'other': other})
+        self.send(text_data=json.dumps({
+            'type': 'info_handler',
+            'html': html
+        }))
 
     def invite_handler(self, event):
         sender = User.objects.get(id=event['sender_id'])
@@ -68,14 +77,19 @@ class ChatConsumer(WebsocketConsumer):
             'content': "Play with me <button class='join-game-btn' id='join-game-btn'>🕹️</button>",
         }
         html = render_to_string('pong/partials/chat_message.html', context={'message': message, 'user': self.user})
-        self.send(text_data=html)
+        self.send(text_data=json.dumps({
+            'type': 'invite_handler',
+            'html': html
+        }))
 
     def message_handler(self, event):
         message = Chat.objects.get(id=event['message_id'])
         if message.author not in self.user.banned_users.all():
             html = render_to_string('pong/partials/chat_message.html', context={'message': message, 'user': self.user})
-            self.send(text_data=html)
-
+            self.send(text_data=json.dumps({
+                'type': 'message_handler',
+                'html': html
+            }))
 
 class PongConsumer(AsyncWebsocketConsumer):
     players_waiting = []
