@@ -171,6 +171,7 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(255, 0, 255, 0.7), 0 0 25px rgba(0, 255, 255, 0.7);
     animation: neonGlow 3s infinite alternate;
+    width: 100%;
 }
 
 #memory-game-container {
@@ -1061,5 +1062,21 @@ li {
 
 #gamecustom-ballsize .form-select:focus {
     border-color: #00ffea;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5), 0 0 25px rgba(255, 0, 255, 0.5);
+}
+
+#gamecustom-difficulty .form-select {
+    width: 100%;
+    max-width: 200px;
+    text-align: center;
+    background-color: transparent;
+    color: #fff;
+    border: 2px solid #00ffff;
+    border-radius: 5px;
+    padding: 5px;;
+}
+
+#gamecustom-difficulty .form-select:focus {
+    border-color: #ff00ea;
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.5), 0 0 25px rgba(255, 0, 255, 0.5);
 }

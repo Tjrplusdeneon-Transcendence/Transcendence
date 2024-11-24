@@ -883,8 +883,8 @@ function startGame() {
     const selectedDifficulty = document.getElementById('difficultySelect').value;
     currentDifficulty = selectedDifficulty;
     
-    const paddleSizeInput = document.getElementById('paddle-size').value;
-    paddleHeight = parseInt(paddleSizeInput, 10);
+    const selectedPaddleSize = document.getElementById('paddleSizeSlider').value;
+    updatePaddleSize(selectedPaddleSize);
     
     // Reinitialize game state
     const restartButton = isMatchmaking ? document.getElementById('start-multiplayer-btn') : document.getElementById('start-solo-game-btn');
@@ -1430,16 +1430,6 @@ function sendPaddlePosition(position) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    const paddleSizeInput = document.getElementById("paddle-size");
-    const paddleSizeDisplay = document.getElementById("paddle-size-display");
-
-    paddleSizeInput.addEventListener("input", function () {
-        paddleHeight = parseInt(paddleSizeInput.value, 10); // Met à jour la hauteur globale du paddle
-        paddleSizeDisplay.textContent = paddleHeight; // Met à jour l'affichage
-    });
-});
-
 function showMenu() {
     document.getElementById('difficulty-menu').style.display = 'flex';
     document.getElementById('pongCanvas').style.display = 'none';
@@ -1561,4 +1551,34 @@ function updateBallSize(size) {
         default:
             ball.radius = 20; // Taille par défaut (moyenne)
     }
+}
+
+const paddleSizeSlider = document.getElementById('paddleSizeSlider');
+const paddleSizeDisplay = document.getElementById('paddleSizeDisplay');
+
+// Mappage des valeurs du slider à des tailles lisibles
+const paddleSizeLabels = {
+    50: 'Small',
+    75: 'Below Medium',
+    100: 'Medium',
+    125: 'Above Medium',
+    150: 'Large'
+};
+
+// Mettre à jour la taille du paddle et l'affichage du label
+paddleSizeSlider.addEventListener('input', () => {
+    const selectedSize = parseInt(paddleSizeSlider.value, 10);
+    updatePaddleSize(selectedSize);
+    paddleSizeDisplay.textContent = paddleSizeLabels[selectedSize] || `${selectedSize}px`;
+});
+
+// Fonction pour ajuster la hauteur du paddle
+function updatePaddleSize(size) {
+    paddleHeight = size;
+
+    // Ajuster les positions pour rester dans les limites
+    paddleY1 = Math.min(paddleY1, canvas.height - paddleHeight);
+    paddleY2 = Math.min(paddleY2, canvas.height - paddleHeight);
+
+    console.log(`Paddle size updated to: ${paddleSizeLabels[size]} (${size}px)`);
 }
