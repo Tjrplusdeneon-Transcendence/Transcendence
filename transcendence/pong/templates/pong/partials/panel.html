@@ -9,7 +9,7 @@
 	<div id="sign_form">
 	</div>
 {% else %}
-	<p>Welcome, {{ request.user }}</p>
+	<p>Welcome, {{ user.username }}</p>
 	<button id="logoutButton" hx-get="{% url 'logout' %}" hx-target="#loginPanel" hx-swap="innerHTML">
 		Log Out
 	</button>
