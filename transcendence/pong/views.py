@@ -42,7 +42,13 @@ def signup_user(request):
         if sign_form.is_valid():
             user = sign_form.save()
             login(request, user)
-            return render(request, 'pong/partials/panel.html')
+            chat_messages = Chat.objects.all()[:20]
+            panel_html = render_to_string('pong/partials/panel.html', request=request)
+            chat_html = render_to_string('pong/chat.html', {'chat_messages': chat_messages}, request=request)
+            return JsonResponse({
+                'panel_html': panel_html,
+                'chat_html': chat_html
+            })
     return render(request, 'pong/partials/signup.html', context={'sign_form': sign_form})
 
 def logout_user(request):
