@@ -19,6 +19,7 @@ services:
       - transcendence
     volumes:
       - ./transcendence:/app
+      - ./transcendence/pong/static:/app/pong/static
     ports:
       - "8000:8000"
     env_file:
@@ -31,9 +32,9 @@ services:
     container_name: nginx
     build: ./nginx
     ports:
-      - "8443:80"
+      - "8443:443"
     volumes:
-      - ./app/static:/usr/src/app/static
+      - ./transcendence/pong/static:/usr/src/app/static
     networks:
       - transcendence
     restart: always
@@ -44,6 +45,5 @@ networks:
 
 volumes:
   db:
-
 
 
