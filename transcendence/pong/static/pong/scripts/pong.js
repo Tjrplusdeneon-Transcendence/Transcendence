@@ -956,8 +956,6 @@ function startGame() {
             requestAnimationFrame(draw);
         });
     } else if (isTournament) {
-        // Set up the game for local multiplayer in tournament mode
-        LocalMultiplayer = true;
         playerRole = 'player1';
         paddleY1 = (canvas.height - paddleHeight) / 2;
         paddleY2 = (canvas.height - paddleHeight) / 2;
@@ -1644,7 +1642,12 @@ document.getElementById('tournament-btn').addEventListener('click', function() {
 document.getElementById('addPlayerBtn').addEventListener('click', function() {
     const playerInput = document.getElementById(`player${players.length + 1}`);
     if (playerInput && playerInput.value.trim() !== '') {
-        players.push(playerInput.value.trim());
+        const playerName = playerInput.value.trim();
+        if (playerName.length > 14) {
+            alert('Player name cannot exceed 14 characters.');
+        }
+        else {
+        players.push({name: playerName, isAI: false});
         document.getElementById('playerCount').textContent = `Select Players Nicknames (${players.length}/8)`;
         if (players.length < 8) {
             const nextPlayer = players.length + 1;
@@ -1655,12 +1658,13 @@ document.getElementById('addPlayerBtn').addEventListener('click', function() {
             document.getElementById('startTournamentBtn').textContent = `Start with ${players.length} players`;
         }
     }
+        }
 });
 
 document.getElementById('startTournamentBtn').addEventListener('click', function() {
     // Fill remaining slots with AI
     while (players.length < 8) {
-        players.push(`AI ${players.length + 1}`);
+        players.push({ name: `AI ${players.length + 1}`, isAI: true});
     }
 
     // Create tournament matches
@@ -1685,7 +1689,6 @@ document.getElementById('startMatchBtn').addEventListener('click', function() {
     // Start the local match between the two players
     document.getElementById('tournamentMatch').style.display = 'none';
     document.getElementById('pongCanvas').style.display = 'block';
-    LocalMultiplayer = true;
     playerRole = 'player1';
     document.getElementById('go-back-btn').style.display = 'none';
     startGame();
@@ -1703,7 +1706,7 @@ function showNextMatch() {
     document.getElementById('return-menu-btn').style.display = 'none';
     while (currentMatch < tournamentMatches.length) {
         const match = tournamentMatches[currentMatch];
-        if (match.player1.startsWith('AI') && match.player2.startsWith('AI')) {
+        if (match.player1.isAI && match.player2.isAI) {
             // Both players are AI, randomly select a winner
             const winner = Math.random() < 0.5 ? match.player1 : match.player2;
             updateTournamentMatches(match, winner);
@@ -1717,10 +1720,19 @@ function showNextMatch() {
             // At least one player is a human, show the match preparation screen
             document.getElementById('tournamentStage').textContent = `${match.stage} (${match.match}/${match.stage === 'Quarter-Finals' ? 4 : match.stage === 'Semi-Finals' ? 2 : 1})`;
             // document.getElementById('matchup').display = 'block';
-            document.getElementById('matchup').textContent = `${match.player1} VS. ${match.player2}`;
+            document.getElementById('matchup').textContent = `${match.player1.name} VS. ${match.player2.name}`;
             document.getElementById('startMatchBtn').style.display = 'block';
             document.getElementById('tournamentMatch').style.display = 'block';
             document.getElementById('go-back-btn').style.display = 'block';
+            if (match.player1.isAI || match.player2.isAI) {
+                isAIEnabled = true;
+                LocalMultiplayer = false;
+                inLocal = false;
+            } else {
+                isAIEnabled = false;
+                LocalMultiplayer = true;
+                inLocal = true;
+            }
             currentMatch++;
             return;
         }
@@ -1743,7 +1755,7 @@ function updateTournamentMatches(match, winner) {
         if (match.match === 1) tournamentMatches[6].player1 = winner;
         if (match.match === 2) tournamentMatches[6].player2 = winner;
     } else if (match.stage === 'Finals') {
-        tournamentWinner = winner;
+        tournamentWinner = winner.name;
     }
 }
 
@@ -1773,7 +1785,7 @@ function endGameTournament() {
         if (match.match === 1) tournamentMatches[6].player1 = winner;
         if (match.match === 2) tournamentMatches[6].player2 = winner;
     } else if (match.stage === 'Finals') {
-        tournamentWinner = winner;
+        tournamentWinner = winner.name;
     }
 
     // Hide the game canvas and show the proceed button
@@ -1798,12 +1810,6 @@ function endGameTournament() {
             console.log('return-menu-btn is hidden until the end of the tournament');
         }
     }
-}
-
-function determineWinner(player1, player2) {
-    // Implement the logic to determine the winner of the match
-    // For now, we'll randomly select a winner
-    return Math.random() < 0.5 ? player1 : player2;
 }
 
 function resetGameSettings() {
