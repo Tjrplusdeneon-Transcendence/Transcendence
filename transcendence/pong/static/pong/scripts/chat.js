@@ -62,6 +62,7 @@ function attachBanButtonListener() {
 function attachInviteButtonListener() {
     document.querySelectorAll('.invite-button').forEach(button => {
         button.onclick = function(e) {
+            launchOnline ();
             const senderId = e.target.getAttribute('user-id');
             const authorId = e.target.getAttribute('author-id');
             if (authorId) {
@@ -74,7 +75,7 @@ function attachInviteButtonListener() {
 function attachJoinGameButtonListener() {
     document.querySelectorAll('.join-game-btn').forEach(button => {
         button.onclick = function(e) {
-            alert("Joining game...");  // Placeholder action, replace with your logic
+            launchOnline ();
         };
     });
 }

@@ -1317,7 +1317,12 @@ document.getElementById('go-back-btn').addEventListener('click', function() {
     }
 });
 
+
 document.getElementById('online-btn').addEventListener('click', function() {
+    launchOnline ();
+});
+
+function launchOnline () {
     isMatchmaking = true;
 
     document.getElementById('multiplayer-menu').style.display = 'none';

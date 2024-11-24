@@ -5,14 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('htmx:afterRequest', function(evt) {
     // Process the response
     if (evt.detail.xhr.responseText) {
-        try {
             const response = JSON.parse(evt.detail.xhr.responseText);
             document.getElementById('loginPanel').innerHTML = response.panel_html;
             document.getElementById('chatSection').innerHTML = response.chat_html;
-        } catch (e) {
-            // Handle cases where response is not JSON
-            document.getElementById('loginPanel').innerHTML = evt.detail.xhr.responseText;
-        }
     }
     
     // Reinitialize HTMX for the updated content
