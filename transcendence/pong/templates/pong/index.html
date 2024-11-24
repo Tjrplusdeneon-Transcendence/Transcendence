@@ -172,6 +172,31 @@
                 <div id="searching-menu" style="display: none;">
                     <button id="searching-btn" class="btn btn-primary" disabled>Searching for opponent...</button>
                 </div>
+
+                <!-- Tournament setup -->
+                <div id="tournamentSetup" style="display: none;">
+                    <h2>Welcome to the Great Pong Tournament</h2>
+                    <p id="playerCount">Select Players Nicknames (0/8)</p>
+                    <div id="playerInputs">
+                        <label for="player1">Player 1: </label>
+                        <input type="text" id="player1" name="player1">
+                    </div>
+                    <button id="addPlayerBtn" class="btn btn-primary">Add Player</button>
+                </div>
+
+                <!-- Tournament match -->
+                <div id="tournamentMatch" style="display: none;">
+                    <h2 id="tournamentStage"></h2>
+                    <p id="matchup"></p>
+                    <button id="startMatchBtn" class="btn btn-primary">Start Match</button>
+                    {% comment %} <button id="proceedBtn" class="btn btn-primary">Proceed to Next Match</button> {% endcomment %}
+                </div>
+
+                <!-- Tournament winner -->
+                <div id="tournamentWinner" style="display: none;">
+                    <h2 id="winnerMessage"></h2>
+                </div>
+                <button id="proceedBtn" class="btn btn-primary" style="display: none;">Proceed to Next Match</button>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="start-solo-game-btn" style="display: none;">Solo Game</button>
@@ -181,6 +206,7 @@
                 <button type="button" class="btn btn-primary" id="quit-btn" style="display: none;" disabled>Quit</button>
                 <button type="button" class="btn btn-primary" id="go-back-btn" style="display: none;">Go Back</button>
                 <button type="button" class="btn btn-primary" id="return-menu-btn" style="display: none;">Return to Menu</button>
+                <button type="button" class="btn btn-primary" id="startTournamentBtn" style="display: none;">Start with X players</button>
             </div>
         </div>
     </div>
