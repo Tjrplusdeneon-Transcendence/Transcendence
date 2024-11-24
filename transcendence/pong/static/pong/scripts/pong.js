@@ -389,11 +389,13 @@ function calculateRandomIncorrectPosition()
 
 function predictBallPosition() 
 {
+    if (!isAIEnabled) {
+        return;
+    }
     let predictedX = x;
     let predictedY = y;
     let predictedDx = dx;
     let predictedDy = dy;
-
     while (true) 
     {
     
@@ -521,8 +523,8 @@ function checkPaddleCollision(deltaTime) {
 
             let speed = Math.sqrt(dx * dx + dy * dy);
             let angle = Math.atan2(dy, dx) + angleAdjustment;
-            let minAngleCap = (Math.PI * 3) / 11;
-            let maxAngleCap = (Math.PI * 8) / 11;
+            let minAngleCap = (Math.PI * 4) / 11;
+            let maxAngleCap = (Math.PI * 7) / 11;
 
             if (Math.abs(angle) > minAngleCap && Math.abs(angle) < maxAngleCap) {
                 angle = Math.atan2(dy, dx);
@@ -543,7 +545,30 @@ function checkPaddleCollision(deltaTime) {
         let futureY = y + dy * deltaTime;
 
         if (futureY > paddleY2 && futureY < paddleY2 + paddleHeight) {
-            dx = -dx * difficultySettings[currentDifficulty].speedMultiplier;
+            let angleAdjustment = 0;
+            if (paddleDirection === 1) {
+                angleAdjustment = angleAdjustmentDown;
+                console.log("Player 2 moving up: dy =", dy);
+            } else if (paddleDirection === -1) {
+                angleAdjustment = angleAdjustmentUp;
+                console.log("Player 2 moving down: dy =", dy);
+            } else {
+                console.log("Player 2 not moving: dy =", dy);
+            }
+
+            let speed = Math.sqrt(dx * dx + dy * dy);
+            let angle = Math.atan2(dy, dx) + angleAdjustment;
+            let minAngleCap = (Math.PI * 4) / 11;
+            let maxAngleCap = (Math.PI * 7) / 11;
+
+            if (Math.abs(angle) > minAngleCap && Math.abs(angle) < maxAngleCap) {
+                angle = Math.atan2(dy, dx);
+            }
+            dx = -Math.abs(speed * Math.cos(angle));
+            dy = speed * Math.sin(angle);
+
+            console.log("New player 2 dx:", dx, "New player 2 dy:", dy);
+
             x = canvas.width - paddleWidth - ballRadius;
             ballMovingTowardsAI = false;
         }
