@@ -1,26 +1,15 @@
-{% load static %}
 <span id="closeButton">X</span>
-<div id="panel">
 {% if not user.is_authenticated %}
-    <button id="signinButton" hx-get="{% url 'signin' %}" hx-target="#sign_form" hx-swap="innerHTML">
-        Sign In
-    </button>
-    <button id="signupButton" hx-get="{% url 'signup' %}" hx-target="#sign_form" hx-swap="innerHTML">
-        Sign Up
-    </button>
-    <div id="sign_form"></div>
+	<button id="signinButton" hx-get="{% url 'signin' %}" hx-target="#sign_form" hx-swap="innerHTML">
+		Sign In
+	</button>
+	<button id="signupButton" hx-get="{% url 'signup' %}" hx-target="#sign_form" hx-swap="innerHTML">
+		Sign Up
+	</button>
+	<div id="sign_form"></div>
 {% else %}
-    <!-- <img src="{% static 'pong/images/profile-picture.jpg' %}" alt="Profile Picture" class="profile-picture" /> -->
-    <p>Welcome, {{ request.user }}</p>
-    <button id="logoutButton" hx-get="{% url 'logout' %}" hx-target="#loginPanel" hx-swap="innerHTML">
-        Log Out
-    </button>
-    <div id="gameStats">
-        <h2>Game Statistics</h2>
-        <p>Games played: <span id="gamesPlayed">{{ user.games_played }}</span></p>
-        <p>Wins: <span id="wins">{{ user.wins }}</span></p>
-        <p>Losses: <span id="losses">{{ user.losses }}</span></p>
-        <p>Score: <span id="totalScore">{{ user.score }}</span></p>
-    </div>
+	<p>Welcome, {{ request.user }}</p>
+	<button id="logoutButton" hx-get="{% url 'logout' %}" hx-target="#loginPanel" hx-swap="innerHTML">
+		Log Out
+	</button>
 {% endif %}
-</div>
