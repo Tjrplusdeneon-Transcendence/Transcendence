@@ -1338,6 +1338,10 @@ document.getElementById('go-back-btn').addEventListener('click', function() {
 });
 
 document.getElementById('online-btn').addEventListener('click', function() {
+    launchOnlineGame();
+});
+
+function launchOnlineGame() {
     isMatchmaking = true;
 
     document.getElementById('multiplayer-menu').style.display = 'none';
@@ -1438,7 +1442,7 @@ document.getElementById('online-btn').addEventListener('click', function() {
     socket.onerror = function(error) {
         console.error('WebSocket error:', error);
     };
-});
+};
 
 document.getElementById('searching-btn').addEventListener('click', function() {
     if (this.textContent === 'Start Match') {

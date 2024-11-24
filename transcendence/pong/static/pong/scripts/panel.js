@@ -1,67 +1,80 @@
-document.getElementById('loginButton').addEventListener('click', function(event) {
-    event.preventDefault();
-    document.getElementById('loginPanel').style.display = 'block';
-});
-
 document.addEventListener('DOMContentLoaded', function() {
-    attachButtonListeners();
+    attachEventListeners();
 });
 
 document.addEventListener('htmx:afterRequest', function(evt) {
-    const response = JSON.parse(evt.detail.xhr.responseText);
-    document.getElementById('loginPanel').innerHTML = response.panel_html;
-    document.getElementById('chatSection').innerHTML = response.chat_html;
-
+    // Process the response
+    if (evt.detail.xhr.responseText) {
+            const response = JSON.parse(evt.detail.xhr.responseText);
+            document.getElementById('loginPanel').innerHTML = response.panel_html;
+            document.getElementById('chatSection').innerHTML = response.chat_html;
+    }
+    
     // Reinitialize HTMX for the updated content
     htmx.process(document.body);
-
+    
     // Reinitialize WebSocket and event listeners after content update
     if (document.getElementById('chatContainer')) {
         initializeWebSocket();
         attachFormSubmitListener();
-        attachButtonListeners(); 
     }
+
+    // Reattach event listeners for dynamically loaded content
+    attachEventListeners();
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+function attachEventListeners() {
+    attachLoginButtonListener();
+    attachLogoutButtonListener();
+    attachCloseButtonListener();
+    attachProfileModalCloseListener();
+}
+
+function attachLoginButtonListener() {
+    const loginButton = document.getElementById('loginButton');
+    if (loginButton) {
+        loginButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('loginPanel').style.display = 'block';
+        });
+    }
+}
+
+function attachLogoutButtonListener() {
     const logoutButton = document.getElementById('logoutButton');
     if (logoutButton) {
         logoutButton.addEventListener('click', function() {
             closeWebSocket();
         });
     }
-});
+}
 
-// Attach the listener for the logout button after content updates
-document.addEventListener('htmx:afterRequest', function(evt) {
-    const logoutButton = document.getElementById('logoutButton');
-    if (logoutButton) {
-        logoutButton.addEventListener('click', function() {
-            closeWebSocket();
+function attachCloseButtonListener() {
+    const closeButton = document.getElementById('closeButton');
+    if (closeButton) {
+        closeButton.addEventListener('click', function() {
+            document.getElementById('loginPanel').classList.add('slide-out');
+            setTimeout(function() {
+                document.getElementById('loginPanel').style.display = 'none';
+                document.getElementById('loginPanel').classList.remove('slide-out');
+            }, 300);
         });
     }
-});
+}
 
-// document.getElementById('profileInfo').style.display = 'none';
-// document.getElementById('gameStats').style.display = 'none';
-// document.getElementById('chatContainer').style.display = 'none';
+function attachProfileModalCloseListener() {
+    const profileModalCloseButton = document.getElementById('closeProfileModal');
+    if (profileModalCloseButton) {
+        profileModalCloseButton.addEventListener('click', function() {
+            document.getElementById('profileModal').style.display = 'none';
+        });
+    }
+}
 
-document.getElementById('closeButton').addEventListener('click', function() 
-{
-    document.getElementById('loginPanel').classList.add('slide-out');
-    setTimeout(function() 
-    {
-        document.getElementById('loginPanel').style.display = 'none';
-        document.getElementById('loginPanel').classList.remove('slide-out');
-    }, 300);
-});
-
-
-function openProfileModal(username, targetElement) 
-{
+function openProfileModal(username, targetElement) {
     const modal = document.getElementById('profileModal');
     const profileUsername = document.getElementById('profileUsername');
-    
+
     profileUsername.textContent = username;
 
     const rect = targetElement.getBoundingClientRect();
@@ -70,8 +83,3 @@ function openProfileModal(username, targetElement)
     modal.style.left = `${rect.left + window.scrollX}px`;
     modal.style.display = 'block';
 }
-
-document.getElementById('closeProfileModal').addEventListener('click', function() 
-{
-    document.getElementById('profileModal').style.display = 'none';
-});

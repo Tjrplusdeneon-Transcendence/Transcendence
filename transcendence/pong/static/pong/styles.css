@@ -352,6 +352,24 @@ body {
     margin-bottom: 5px;
 }
 
+#otherPlayerStats {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #333;
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(255, 199, 15, 0.5);
+    color: #fc9d06;
+}
+
+#otherPlayerStats h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+#otherPlayerStats p {
+    margin-bottom: 5px;
+}
+
 #closeButton {
     position: absolute;
     top: 10px;
@@ -468,7 +486,7 @@ body {
 }
 
 .message-meta {
-  font-size: 8px;
+  font-size: 12px;
 }
 
 /* Buttons in chat messages */
@@ -511,6 +529,21 @@ body {
 .join-game-btn:hover {
     color: #27ae60; /* Change to a darker green on hover, adjust as needed */
 }
+
+.info-button {
+    background-color: transparent; /* Remove background color */
+    border: none; /* Remove border */
+    color: inherit; /* Inherit text color from parent */
+    cursor: pointer; /* Change cursor to pointer */
+    font-size: 1em; /* Adjust font size as needed */
+    padding: 0; /* Remove padding */
+    outline: none; /* Remove focus outline */
+}
+
+.info-button:hover {
+    color: #007BFF; /* Change color on hover, adjust as needed */
+}
+
 
 li {
     list-style-type: none;

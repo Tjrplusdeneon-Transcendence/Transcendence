@@ -10,7 +10,7 @@
 		<script src="{% static 'pong/scripts/htmx.min.js' %}"></script> <!--htmx extension-->
 		<script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/ws.js"></script> <!--webssocket extension for htmx-->
 	</head>
-	<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'> <!--csrf_token for htmx-->
+	<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' data-user-authenticated="{{ user.is_authenticated }}"> <!--csrf_token for htmx-->
 		{% block content %}{% endblock content %}
 	</body>
 </html>
