@@ -720,7 +720,7 @@ li {
 }
 
 .carousel-control-next {
-    right: calc(5%); 
+    right: calc(20%); 
 }
 
 .slider_section .carousel-indicators li {
