@@ -3,12 +3,11 @@ let chatSocket = null;
 function closeWebSocket() {
     if (chatSocket) {
         chatSocket.close();
-        chatSocket = null; // Reset the chatSocket variable
+        chatSocket = null;
     }
 }
 
 function initializeWebSocket() {
-    // Ensure an existing WebSocket connection is closed
     closeWebSocket();
 
     chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat');
@@ -20,15 +19,12 @@ function initializeWebSocket() {
                 document.getElementById('loginPanel').innerHTML = data.html;
             }
         } catch (err) {
+            // If parsing fails, assume it's HTML and append it to messageList
             document.getElementById('messageList').innerHTML += e.data;
             const chatBox = document.getElementById('chatBox');
             chatBox.scrollTop = chatBox.scrollHeight;
         }
-        
-        attachBanButtonListener();
-        attachInviteButtonListener();
-        attachJoinGameButtonListener();
-        attachInfoButtonListener();
+        attachEventListeners();
     };
 
     chatSocket.onclose = function(e) {
@@ -57,7 +53,6 @@ function attachFormSubmitListener() {
     }
 }
 
-
 function attachInfoButtonListener() {
     document.querySelectorAll('.info-button').forEach(button => {
         button.onclick = function(e) {
@@ -65,7 +60,7 @@ function attachInfoButtonListener() {
             const authorId = e.target.getAttribute('author-id');
             if (authorId) {
                 chatSocket.send(JSON.stringify({ 'info': authorId, 'sender': senderId }));
-            }    
+            }
         };
     });
 }
@@ -97,29 +92,39 @@ function attachInviteButtonListener() {
 function attachJoinGameButtonListener() {
     document.querySelectorAll('.join-game-btn').forEach(button => {
         button.onclick = function(e) {
-            launchOnlineGame();  // Placeholder action, replace with your logic
+            launchOnlineGame();
         };
     });
+}
+
+function attachLogoutButtonListener() {
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', function() {
+            closeWebSocket();
+        });
+    }
+}
+
+function attachEventListeners() {
+    attachFormSubmitListener();
+    attachBanButtonListener();
+    attachInviteButtonListener();
+    attachJoinGameButtonListener();
+    attachInfoButtonListener();
+    attachLogoutButtonListener();
 }
 
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('chatContainer')) {
         initializeWebSocket();
-        attachFormSubmitListener();
-        attachBanButtonListener();
-        attachInviteButtonListener();
-        attachJoinGameButtonListener();
-        attachInfoButtonListener();
+        attachEventListeners();
     }
 });
 
 document.addEventListener('htmx:afterSwap', function(evt) {
     if (evt.detail.target.id === 'chatSection') {
         initializeWebSocket();
-        attachFormSubmitListener();
-        attachBanButtonListener();
-        attachInviteButtonListener();
-        attachJoinGameButtonListener();
-        attachInfoButtonListener();
+        attachEventListeners();
     }
 });
