@@ -14,12 +14,21 @@ function initializeWebSocket() {
     chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat');
 
     chatSocket.onmessage = function(e) {
-        document.getElementById('messageList').innerHTML += e.data;
-        const chatBox = document.getElementById('chatBox');
-        chatBox.scrollTop = chatBox.scrollHeight;
+        try {
+            const data = JSON.parse(e.data);
+            if (data.type === 'info_handler') {
+                document.getElementById('loginPanel').innerHTML = data.html;
+            }
+        } catch (err) {
+            document.getElementById('messageList').innerHTML += e.data;
+            const chatBox = document.getElementById('chatBox');
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        
         attachBanButtonListener();
         attachInviteButtonListener();
         attachJoinGameButtonListener();
+        attachInfoButtonListener();
     };
 
     chatSocket.onclose = function(e) {
@@ -48,6 +57,19 @@ function attachFormSubmitListener() {
     }
 }
 
+
+function attachInfoButtonListener() {
+    document.querySelectorAll('.info-button').forEach(button => {
+        button.onclick = function(e) {
+            const senderId = e.target.getAttribute('user-id');
+            const authorId = e.target.getAttribute('author-id');
+            if (authorId) {
+                chatSocket.send(JSON.stringify({ 'info': authorId, 'sender': senderId }));
+            }    
+        };
+    });
+}
+
 function attachBanButtonListener() {
     document.querySelectorAll('.ban-button').forEach(button => {
         button.onclick = function(e) {
@@ -66,6 +88,7 @@ function attachInviteButtonListener() {
             const authorId = e.target.getAttribute('author-id');
             if (authorId) {
                 chatSocket.send(JSON.stringify({ 'invite': authorId, 'sender': senderId }));
+                launchOnlineGame();
             }
         };
     });
@@ -74,7 +97,7 @@ function attachInviteButtonListener() {
 function attachJoinGameButtonListener() {
     document.querySelectorAll('.join-game-btn').forEach(button => {
         button.onclick = function(e) {
-            alert("Joining game...");  // Placeholder action, replace with your logic
+            launchOnlineGame();  // Placeholder action, replace with your logic
         };
     });
 }
@@ -86,6 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
         attachBanButtonListener();
         attachInviteButtonListener();
         attachJoinGameButtonListener();
+        attachInfoButtonListener();
     }
 });
 
@@ -96,5 +120,6 @@ document.addEventListener('htmx:afterSwap', function(evt) {
         attachBanButtonListener();
         attachInviteButtonListener();
         attachJoinGameButtonListener();
+        attachInfoButtonListener();
     }
 });

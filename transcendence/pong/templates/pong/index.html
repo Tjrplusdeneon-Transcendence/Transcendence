@@ -190,8 +190,33 @@
                 <div id="searching-menu" style="display: none;">
                     <button id="searching-btn" class="btn btn-primary" disabled>Searching for opponent...</button>
                 </div>
+
+                <!-- Tournament setup -->
+                <div id="tournamentSetup" style="display: none;">
+                    <h2>Welcome to the Great Pong Tournament</h2>
+                    <p id="playerCount">Select Players Nicknames (0/8)</p>
+                    <div id="playerInputs">
+                        <label for="player1">Player 1: </label>
+                        <input type="text" id="player1" name="player1">
+                    </div>
+                    <button id="addPlayerBtn" class="btn btn-primary">Add Player</button>
+                </div>
+
+                <!-- Tournament match -->
+                <div id="tournamentMatch" style="display: none;">
+                    <h2 id="tournamentStage"></h2>
+                    <p id="matchup"></p>
+                    <button id="startMatchBtn" class="btn btn-primary">Start Match</button>
+                    {% comment %} <button id="proceedBtn" class="btn btn-primary">Proceed to Next Match</button> {% endcomment %}
+                </div>
+
+                <!-- Tournament winner -->
+                <div id="tournamentWinner" style="display: none;">
+                    <h2 id="winnerMessage"></h2>
+                </div>
+                <button id="proceedBtn" class="btn btn-primary" style="display: none;">Proceed to Next Match</button>
             </div>
-            <div class="modal-footer">
+            <div id="pong-footer" class="modal-footer">
                 <button type="button" class="btn btn-primary" id="start-solo-game-btn" style="display: none;">Solo Game</button>
                 <button type="button" class="btn btn-primary" id="start-local-multiplayer-btn" style="display: none;">Local Multiplayer</button>
                 <button type="button" class="btn btn-primary" id="start-multiplayer-btn" style="display: none;">Multiplayer</button>
@@ -199,6 +224,7 @@
                 <button type="button" class="btn btn-primary" id="quit-btn" style="display: none;" disabled>Quit</button>
                 <button type="button" class="btn btn-primary" id="go-back-btn" style="display: none;">Go Back</button>
                 <button type="button" class="btn btn-primary" id="return-menu-btn" style="display: none;">Return to Menu</button>
+                <button type="button" class="btn btn-primary" id="startTournamentBtn" style="display: none;">Start with X players</button>
             </div>
         </div>
     </div>
@@ -210,31 +236,50 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="memoryModalLabel">Memory Game</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+                <button id="closeModalM" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
             </div>
             <div class="modal-body">
                 <!-- New Main Menu Canvas -->
-                <canvas id="mainMenuCanvas" width="640" height="480" style="background-color: #1a1a1a;"></canvas>
+                <canvas id="mainMenuCanvas-memory" width="640" height="480" style="background-color: #1a1a1a;"></canvas>
                 <div 
-                    id="leftSide" class="main-menu-side">–Singleplayer
+                    id="leftSideM" class="main-menu-side">–Singleplayer
                     <button id="singleplayerButton-memory" class="main-menu-button"></button>
                 </div>
                 <div 
-                    id="rightSide" class="main-menu-side">–Multiplayer
+                    id="rightSideM" class="main-menu-side">–Multiplayer
                     <button id="multiplayerButton-memory" class="main-menu-button"></button>
                 </div>
-                <!-- Difficulty selector /!\ ATTENTION A BIEN LE CACHER-->
+                <div id="multiplayer-menu-memory" style="display: none;">
+                    <button id="local-btn-memory" class="btn btn-primary">Local</button>
+                    <button id="tournament-btn-memory" class="btn btn-primary">Tournament</button>
+                    <button id="online-btn-memory" class="btn btn-primary">Online</button>
+                </div>
+                <!-- Difficulty selector -->
                 <div id="difficulty-menu-m" class="difficulty-menu-m mb-3">
-                    <label for="memoryDifficultySelect" class="form-label">Select Difficulty:</label>
-                    <select id="memoryDifficultySelect" class="form-select">
-                        <option value="easy">Easy</option>
-                        <option value="medium" selected>Medium</option>
-                        <option value="hard">Hard</option>
-                    </select>
+                    <div id="memo-select">
+                        <label for="memoryDifficultySelect" class="form-label">Select Difficulty:</label>
+                        <select id="memoryDifficultySelect" class="form-select">
+                            <option value="easy">Easy</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </div>
+                    <!-- Game Customs -->
+                    <div id="gamecustom-shuffle">
+                        <label>
+                            <input type="checkbox" id="shuffleToggle"> Enable ReShuffle Mode
+                        </label>
+                    </div>
+                    <div id="gamecustom-hint">
+                        <label>
+                            <input type="checkbox" id="hintToggle"> Enable Show Random Card Mode
+                        </label>
+                    </div>
                 <!--GAME-->
                 </div>
                     <div id="memory-game-container" class="memory-game-container"></div>
                 </div>
+                 
                 <!-- New multiplayer menu -->
                 <div id="multiplayer-menu-memory" style="display: none;">
                     <button id="local-btn-memory" class="btn btn-primary">Local</button>
@@ -245,11 +290,7 @@
                 <div id="searching-menu-memory" style="display: none;">
                     <button id="searching-btn-memory" class="btn btn-primary" disabled>Searching for opponent...</button>
                 </div>
-            <div class="modal-footer">
-                <!--BOUTONS A ENLEVER APRES INTEGRATION DU MEMORY-->
-                <button type="button" class="btn btn-primary" id="start-memory-game-btn">Solo Game</button>
-                <button type="button" class="btn btn-primary" id="start-memory-game-btn">Matchmaking</button>
-
+            <div id="memory-footer" class="modal-footer">
                 <!--New footer button-->
                 <button type="button" class="btn btn-primary" id="start-solo-game-btn-memo" style="display: none;">Solo Game</button>
                 <button type="button" class="btn btn-primary" id="start-local-multiplayer-btn-memo" style="display: none;">Local Multiplayer</button>
@@ -273,12 +314,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
             </div>
             <div class="modal-body">
-                    <h5>Quoi ? Vous avez bien dit Doom dans transcendence ?</h5 >
-                    <div id="doom-game-container" class="doom-game-container" style="height: 400px; width: 640px;"></div>
-                </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="start-doom-game-btn">Check this out</button>
-                <button type="button" class="btn btn-primary" id="start-doom-game-btn">Matchmaking</button>
+                <button type="button" class="main-menu-side" id="start-doom-game-btn">Check this out</button>
+                <div id="doom-game-container" class="doom-game-container" style="height: 400px; width: 640px;"></div>
             </div>
         </div>
     </div>
@@ -288,9 +325,42 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script> <!-- A verifier en Django -->
 <script src="https://js-dos.com/6.22/current/js-dos.js"></script>
 <script src="{% static 'pong/scripts/doom.js' %}"></script>
+<script src="{% static 'pong/scripts/pong.js' %}"></script>
 <script src="{% static 'pong/scripts/chat.js' %}"></script>
 <script src="{% static 'pong/scripts/panel.js' %}"></script>
 <script src="{% static 'pong/scripts/gamestats.js' %}"></script>
-<script src="{% static 'pong/scripts/pong.js' %}"></script>
 <script src="{% static 'pong/scripts/memory.js' %}"></script>
+<script src="{% static 'pong/scripts/menu.js' %}"></script>
+
+
+<script>
+	// Fonction pour vérifier si le menu principal est visible
+	function toggleFooterVisibility() {
+		const footer = document.getElementById('pong-footer');
+		const leftSide = document.getElementById('leftSide');
+		const rightSide = document.getElementById('rightSide');
+
+        const footerM = document.getElementById('memory-footer');
+		const leftSideM = document.getElementById('leftSideM');
+		const rightSideM = document.getElementById('rightSideM');
+	
+		// Vérifie si le menu principal est visible
+		if (leftSide && rightSide && window.getComputedStyle(leftSide).display !== 'none' && window.getComputedStyle(rightSide).display !== 'none') {
+			footer.style.display = 'none';  // Cache le footer
+		} else {
+			footer.style.display = 'flex';  // Affiche le footer
+		}
+
+        if (leftSideM && rightSideM && window.getComputedStyle(leftSideM).display !== 'none' && window.getComputedStyle(rightSideM).display !== 'none') {
+			footerM.style.display = 'none';  // Cache le footer
+		} else {
+			footerM.style.display = 'flex';  // Affiche le footer
+		}
+	}
+	
+	// Exécute la fonction lors du chargement de la page et à chaque changement de menu
+	document.addEventListener('DOMContentLoaded', toggleFooterVisibility);
+	document.addEventListener('click', toggleFooterVisibility);
+</script>
+	
 {% endblock content %}
