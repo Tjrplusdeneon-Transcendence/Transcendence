@@ -14,9 +14,20 @@ function initializeWebSocket() {
     chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat');
 
     chatSocket.onmessage = function(e) {
-        document.getElementById('messageList').innerHTML += e.data;
-        const chatBox = document.getElementById('chatBox');
-        chatBox.scrollTop = chatBox.scrollHeight;
+        try {
+            const data = JSON.parse(e.data);
+            if (data.type === 'info_handler') {
+                document.getElementById('panel').innerHTML = data.html;
+            } else {
+                document.getElementById('messageList').innerHTML += e.data;
+                const chatBox = document.getElementById('chatBox');
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        } catch (err) {
+            // Assume it's HTML if not JSON
+            document.getElementById('panel').innerHTML = e.data;
+        }       
+        
         attachBanButtonListener();
         attachInviteButtonListener();
         attachJoinGameButtonListener();
