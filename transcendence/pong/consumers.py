@@ -8,12 +8,6 @@ import re
 import math
 import random
 
-from asgiref.sync import async_to_sync
-from channels.generic.websocket import WebsocketConsumer
-from django.template.loader import render_to_string
-from .models import User, Chat
-import json
-
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.user = self.scope['user']
@@ -77,19 +71,14 @@ class ChatConsumer(WebsocketConsumer):
             'content': "Play with me <button class='join-game-btn' id='join-game-btn'>🕹️</button>",
         }
         html = render_to_string('pong/partials/chat_message.html', context={'message': message, 'user': self.user})
-        self.send(text_data=json.dumps({
-            'type': 'invite_handler',
-            'html': html
-        }))
+        self.send(text_data=html)
 
     def message_handler(self, event):
         message = Chat.objects.get(id=event['message_id'])
         if message.author not in self.user.banned_users.all():
             html = render_to_string('pong/partials/chat_message.html', context={'message': message, 'user': self.user})
-            self.send(text_data=json.dumps({
-                'type': 'message_handler',
-                'html': html
-            }))
+            self.send(text_data=html)
+
 
 class PongConsumer(AsyncWebsocketConsumer):
     players_waiting = []

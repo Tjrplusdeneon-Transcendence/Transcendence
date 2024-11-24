@@ -17,16 +17,13 @@ function initializeWebSocket() {
         try {
             const data = JSON.parse(e.data);
             if (data.type === 'info_handler') {
-                document.getElementById('panel').innerHTML = data.html;
-            } else {
-                document.getElementById('messageList').innerHTML += e.data;
-                const chatBox = document.getElementById('chatBox');
-                chatBox.scrollTop = chatBox.scrollHeight;
+                document.getElementById('loginPanel').innerHTML = data.html;
             }
         } catch (err) {
-            // Assume it's HTML if not JSON
-            document.getElementById('panel').innerHTML = e.data;
-        }       
+            document.getElementById('messageList').innerHTML += e.data;
+            const chatBox = document.getElementById('chatBox');
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
         
         attachBanButtonListener();
         attachInviteButtonListener();
