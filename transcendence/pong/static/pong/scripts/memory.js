@@ -22,20 +22,20 @@ document.getElementById('start-solo-game-btn-memo').addEventListener('click', ()
     
     document.getElementById('difficulty-menu-m').style.display = 'none';
     document.getElementById('return-menu-btn-memo').style.display = 'none';
-    //document.getElementById('gamecustom-shuffle').style.display = 'none';
-    //document.getElementById('gamecustom-hint').style.display = 'none';
+    document.getElementById('gamecustom-shuffle').style.display = 'none';
+    document.getElementById('gamecustom-hint').style.display = 'none';
     gameContainer.style.display = 'grid';
 
     startMemory();
 });
 
-/*document.getElementById('shuffleToggle').addEventListener('change', function() {
+document.getElementById('shuffleToggle').addEventListener('change', function() {
     shuffleModeEnabled = this.checked; 
 });
 
 document.getElementById('hintToggle').addEventListener('change', function() {
     hintModeEnabled = this.checked; 
-});*/
+});
 
 function startMemory() 
 {
@@ -321,9 +321,8 @@ function restartMemory()
     resetMemory();
     gameContainer.style.display = 'none';
     document.getElementById('difficulty-menu-m').style.display = 'block';
-    //document.getElementById('gamecustom-shuffle').style.display = 'block';
-    //document.getElementById('gamecustom-hint').style.display = 'block';
-    //document.getElementById('memory-matchmaking-btn').style.display = 'block';
+    document.getElementById('gamecustom-shuffle').style.display = 'block';
+    document.getElementById('gamecustom-hint').style.display = 'block';
 
     const startButton = document.getElementById('start-solo-game-btn-memo');
     document.getElementById('return-menu-btn-memo').style.display = 'block';

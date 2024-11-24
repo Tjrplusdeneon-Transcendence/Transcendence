@@ -902,6 +902,10 @@ li {
     border-color: orange;
 }
 
+.memory-game-container .card.hint {
+    border-color: rgb(7, 255, 238);
+}
+
 #multiplayer-menu, #multiplayer-menu-memory {
     display: flex;
     flex-direction: column;
