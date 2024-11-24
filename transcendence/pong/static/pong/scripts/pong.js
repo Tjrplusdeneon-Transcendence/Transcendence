@@ -504,7 +504,6 @@ const angleAdjustmentUp = 0.2;
 const angleAdjustmentDown = -0.2;
 
 
-
 function checkPaddleCollision(deltaTime) {
     if (dx < 0 && x + dx * deltaTime < paddleWidth + ballRadius) {
         let futureY = y + dy * deltaTime;
