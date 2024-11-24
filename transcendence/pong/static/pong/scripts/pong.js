@@ -1559,7 +1559,7 @@ paddleSizeSlider.addEventListener('input', () => {
 
 // Fonction pour ajuster la hauteur du paddle
 function updatePaddleSize(size) {
-    paddleHeight = size;
+    paddleHeight = parseInt(size, 10);
 
     // Ajuster les positions pour rester dans les limites
     paddleY1 = Math.min(paddleY1, canvas.height - paddleHeight);
