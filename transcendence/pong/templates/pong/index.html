@@ -230,29 +230,37 @@
                     id="rightSideM" class="main-menu-side">–Multiplayer
                     <button id="multiplayerButton-memory" class="main-menu-button"></button>
                 </div>
+                <div id="multiplayer-menu-memory" style="display: none;">
+                    <button id="local-btn-memory" class="btn btn-primary">Local</button>
+                    <button id="tournament-btn-memory" class="btn btn-primary">Tournament</button>
+                    <button id="online-btn-memory" class="btn btn-primary">Online</button>
+                </div>
                 <!-- Difficulty selector -->
                 <div id="difficulty-menu-m" class="difficulty-menu-m mb-3">
-                    <label for="memoryDifficultySelect" class="form-label">Select Difficulty:</label>
-                    <select id="memoryDifficultySelect" class="form-select">
-                        <option value="easy">Easy</option>
-                        <option value="medium" selected>Medium</option>
-                        <option value="hard">Hard</option>
-                    </select>
+                    <div id="memo-select">
+                        <label for="memoryDifficultySelect" class="form-label">Select Difficulty:</label>
+                        <select id="memoryDifficultySelect" class="form-select">
+                            <option value="easy">Easy</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </div>
+                    <!-- Game Customs -->
+                    <div id="gamecustom-shuffle">
+                        <label>
+                            <input type="checkbox" id="shuffleToggle"> Enable ReShuffle Mode
+                        </label>
+                    </div>
+                    <div id="gamecustom-hint">
+                        <label>
+                            <input type="checkbox" id="hintToggle"> Enable Show Random Card Mode
+                        </label>
+                    </div>
                 <!--GAME-->
                 </div>
                     <div id="memory-game-container" class="memory-game-container"></div>
                 </div>
-                 <!-- Game Customs -->
-                <div id="gamecustom-shuffle">
-                    <label>
-                        <input type="checkbox" id="shuffleToggle"> Enable ReShuffle Mode
-                    </label>
-                </div>
-                <div id="gamecustom-hint">
-                    <label>
-                        <input type="checkbox" id="hintToggle"> Enable Show Random Card Mode
-                    </label>
-                </div>
+                 
                 <!-- New multiplayer menu -->
                 <div id="multiplayer-menu-memory" style="display: none;">
                     <button id="local-btn-memory" class="btn btn-primary">Local</button>
@@ -287,12 +295,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
             </div>
             <div class="modal-body">
-                    <h5>Quoi ? Vous avez bien dit Doom dans transcendence ?</h5 >
-                    <div id="doom-game-container" class="doom-game-container" style="height: 400px; width: 640px;"></div>
-                </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="start-doom-game-btn">Check this out</button>
-                <button type="button" class="btn btn-primary" id="start-doom-game-btn">Matchmaking</button>
+                <button type="button" class="main-menu-side" id="start-doom-game-btn">Check this out</button>
+                <div id="doom-game-container" class="doom-game-container" style="height: 400px; width: 640px;"></div>
             </div>
         </div>
     </div>
