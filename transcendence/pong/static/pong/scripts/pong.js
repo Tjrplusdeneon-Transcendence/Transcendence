@@ -688,13 +688,11 @@ function draw(currentTime) {
     if (x + dx * deltaTime < ballRadius) {
         winner = LocalMultiplayer ? 'Player 2' : (isAIEnabled ? 'AI' : 'Player 2');
         gameRunning = false;
-        increaseLosses();
         gameOverMessage();
         return;
     } else if (x + dx * deltaTime > canvas.width - ballRadius) {
         winner = 'Player 1';
         gameRunning = false;
-        increaseWins();
         gameOverMessage();
         return;
     }
@@ -1236,6 +1234,10 @@ document.getElementById('go-back-btn').addEventListener('click', function() {
 });
 
 document.getElementById('online-btn').addEventListener('click', function() {
+    launchOnlineGame();
+});
+
+function launchOnlineGame() {
     isMatchmaking = true;
 
     document.getElementById('multiplayer-menu').style.display = 'none';
@@ -1283,7 +1285,6 @@ document.getElementById('online-btn').addEventListener('click', function() {
             document.getElementById('return-menu-btn').style.display = 'inline-block';
             document.getElementById('return-menu-btn').disabled = true; // Disable the "Return to Menu" button during the match
             initializeGameState(data.initial_state);
-            increaseGamesPlayed();
             startGame();
             resetMatchmakingState(); // Reset matchmaking state after the game starts
             document.getElementById('rematch-btn').disabled = true;
@@ -1335,7 +1336,7 @@ document.getElementById('online-btn').addEventListener('click', function() {
     socket.onerror = function(error) {
         console.error('WebSocket error:', error);
     };
-});
+};
 
 document.getElementById('searching-btn').addEventListener('click', function() {
     if (this.textContent === 'Start Match') {
@@ -1445,7 +1446,6 @@ function hideMenu() {
 }
 
 document.getElementById('start-solo-game-btn').addEventListener('click', function () {
-    increaseGamesPlayed();
     if (this.textContent === 'Start Game') {
         hideMenu(); // Masquer le menu pour lancer la partie
         startGame();

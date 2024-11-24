@@ -2,7 +2,7 @@
 	<li class="message user-message">
 		{{ message.content }}
 	</li>
-{% else %}
+{% elif message.author not in user.banned_users.all %}
 	<li>
 		<div class="message-meta">
 			<span class="message-author">{{ message.author }}</span>

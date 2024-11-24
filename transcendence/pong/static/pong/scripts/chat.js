@@ -66,6 +66,7 @@ function attachInviteButtonListener() {
             const authorId = e.target.getAttribute('author-id');
             if (authorId) {
                 chatSocket.send(JSON.stringify({ 'invite': authorId, 'sender': senderId }));
+                launchOnlineGame();
             }
         };
     });
@@ -74,7 +75,7 @@ function attachInviteButtonListener() {
 function attachJoinGameButtonListener() {
     document.querySelectorAll('.join-game-btn').forEach(button => {
         button.onclick = function(e) {
-            alert("Joining game...");  // Placeholder action, replace with your logic
+            launchOnlineGame();  // Placeholder action, replace with your logic
         };
     });
 }

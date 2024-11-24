@@ -38,7 +38,6 @@ document.getElementById('hintToggle').addEventListener('change', function() {
 
 function startMemory() 
 {
-    increaseGamesPlayed();
     resetMemory();
     generateCardsBasedOnDifficulty();
     shuffle(cards);
@@ -225,14 +224,12 @@ function checkForMatch()
             setTimeout(() => {
                 if (points > pairs / 2) {
                     window.updateGameStats(1);
-                    increaseWins();
                     endGame('Joueur');
                 } else if (points === pairs / 2) {
                     window.updateGameStats(0);
-                    endGame('Personne n\'');
+                    endGame('Égalité');
                 } else {
                     window.updateGameStats(-1);
-                    increaseLosses();
                     endGame('Bot');
                 }
             }, 500);
