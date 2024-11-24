@@ -238,7 +238,7 @@ body {
 .login-panel {
     display: none;
     position: fixed;
-    z-index: 999;
+    z-index: 989;
     top: 0;
     right: 0;
     width: 320px;
