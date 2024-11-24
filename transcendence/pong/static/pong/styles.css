@@ -1066,3 +1066,33 @@ li {
 #leftSide:hover, #rightSide:hover {
     transform: scale(1.03); /* Légère croissance au survol */
 }
+
+#gamecustom-ballsize {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #ffffff;
+    text-align: center;
+}
+
+#gamecustom-ballsize label {
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+#gamecustom-ballsize .form-select {
+    width: 100%;
+    max-width: 200px;
+    text-align: center;
+    background-color: transparent;
+    color: #fff;
+    border: 2px solid #ff00ff;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+#gamecustom-ballsize .form-select:focus {
+    border-color: #00ffea;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5), 0 0 25px rgba(255, 0, 255, 0.5);
+}

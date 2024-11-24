@@ -1,11 +1,18 @@
 const canvas = document.getElementById('pongCanvas');
 const context = canvas.getContext('2d');
-
+let ball = {
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+    radius: 20, // Taille par défaut
+    dx: -200,   // Direction X initiale
+    dy: 200,    // Direction Y initiale
+    color: '#FFFFFF'
+};
 let firstHit = true;
 let paddleHeight = 100, paddleWidth = 10;
 let paddleY1 = (canvas.height - paddleHeight) / 2;
 let paddleY2 = (canvas.height - paddleHeight) / 2;
-const ballRadius = 10;
+let ballRadius = 10;
 let x = canvas.width / 2;
 let y = canvas.height / 2;
 
@@ -234,14 +241,12 @@ function drawPaddle(x, y, color, shadowColor, opacity = 1)
 function drawBall(posX = x, posY = y, opacity = 1) 
 {
     context.beginPath();
-    context.arc(posX, posY, ballRadius, 0, Math.PI * 2);
-    context.fillStyle = '#ff9204';
-    context.globalAlpha = opacity;
-    context.shadowColor = '#ff9204';
-    context.shadowBlur = 20;
+    context.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2); 
+    context.fillStyle = ball.color; 
+    context.shadowColor = ball.color; 
+    context.shadowBlur = 20; 
     context.fill();
     context.closePath();
-    context.globalAlpha = 1;
 }
 
 function gameOverMessage() {
@@ -389,13 +394,13 @@ function predictBallPosition()
     {
     
         let timeToPaddle = predictedDx > 0
-            ? (canvas.width - paddleWidth - ballRadius - predictedX) / predictedDx
-            : (paddleWidth + ballRadius - predictedX) / predictedDx;
+            ? (canvas.width - paddleWidth - ball.radius - predictedX) / predictedDx
+            : (paddleWidth + ball.radius - predictedX) / predictedDx;
 
     
         let timeToHorizontalWall = predictedDy >= 0
-            ? (canvas.height - ballRadius - predictedY) / predictedDy
-            : (ballRadius - predictedY) / predictedDy;
+            ? (canvas.height - ball.radius - predictedY) / predictedDy
+            : (ball.radius - predictedY) / predictedDy;
 
     
         let timeToNextEvent = Math.min(timeToPaddle, timeToHorizontalWall);
@@ -409,8 +414,8 @@ function predictBallPosition()
             predictedDy = -predictedDy;
         } else {
         
-            if ((predictedDx > 0 && predictedX >= canvas.width - paddleWidth - ballRadius) ||
-                (predictedDx < 0 && predictedX <= paddleWidth + ballRadius)) {
+            if ((predictedDx > 0 && predictedX >= canvas.width - paddleWidth - ball.radius) ||
+                (predictedDx < 0 && predictedX <= paddleWidth + ball.radius)) {
             
                 if (predictedDx > 0) {
                         
@@ -435,7 +440,7 @@ function predictTimeToPlayerPaddle()
     let predictedDx = dx;
 
 
-    let timeToPlayerPaddle = (paddleWidth + ballRadius - predictedX) / predictedDx;
+    let timeToPlayerPaddle = (paddleWidth + ball.radius - predictedX) / predictedDx;
 
     return timeToPlayerPaddle;
 }
@@ -495,7 +500,7 @@ const angleAdjustmentDown = -0.2;
 
 
 function checkPaddleCollision(deltaTime) {
-    if (dx < 0 && x + dx * deltaTime < paddleWidth + ballRadius) {
+    if (dx < 0 && x + dx * deltaTime < paddleWidth + ball.radius) {
         let futureY = y + dy * deltaTime;
 
         if (futureY > paddleY1 && futureY < paddleY1 + paddleHeight) {
@@ -523,19 +528,19 @@ function checkPaddleCollision(deltaTime) {
 
             console.log("New dx:", dx, "New dy:", dy);
 
-            x = paddleWidth + ballRadius;
+            x = paddleWidth + ball.radius;
             ballMovingTowardsAI = true;
             if (start_hits++ > 3)
                 aiHits++;
         }
     }
 
-    if (dx > 0 && x + dx * deltaTime > canvas.width - paddleWidth - ballRadius) {
+    if (dx > 0 && x + dx * deltaTime > canvas.width - paddleWidth - ball.radius) {
         let futureY = y + dy * deltaTime;
 
         if (futureY > paddleY2 && futureY < paddleY2 + paddleHeight) {
             dx = -dx * difficultySettings[currentDifficulty].speedMultiplier;
-            x = canvas.width - paddleWidth - ballRadius;
+            x = canvas.width - paddleWidth - ball.radius;
             ballMovingTowardsAI = false;
         }
     }
@@ -546,6 +551,7 @@ let previousPaddleY2 = [];
 let previousBallPositions = [];
 
 const maxAfterImages = 20;
+
 function draw(currentTime) {
     if (!lastTime) lastTime = currentTime;
     
@@ -685,19 +691,19 @@ function draw(currentTime) {
 
     checkPaddleCollision(deltaTime);
 
-    if (x + dx * deltaTime < ballRadius) {
+    if (x + dx * deltaTime < ball.radius) {
         winner = LocalMultiplayer ? 'Player 2' : (isAIEnabled ? 'AI' : 'Player 2');
         gameRunning = false;
         gameOverMessage();
         return;
-    } else if (x + dx * deltaTime > canvas.width - ballRadius) {
+    } else if (x + dx * deltaTime > canvas.width - ball.radius) {
         winner = 'Player 1';
         gameRunning = false;
         gameOverMessage();
         return;
     }
 
-    if (y + dy * deltaTime > canvas.height - ballRadius || y + dy * deltaTime < ballRadius)
+    if (y + dy * deltaTime > canvas.height - ball.radius || y + dy * deltaTime < ball.radius)
         dy = -dy;
 
     x += dx * difficultySettings[currentDifficulty].speedMultiplier * deltaTime;
@@ -825,7 +831,7 @@ function showReadyAnimation(callback) {
     const originalBallGlow = drawBall;
     drawBall = function(posX = x, posY = y, opacity = 1) {
         context.beginPath();
-        context.arc(posX, posY, ballRadius, 0, Math.PI * 2);
+        context.arc(posX, posY, ball.radius, 0, Math.PI * 2);
         context.fillStyle = '#ff9204';
         context.shadowColor = '#ff9204';
         context.globalAlpha = opacity;
@@ -870,6 +876,8 @@ function drawInitialGameState() {
 }
 
 function startGame() {
+    const selectedBallSize = document.getElementById('ballSizeSelect').value;
+    updateBallSize(selectedBallSize);
     // Récupérer les options sélectionnées
     const selectedDifficulty = document.getElementById('difficultySelect').value;
     currentDifficulty = selectedDifficulty;
@@ -976,7 +984,8 @@ function restartPong() {
         // Garder les paramètres actuels de taille et de difficulté
         const selectedDifficulty = currentDifficulty;
         const paddleSize = paddleHeight;
-    
+        const selectedBallSize = document.getElementById('ballSizeSelect').value;
+        updateBallSize(selectedBallSize);
         // Réinitialiser l'état du jeu
         firstHit = true;
         aiHits = 0;
@@ -1525,5 +1534,30 @@ function toggleDarknessMode(currentTime) {
             elementsVisible = !elementsVisible; // Bascule l'état
             lastVisibilityToggleTime = currentTime;
         }
+    }
+}
+
+// Références au sélecteur de taille de la balle
+const ballSizeSelect = document.getElementById('ballSizeSelect');
+
+// Mettre à jour la taille de la balle lorsque l'utilisateur change l'option
+ballSizeSelect.addEventListener('change', () => {
+    const ballSize = ballSizeSelect.value;
+    updateBallSize(ballSize);
+});
+
+function updateBallSize(size) {
+    switch (size) {
+        case 'small':
+            ball.radius = 10; // Taille petite
+            break;
+        case 'medium':
+            ball.radius = 20; // Taille moyenne
+            break;
+        case 'large':
+            ball.radius = 30; // Taille grande
+            break;
+        default:
+            ball.radius = 20; // Taille par défaut (moyenne)
     }
 }
