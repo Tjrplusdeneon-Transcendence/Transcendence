@@ -878,6 +878,7 @@ function drawInitialGameState() {
 function startGame() {
     const selectedBallSize = document.getElementById('ballSizeSelect').value;
     updateBallSize(selectedBallSize);
+    
     // Récupérer les options sélectionnées
     const selectedDifficulty = document.getElementById('difficultySelect').value;
     currentDifficulty = selectedDifficulty;
@@ -1080,7 +1081,7 @@ function restartPong() {
 //     lastTime = 0;
 
 //     document.getElementById('pongCanvas').style.display = 'none';
-//     document.getElementById('difficulty-menu').style.display = 'block';
+//     document.getElementById('difficulty-menu').style.display = 'flex';
 
 //     const startButton = document.getElementById('start-pong-game-btn');
 //     startButton.textContent = 'Start Game';
@@ -1109,7 +1110,7 @@ document.getElementById('singleplayerButton').addEventListener('click', function
     document.getElementById('mainMenuCanvas').style.display = 'none';
     document.getElementById('singleplayerButton').style.display = 'none';
     document.getElementById('multiplayerButton').style.display = 'none';
-    document.getElementById('difficulty-menu').style.display = 'block';
+    document.getElementById('difficulty-menu').style.display = 'flex';
     document.getElementById('pongCanvas').style.display = 'none'; // Ensure the game canvas is hidden
     document.getElementById('start-solo-game-btn').style.display = 'block';
     document.getElementById('start-solo-game-btn').textContent = 'Start Game'; // Change button text to "Start Game"
@@ -1131,7 +1132,7 @@ document.getElementById('leftSide').addEventListener('click', function() {
     document.getElementById('rightSide').style.display = 'none';
     document.getElementById('singleplayerButton').style.display = 'none';
     document.getElementById('multiplayerButton').style.display = 'none';
-    document.getElementById('difficulty-menu').style.display = 'block';
+    document.getElementById('difficulty-menu').style.display = 'flex';
     document.getElementById('pongCanvas').style.display = 'none'; // Ensure the game canvas is hidden
     document.getElementById('start-solo-game-btn').style.display = 'block';
     document.getElementById('start-solo-game-btn').textContent = 'Start Game'; // Change button text to "Start Game"
@@ -1205,7 +1206,7 @@ document.getElementById('local-btn').addEventListener('click', function()
     LocalMultiplayer = true;
     isMatchmaking = false;
     document.getElementById('multiplayer-menu').style.display = 'none';
-    document.getElementById('difficulty-menu').style.display = 'block';
+    document.getElementById('difficulty-menu').style.display = 'flex';
     document.getElementById('return-menu-btn').style.display = 'none';
     document.getElementById('go-back-btn').textContent = 'Go Back'; // Reset button text to "Go Back"
     document.getElementById('start-solo-game-btn').style.display = 'block';
@@ -1440,7 +1441,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function showMenu() {
-    document.getElementById('difficulty-menu').style.display = 'block';
+    document.getElementById('difficulty-menu').style.display = 'flex';
     document.getElementById('pongCanvas').style.display = 'none';
     document.getElementById('start-solo-game-btn').textContent = 'Start Game';
 }
