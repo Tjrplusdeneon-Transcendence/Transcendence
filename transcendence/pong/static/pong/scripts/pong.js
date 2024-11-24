@@ -933,7 +933,7 @@ function startGame() {
     const selectedDifficulty = document.getElementById('difficultySelect').value;
     currentDifficulty = selectedDifficulty;
     
-    const selectedPaddleSize = document.getElementById('paddleSizeSlider').value;
+    const selectedPaddleSize = document.getElementById('paddle-size').value;
     updatePaddleSize(selectedPaddleSize);
     
     // Reinitialize game state
@@ -1920,7 +1920,7 @@ function updateBallSize(size) {
     }
 }
 
-const paddleSizeSlider = document.getElementById('paddleSizeSlider');
+const paddleSizeSlider = document.getElementById('paddle-size');
 const paddleSizeDisplay = document.getElementById('paddleSizeDisplay');
 
 // Mappage des valeurs du slider à des tailles lisibles
