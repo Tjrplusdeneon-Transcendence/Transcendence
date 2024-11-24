@@ -20,6 +20,7 @@ function initializeWebSocket() {
         attachBanButtonListener();
         attachInviteButtonListener();
         attachJoinGameButtonListener();
+        attachInfoButtonListener();
     };
 
     chatSocket.onclose = function(e) {
@@ -46,6 +47,19 @@ function attachFormSubmitListener() {
             }
         };
     }
+}
+
+
+function attachInfoButtonListener() {
+    document.querySelectorAll('.info-button').forEach(button => {
+        button.onclick = function(e) {
+            const senderId = e.target.getAttribute('user-id');
+            const authorId = e.target.getAttribute('author-id');
+            if (authorId) {
+                chatSocket.send(JSON.stringify({ 'info': authorId, 'sender': senderId }));
+            }    
+        };
+    });
 }
 
 function attachBanButtonListener() {
@@ -87,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
         attachBanButtonListener();
         attachInviteButtonListener();
         attachJoinGameButtonListener();
+        attachInfoButtonListener();
     }
 });
 
@@ -97,5 +112,6 @@ document.addEventListener('htmx:afterSwap', function(evt) {
         attachBanButtonListener();
         attachInviteButtonListener();
         attachJoinGameButtonListener();
+        attachInfoButtonListener();
     }
 });

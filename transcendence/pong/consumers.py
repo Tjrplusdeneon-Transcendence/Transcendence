@@ -47,6 +47,19 @@ class ChatConsumer(WebsocketConsumer):
                 'sender_id': sender_id,
             }
             async_to_sync(self.channel_layer.group_send)(f"user_{player_id}", event)  # Send invite event to the player's group
+        elif 'info' in data:
+            sender_id = data['sender']
+            other_id = data['info']
+            event = {
+                'type': 'info_handler',
+                'other_id': other_id,
+            }
+            async_to_sync(self.channel_layer.group_send)(f"user_{sender_id}", event)  # Send info to the user's group
+
+    def info_handler(self, event):
+        other = User.objects.get(id=event['other_id'])
+        html = render_to_string('pong/partials/panel.html', context={'user': self.user,'other': other})
+        self.send(text_data=html)
 
     def invite_handler(self, event):
         sender = User.objects.get(id=event['sender_id'])
