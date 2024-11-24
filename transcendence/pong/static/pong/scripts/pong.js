@@ -500,52 +500,37 @@ const angleAdjustmentDown = -0.2;
 
 
 function checkPaddleCollision(deltaTime) {
-    if (dx < 0 && x + dx * deltaTime < paddleWidth + ball.radius) {
-        let futureY = y + dy * deltaTime;
+    console.log(`Balle: x=${x}, y=${y}, dx=${dx}, dy=${dy}`);
+    console.log(`Paddle gauche: y=${paddleY1}, hauteur=${paddleHeight}`); 
 
-        if (futureY > paddleY1 && futureY < paddleY1 + paddleHeight) {
-            let angleAdjustment = 0;
-            if (paddleDirection === 1) {
-                angleAdjustment = angleAdjustmentUp;
-                console.log("Player moving up: dy =", dy);
-            } else if (paddleDirection === -1) {
-                angleAdjustment = angleAdjustmentDown;
-                console.log("Player moving down: dy =", dy);
-            } else {
-                console.log("Player not moving: dy =", dy);
-            }
-
-            let speed = Math.sqrt(dx * dx + dy * dy);
-            let angle = Math.atan2(dy, dx) + angleAdjustment;
-            let minAngleCap = (Math.PI * 3) / 11;
-            let maxAngleCap = (Math.PI * 8) / 11;
-
-            if (Math.abs(angle) > minAngleCap && Math.abs(angle) < maxAngleCap) {
-                angle = Math.atan2(dy, dx);
-            }
-            dx = Math.abs(speed * Math.cos(angle));
-            dy = speed * Math.sin(angle);
-
-            console.log("New dx:", dx, "New dy:", dy);
-
-            x = paddleWidth + ball.radius;
-            ballMovingTowardsAI = true;
-            if (start_hits++ > 3)
-                aiHits++;
+    // Vérifier la collision avec le paddle gauche
+    if (dx < 0 && x - ball.radius <= paddleWidth) {
+        // Vérifie si la balle est dans les limites verticales du paddle
+        if (y + ball.radius >= paddleY1 && y - ball.radius <= paddleY1 + paddleHeight) {
+            // Ajuste la position pour empêcher la balle de "traverser" le paddle
+            x = paddleWidth + ball.radius; 
+            dx = -dx; // Inverse la direction X
+            console.log("Collision avec le paddle gauche !");
         }
     }
 
-    if (dx > 0 && x + dx * deltaTime > canvas.width - paddleWidth - ball.radius) {
-        let futureY = y + dy * deltaTime;
-
-        if (futureY > paddleY2 && futureY < paddleY2 + paddleHeight) {
-            dx = -dx * difficultySettings[currentDifficulty].speedMultiplier;
-            x = canvas.width - paddleWidth - ball.radius;
-            ballMovingTowardsAI = false;
+    // Vérifier la collision avec le paddle droit
+    if (dx > 0 && x + ball.radius >= canvas.width - paddleWidth) {
+        // Vérifie si la balle est dans les limites verticales du paddle
+        if (y + ball.radius >= paddleY2 && y - ball.radius <= paddleY2 + paddleHeight) {
+            // Ajuste la position pour empêcher la balle de "traverser" le paddle
+            x = canvas.width - paddleWidth - ball.radius; 
+            dx = -dx; // Inverse la direction X
+            console.log("Collision avec le paddle droit !");
         }
+    }
+
+    // Vérifier la collision avec les murs supérieur et inférieur
+    if (y - ball.radius <= 0 || y + ball.radius >= canvas.height) {
+        dy = -dy; // Inverse la direction Y
+        console.log("Collision avec un mur !");
     }
 }
-
 let previousPaddleY1 = [];
 let previousPaddleY2 = [];
 let previousBallPositions = [];
