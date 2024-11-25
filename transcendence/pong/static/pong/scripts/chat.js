@@ -1,6 +1,6 @@
 let chatSocket = null;
 
-function closeWebSocket() {
+function closeChatSocket() {
     if (chatSocket) {
         chatSocket.close();
         chatSocket = null;
@@ -8,9 +8,18 @@ function closeWebSocket() {
 }
 
 function initializeWebSocket() {
-    closeWebSocket();
+    closeChatSocket();
 
-    chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat');
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const host = window.location.host; // Includes hostname and port (if present)
+    const path = '/ws/chat';
+
+    const socketUrl = `${protocol}://${host}${path}`;
+    console.log(`Connecting to ChatSocket at: ${socketUrl}`);
+
+    chatSocket = new WebSocket(socketUrl);
+
+    console.log('ChatSocket connected.');
 
     chatSocket.onmessage = function(e) {
         try {
@@ -101,7 +110,7 @@ function attachLogoutButtonListener() {
     const logoutButton = document.getElementById('logoutButton');
     if (logoutButton) {
         logoutButton.addEventListener('click', function() {
-            closeWebSocket();
+            closeChatSocket();
         });
     }
 }
