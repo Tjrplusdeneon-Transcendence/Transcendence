@@ -1,11 +1,18 @@
 const canvas = document.getElementById('pongCanvas');
 const context = canvas.getContext('2d');
-
+let ball = {
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+    radius: 20,
+    dx: -200,
+    dy: 200,
+    color: '#FFFFFF'
+};
 let firstHit = true;
 let paddleHeight = 100, paddleWidth = 10;
 let paddleY1 = (canvas.height - paddleHeight) / 2;
 let paddleY2 = (canvas.height - paddleHeight) / 2;
-const ballRadius = 10;
+let ballRadius = 10;
 let x = canvas.width / 2;
 let y = canvas.height / 2;
 
@@ -25,7 +32,6 @@ let aiTargetY = canvas.height / 2 - paddleHeight / 2;
 const maxErrorOffset = 50;
 
 let aiHits = 0;
-
 
 const maxHitsForMaxMissProbability = 15;
 const maxMissProbability = 0.3;
@@ -55,45 +61,7 @@ let playerRole = null;
 let tourneyWinner = 'Default';
 let tourneyIterator = 0;
 let finals = false;
-// const socket = new WebSocket('ws://localhost:8000/ws/pong/');
 
-
-// socket.onopen = function(e) {
-//     console.log('WebSocket connected.');
-// };
-
-// socket.onmessage = function(event) {
-//     const data = JSON.parse(event.data);
-//     console.log('Received:', data);
-
-//     if (data.type === 'match_found') {
-//         playerRole = data.player;
-//         startGame();
-//     } else if (data.type === 'paddle_moved') {
-//         if (data.player === 'player1') {
-//             paddleY1 = data.position;
-//         } else if (data.player === 'player2') {
-//             paddleY2 = data.position;
-//         }
-//     } else if (data.type === 'game_update') {
-//         x = data.state.ball_position[0];
-//         y = data.state.ball_position[1];
-//         // Update other game state variables as needed
-//     }
-// };
-
-// socket.onclose = function(event) {
-//     console.log('WebSocket closed.');
-// };
-
-// socket.onerror = function(error) {
-//     console.error('WebSocket error:', error);
-// };
-
-// function movePaddle(direction) {
-//     const position = direction === 'up' ? paddleY1 - playerSpeed : paddleY1 + playerSpeed;
-//     socket.send(JSON.stringify({ type: 'move_paddle', player: playerRole, position }));
-// }
 canvas.addEventListener('mousemove', handleMouseMove);
 canvas.addEventListener('mouseleave', handleMouseLeave);
 
@@ -120,12 +88,12 @@ function updatePaddlePosition(deltaTime) {
         if (playerRole === 'player1') {
             if (mouseY < paddleY1 + paddleHeight / 2) {
                 paddleY1 -= playerSpeed * deltaTime;
-                paddleDirection = 1; // Moving up
+                paddleDirection = 1;
             } else if (mouseY > paddleY1 + paddleHeight / 2) {
                 paddleY1 += playerSpeed * deltaTime;
-                paddleDirection = -1; // Moving down
+                paddleDirection = -1; 
             } else {
-                paddleDirection = 0; // No movement
+                paddleDirection = 0; 
             }
 
             if (paddleY1 < 0) {
@@ -144,12 +112,12 @@ function updatePaddlePosition(deltaTime) {
         } else if (playerRole === 'player2') {
             if (mouseY < paddleY2 + paddleHeight / 2) {
                 paddleY2 -= playerSpeed * deltaTime;
-                paddleDirection = 1; // Moving up
+                paddleDirection = 1; 
             } else if (mouseY > paddleY2 + paddleHeight / 2) {
                 paddleY2 += playerSpeed * deltaTime;
-                paddleDirection = -1; // Moving down
+                paddleDirection = -1; 
             } else {
-                paddleDirection = 0; // No movement
+                paddleDirection = 0; 
             }
 
             if (paddleY2 < 0) {
@@ -172,27 +140,27 @@ function updatePaddlePosition(deltaTime) {
 document.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowUp') {
         upPressed = true;
-        mouseBlocked = false; // Unblock mouse movement
-        keyboardActive = true; // Disable mouse interactions
-        paddleDirection = 1; // Moving up
+        mouseBlocked = false;
+        keyboardActive = true;
+        paddleDirection = 1;
     }
     else if (event.key === 'w' && LocalMultiplayer){
         wPressed = true;
-        mouseBlocked = false; // Unblock mouse movement
-        keyboardActive = true; // Disable mouse interactions
-        paddleDirection = 1; // Moving up
+        mouseBlocked = false;
+        keyboardActive = true;
+        paddleDirection = 1;
     } 
     else if (event.key === 'ArrowDown') {
         downPressed = true;
-        mouseBlocked = false; // Unblock mouse movement
-        keyboardActive = true; // Disable mouse interactions
-        paddleDirection = -1; // Moving down
+        mouseBlocked = false;
+        keyboardActive = true;
+        paddleDirection = -1;
     }
     else if (event.key === 's' && LocalMultiplayer){
         sPressed = true;
-        mouseBlocked = false; // Unblock mouse movement
-        keyboardActive = true; // Disable mouse interactions
-        paddleDirection = -1; // Moving down
+        mouseBlocked = false;
+        keyboardActive = true;
+        paddleDirection = -1;
     }
 });
 
@@ -236,19 +204,15 @@ function drawPaddle(x, y, color, shadowColor, opacity = 1)
 function drawBall(posX = x, posY = y, opacity = 1) 
 {
     context.beginPath();
-    context.arc(posX, posY, ballRadius, 0, Math.PI * 2);
-    context.fillStyle = '#ff9204';
-    context.globalAlpha = opacity;
-    context.shadowColor = '#ff9204';
-    context.shadowBlur = 20;
+    context.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2); 
+    context.fillStyle = ball.color; 
+    context.shadowColor = ball.color; 
+    context.shadowBlur = 20; 
     context.fill();
     context.closePath();
-    context.globalAlpha = 1;
 }
 
 function gameOverMessage() {
-    // Clear any previous game over message
-    // if in online match, activate rematch and quit buttons'
     document.getElementById('go-back-btn').disabled = false;
     if (isMatchmaking) {
         document.getElementById('rematch-btn').disabled = false;
@@ -400,13 +364,13 @@ function predictBallPosition()
     {
     
         let timeToPaddle = predictedDx > 0
-            ? (canvas.width - paddleWidth - ballRadius - predictedX) / predictedDx
-            : (paddleWidth + ballRadius - predictedX) / predictedDx;
+            ? (canvas.width - paddleWidth - ball.radius - predictedX) / predictedDx
+            : (paddleWidth + ball.radius - predictedX) / predictedDx;
 
     
         let timeToHorizontalWall = predictedDy >= 0
-            ? (canvas.height - ballRadius - predictedY) / predictedDy
-            : (ballRadius - predictedY) / predictedDy;
+            ? (canvas.height - ball.radius - predictedY) / predictedDy
+            : (ball.radius - predictedY) / predictedDy;
 
     
         let timeToNextEvent = Math.min(timeToPaddle, timeToHorizontalWall);
@@ -420,8 +384,8 @@ function predictBallPosition()
             predictedDy = -predictedDy;
         } else {
         
-            if ((predictedDx > 0 && predictedX >= canvas.width - paddleWidth - ballRadius) ||
-                (predictedDx < 0 && predictedX <= paddleWidth + ballRadius)) {
+            if ((predictedDx > 0 && predictedX >= canvas.width - paddleWidth - ball.radius) ||
+                (predictedDx < 0 && predictedX <= paddleWidth + ball.radius)) {
             
                 if (predictedDx > 0) {
                         
@@ -439,14 +403,13 @@ function predictBallPosition()
     }
 }
 
-
 function predictTimeToPlayerPaddle() 
 {
     let predictedX = x;
     let predictedDx = dx;
 
 
-    let timeToPlayerPaddle = (paddleWidth + ballRadius - predictedX) / predictedDx;
+    let timeToPlayerPaddle = (paddleWidth + ball.radius - predictedX) / predictedDx;
 
     return timeToPlayerPaddle;
 }
@@ -499,13 +462,11 @@ function moveAI(deltaTime)
     }
 }
 
-
 const angleAdjustmentUp = 0.2;
 const angleAdjustmentDown = -0.2;
 
-
 function checkPaddleCollision(deltaTime) {
-    if (dx < 0 && x + dx * deltaTime < paddleWidth + ballRadius) {
+    if (dx < 0 && x + dx * deltaTime < paddleWidth + ball.radius) {
         let futureY = y + dy * deltaTime;
 
         if (futureY > paddleY1 && futureY < paddleY1 + paddleHeight) {
@@ -533,14 +494,14 @@ function checkPaddleCollision(deltaTime) {
 
             console.log("New dx:", dx, "New dy:", dy);
 
-            x = paddleWidth + ballRadius;
+            x = paddleWidth + ball.radius;
             ballMovingTowardsAI = true;
             if (start_hits++ > 3)
                 aiHits++;
         }
     }
 
-    if (dx > 0 && x + dx * deltaTime > canvas.width - paddleWidth - ballRadius) {
+    if (dx > 0 && x + dx * deltaTime > canvas.width - paddleWidth - ball.radius) {
         let futureY = y + dy * deltaTime;
 
         if (futureY > paddleY2 && futureY < paddleY2 + paddleHeight) {
@@ -568,17 +529,17 @@ function checkPaddleCollision(deltaTime) {
 
             console.log("New player 2 dx:", dx, "New player 2 dy:", dy);
 
-            x = canvas.width - paddleWidth - ballRadius;
+            x = canvas.width - paddleWidth - ball.radius;
             ballMovingTowardsAI = false;
         }
     }
 }
-
 let previousPaddleY1 = [];
 let previousPaddleY2 = [];
 let previousBallPositions = [];
 
 const maxAfterImages = 20;
+
 function draw(currentTime) {
     if (!lastTime) lastTime = currentTime;
     
@@ -718,7 +679,7 @@ function draw(currentTime) {
 
     checkPaddleCollision(deltaTime);
 
-    if (x + dx * deltaTime < ballRadius) {
+    if (x + dx * deltaTime < ball.radius) {
         winner = LocalMultiplayer ? 'Player 2' : (isAIEnabled ? 'AI' : 'Player 2');
         gameRunning = false;
         if (isTournament) {
@@ -733,7 +694,7 @@ function draw(currentTime) {
         } 
         gameOverMessage();
         return;
-    } else if (x + dx * deltaTime > canvas.width - ballRadius) {
+    } else if (x + dx * deltaTime > canvas.width - ball.radius) {
         winner = 'Player 1';
         gameRunning = false;
         if (isTournament) {
@@ -748,7 +709,7 @@ function draw(currentTime) {
         return;
     }
 
-    if (y + dy * deltaTime > canvas.height - ballRadius || y + dy * deltaTime < ballRadius)
+    if (y + dy * deltaTime > canvas.height - ball.radius || y + dy * deltaTime < ball.radius)
         dy = -dy;
 
     x += dx * difficultySettings[currentDifficulty].speedMultiplier * deltaTime;
@@ -876,7 +837,7 @@ function showReadyAnimation(callback) {
     const originalBallGlow = drawBall;
     drawBall = function(posX = x, posY = y, opacity = 1) {
         context.beginPath();
-        context.arc(posX, posY, ballRadius, 0, Math.PI * 2);
+        context.arc(posX, posY, ball.radius, 0, Math.PI * 2);
         context.fillStyle = '#ff9204';
         context.shadowColor = '#ff9204';
         context.globalAlpha = opacity;
@@ -921,12 +882,15 @@ function drawInitialGameState() {
 }
 
 function startGame() {
+    const selectedBallSize = document.getElementById('ballSizeSelect').value;
+    updateBallSize(selectedBallSize);
+    
     // Récupérer les options sélectionnées
     const selectedDifficulty = document.getElementById('difficultySelect').value;
     currentDifficulty = selectedDifficulty;
     
-    const paddleSizeInput = document.getElementById('paddle-size').value;
-    paddleHeight = parseInt(paddleSizeInput, 10);
+    const selectedPaddleSize = document.getElementById('paddle-size').value;
+    updatePaddleSize(selectedPaddleSize);
     
     // Reinitialize game state
     const restartButton = isMatchmaking ? document.getElementById('start-multiplayer-btn') : document.getElementById('start-solo-game-btn');
@@ -1057,7 +1021,8 @@ function restartPong() {
         // Garder les paramètres actuels de taille et de difficulté
         const selectedDifficulty = currentDifficulty;
         const paddleSize = paddleHeight;
-    
+        const selectedBallSize = document.getElementById('ballSizeSelect').value;
+        updateBallSize(selectedBallSize);
         // Réinitialiser l'état du jeu
         firstHit = true;
         aiHits = 0;
@@ -1077,103 +1042,6 @@ function restartPong() {
         startGame();
 }
 
-// document.getElementById('start-solo-game-btn').addEventListener('click', function() {
-//     isMatchmaking = false;
-//     document.getElementById('pongCanvas').style.pointerEvents = 'auto';
-//     const selectedDifficulty = document.getElementById('difficultySelect').value;
-//     currentDifficulty = selectedDifficulty;
-//     document.getElementById('difficulty-menu').style.display = 'none';
-//     document.getElementById('pongCanvas').style.display = 'block';
-
-//     const startButton = document.getElementById('start-solo-game-btn');
-//     startButton.textContent = 'Restart Game';
-
-//     startButton.removeEventListener('click', startGame);
-//     startButton.addEventListener('click', startGame);
-
-//     startGame();
-// });
-
-// document.getElementById('start-matchmaking-btn').addEventListener('click', function() {
-//     isMatchmaking = true;
-//     socket.send(JSON.stringify({ type: 'matchmaking' }));
-//     document.getElementById('pongCanvas').style.pointerEvents = 'auto';
-//     const selectedDifficulty = document.getElementById('difficultySelect').value;
-//     currentDifficulty = selectedDifficulty;
-//     document.getElementById('difficulty-menu').style.display = 'none';
-//     document.getElementById('pongCanvas').style.display = 'block';
-
-//     const startButton = document.getElementById('start-matchmaking-btn');
-//     startButton.textContent = 'Restart Game';
-
-//     startButton.removeEventListener('click', startGame);
-//     startButton.addEventListener('click', startGame);
-
-//     startGame();
-// });
-
-// document.getElementById('start-solo-game-btn').addEventListener('click', function() {
-//     isMatchmaking = false;
-//     startGame();
-// });
-
-// document.getElementById('start-matchmaking-btn').addEventListener('click', function() {
-//     isMatchmaking = true;
-//     socket.send(JSON.stringify({ type: 'matchmaking' }));
-// });
-
-// function restartPong() 
-// {
-//     if (restartButton) {
-//         restartButton.disabled = false;
-//     }
-//     isRestarting = true;
-
-//     firstHit = true;
-//     aiHits = 0;
-//     paddleY1 = (canvas.height - paddleHeight) / 2;
-//     paddleY2 = (canvas.height - paddleHeight) / 2;
-//     x = canvas.width / 2;
-//     y = canvas.height / 2;
-
-
-//     const angle = Math.random() * Math.PI / 4 - Math.PI / 8;
-//     const speed = Math.sqrt(difficultySettings[currentDifficulty].dx * difficultySettings[currentDifficulty].dx + difficultySettings[currentDifficulty].dy * difficultySettings[currentDifficulty].dy);
-//     dx = -Math.abs(speed * Math.cos(angle));
-//     dy = speed * Math.sin(angle);
-
-//     gameRunning = false;
-//     winner = '';
-//     aiTargetY = canvas.height / 2 - paddleHeight / 2;
-
-//     aiLastScanTime = 0;
-//     aiLastPredictedY = null;
-//     ballMovingTowardsAI = false;
-//     lastTime = 0;
-
-//     document.getElementById('pongCanvas').style.display = 'none';
-//     document.getElementById('difficulty-menu').style.display = 'block';
-
-//     const startButton = document.getElementById('start-pong-game-btn');
-//     startButton.textContent = 'Start Game';
-
-//     startButton.removeEventListener('click', restartPong);
-//     startButton.addEventListener('click', function() {
-//         const selectedDifficulty = document.getElementById('difficultySelect').value;
-//         currentDifficulty = selectedDifficulty;
-//         playerSpeed = difficultySettings[currentDifficulty].playerSpeed;
-//         aiSpeed = difficultySettings[currentDifficulty].aiSpeed;
-//         document.getElementById('difficulty-menu').style.display = 'none';
-//         document.getElementById('pongCanvas').style.display = 'block';
-
-//         if (animationFrameId) {
-//             cancelAnimationFrame(animationFrameId);
-//         }
-//         cancelAnimation = false;
-//         startGame();
-//     });
-// }
-
 document.getElementById('pongCanvas').style.display = 'none'; 
 
 // New Main Menu Buttons
@@ -1181,7 +1049,7 @@ document.getElementById('singleplayerButton').addEventListener('click', function
     document.getElementById('mainMenuCanvas').style.display = 'none';
     document.getElementById('singleplayerButton').style.display = 'none';
     document.getElementById('multiplayerButton').style.display = 'none';
-    document.getElementById('difficulty-menu').style.display = 'block';
+    document.getElementById('difficulty-menu').style.display = 'flex';
     document.getElementById('pongCanvas').style.display = 'none'; // Ensure the game canvas is hidden
     document.getElementById('start-solo-game-btn').style.display = 'block';
     document.getElementById('start-solo-game-btn').textContent = 'Start Game'; // Change button text to "Start Game"
@@ -1203,7 +1071,7 @@ document.getElementById('leftSide').addEventListener('click', function() {
     document.getElementById('rightSide').style.display = 'none';
     document.getElementById('singleplayerButton').style.display = 'none';
     document.getElementById('multiplayerButton').style.display = 'none';
-    document.getElementById('difficulty-menu').style.display = 'block';
+    document.getElementById('difficulty-menu').style.display = 'flex';
     document.getElementById('pongCanvas').style.display = 'none'; // Ensure the game canvas is hidden
     document.getElementById('start-solo-game-btn').style.display = 'block';
     document.getElementById('start-solo-game-btn').textContent = 'Start Game'; // Change button text to "Start Game"
@@ -1238,22 +1106,6 @@ document.getElementById('start-solo-game-btn').addEventListener('click', functio
     startGame();
 });
 
-
-// document.getElementById('start-local-multiplayer-btn').addEventListener('click', function() {
-//     isMatchmaking = false;
-//     document.getElementById('pongCanvas').style.pointerEvents = 'auto';
-//     const selectedDifficulty = document.getElementById('difficultySelect').value;
-//     currentDifficulty = selectedDifficulty;
-//     document.getElementById('difficulty-menu').style.display = 'none';
-//     document.getElementById('pongCanvas').style.display = 'block';
-
-//     const startButton = document.getElementById('start-solo-game-btn');
-//     startButton.textContent = 'Restart Game';
-
-//     startButton.removeEventListener('click', startGame);
-//     startButton.addEventListener('click', restartPong);
-// });
-
 let socket;
 let bothPlayersReady = false;
 let playerReady = false;
@@ -1277,7 +1129,7 @@ document.getElementById('local-btn').addEventListener('click', function()
     LocalMultiplayer = true;
     isMatchmaking = false;
     document.getElementById('multiplayer-menu').style.display = 'none';
-    document.getElementById('difficulty-menu').style.display = 'block';
+    document.getElementById('difficulty-menu').style.display = 'flex';
     document.getElementById('return-menu-btn').style.display = 'none';
     document.getElementById('go-back-btn').style.display = 'inline-block'; // Ensure go-back button is visible
     document.getElementById('go-back-btn').textContent = 'Go Back'; // Reset button text to "Go Back"
@@ -1530,18 +1382,8 @@ function sendPaddlePosition(position) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    const paddleSizeInput = document.getElementById("paddle-size");
-    const paddleSizeDisplay = document.getElementById("paddle-size-display");
-
-    paddleSizeInput.addEventListener("input", function () {
-        paddleHeight = parseInt(paddleSizeInput.value, 10); // Met à jour la hauteur globale du paddle
-        paddleSizeDisplay.textContent = paddleHeight; // Met à jour l'affichage
-    });
-});
-
 function showMenu() {
-    document.getElementById('difficulty-menu').style.display = 'block';
+    document.getElementById('difficulty-menu').style.display = 'flex';
     document.getElementById('pongCanvas').style.display = 'none';
     document.getElementById('start-solo-game-btn').textContent = 'Start Game';
 }
@@ -1765,12 +1607,6 @@ function showNextMatch() {
             return;
         }
     }
-
-    // Tournament is over, show the winner
-    // document.getElementById('tournamentMatch').style.display = 'none';
-    // document.getElementById('tournamentWinner').style.display = 'block';
-    // document.getElementById('return-menu-btn').style.display = 'none';
-    // document.getElementById('winnerMessage').textContent = `${tournamentWinner} Wins! Congratulations!!!`;
 }
 
 function updateTournamentMatches(match, winner) {
@@ -1894,4 +1730,59 @@ function resetGameSettings() {
     paddleSizeInput.value = paddleHeight;
     const paddleSizeDisplay = document.getElementById('paddle-size-display');
     paddleSizeDisplay.textContent = paddleHeight;
+}
+
+// Références au sélecteur de taille de la balle
+const ballSizeSelect = document.getElementById('ballSizeSelect');
+
+// Mettre à jour la taille de la balle lorsque l'utilisateur change l'option
+ballSizeSelect.addEventListener('change', () => {
+    const ballSize = ballSizeSelect.value;
+    updateBallSize(ballSize);
+});
+
+function updateBallSize(size) {
+    switch (size) {
+        case 'small':
+            ball.radius = 10; // Taille petite
+            break;
+        case 'medium':
+            ball.radius = 20; // Taille moyenne
+            break;
+        case 'large':
+            ball.radius = 30; // Taille grande
+            break;
+        default:
+            ball.radius = 20; // Taille par défaut (moyenne)
+    }
+}
+
+const paddleSizeSlider = document.getElementById('paddle-size');
+const paddleSizeDisplay = document.getElementById('paddleSizeDisplay');
+
+// Mappage des valeurs du slider à des tailles lisibles
+const paddleSizeLabels = {
+    50: 'Small',
+    75: 'Below Medium',
+    100: 'Medium',
+    125: 'Above Medium',
+    150: 'Large'
+};
+
+// Mettre à jour la taille du paddle et l'affichage du label
+paddleSizeSlider.addEventListener('input', () => {
+    const selectedSize = parseInt(paddleSizeSlider.value, 10);
+    updatePaddleSize(selectedSize);
+    paddleSizeDisplay.textContent = paddleSizeLabels[selectedSize] || `${selectedSize}px`;
+});
+
+// Fonction pour ajuster la hauteur du paddle
+function updatePaddleSize(size) {
+    paddleHeight = parseInt(size, 10);
+
+    // Ajuster les positions pour rester dans les limites
+    paddleY1 = Math.min(paddleY1, canvas.height - paddleHeight);
+    paddleY2 = Math.min(paddleY2, canvas.height - paddleHeight);
+
+    console.log(`Paddle size updated to: ${paddleSizeLabels[size]} (${size}px)`);
 }

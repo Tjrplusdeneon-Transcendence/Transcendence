@@ -171,6 +171,7 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(255, 0, 255, 0.7), 0 0 25px rgba(0, 255, 255, 0.7);
     animation: neonGlow 3s infinite alternate;
+    width: 100%;
 }
 
 #memory-game-container {
@@ -238,6 +239,7 @@ body {
 .login-panel {
     display: none;
     position: fixed;
+    z-index: 989;
     top: 0;
     right: 0;
     width: 320px;
@@ -1016,39 +1018,6 @@ li {
     transform: scale(1.1);
 }
 
-
-
-/* .main-menu-button {
-    position: absolute;
-    width: 40%;
-    height: 20%;
-    background: linear-gradient(135deg, #00ffea, #ff00fb);
-    color: white;
-    font-family: 'Press Start 2P', cursive;
-    font-size: 18px;
-    text-align: center;
-    line-height: 2.5;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-.main-menu-button:hover {
-    box-shadow: 0 0 20px rgba(255, 0, 255, 0.7), 0 0 40px rgba(0, 255, 234, 0.7);
-    transform: scale(1.1);
-} */
-
-/* #singleplayerButton {
-    left: 10%;
-    top: 40%;
-}
-
-#multiplayerButton {
-    right: 10%;
-    top: 40%;
-} */
-
 #mainMenuCanvas {
     width: 100%;
     height: auto;
@@ -1088,6 +1057,13 @@ li {
     border-left: 1px solid #333;
 }
 
+#start-doom-game-btn{
+
+    background-color: #1a1a1a;
+    border-left: 1px solid #333;
+    width: 90%;
+}
+
 #leftSide:hover, #leftSideM:hover {
     background-color: rgba(0, 255, 255, 0.1);
     box-shadow: inset 0 0 20px #00FFFF, 0 0 20px #00FFFF;
@@ -1100,7 +1076,13 @@ li {
     border-color: #FF00FB;
 }
 
-#leftSide:hover, #rightSide:hover, #leftSideM:hover, #rightSideM:hover {
+#start-doom-game-btn:hover {
+    background-color: rgba(255, 0, 251, 0.1);
+    box-shadow: inset 0 0 20px #ffaa00, 0 0 20px #ffaa00;
+    border-color: #ffaa00;
+}
+
+#leftSide:hover, #rightSide:hover, #leftSideM:hover, #rightSideM:hover, #start-doom-game-btn:hover {
     transform: scale(1.03);
 }
 
@@ -1126,7 +1108,7 @@ li {
 }
 
 /* Style pour la checkbox */
-#darknessToggle {
+#darknessTogg, #shuffleToggle, #hintToggle {
     accent-color: #00ffff; 
     transform: scale(1.3); 
     margin-right: 10px;
@@ -1175,4 +1157,57 @@ li {
     margin-top: 5px;
     color: #00ffff;
     text-shadow: 0 0 10px #00ffff;
+}
+
+#memo-select {
+    display: flex;
+    text-align: center;
+    padding: 20px;                 
+    border-radius: 10px;
+}
+
+#gamecustom-ballsize {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #ffffff;
+    text-align: center;
+}
+
+#gamecustom-ballsize label {
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+#gamecustom-ballsize .form-select {
+    width: 100%;
+    max-width: 200px;
+    text-align: center;
+    background-color: transparent;
+    color: #fff;
+    border: 2px solid #ff00ff;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+#gamecustom-ballsize .form-select:focus {
+    border-color: #00ffea;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5), 0 0 25px rgba(255, 0, 255, 0.5);
+}
+
+#gamecustom-difficulty .form-select {
+    width: 100%;
+    max-width: 200px;
+    text-align: center;
+    background-color: transparent;
+    color: #fff;
+    border: 2px solid #00ffff;
+    border-radius: 5px;
+    padding: 5px;;
+}
+
+#gamecustom-difficulty .form-select:focus {
+    border-color: #ff00ea;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5), 0 0 25px rgba(255, 0, 255, 0.5);
 }

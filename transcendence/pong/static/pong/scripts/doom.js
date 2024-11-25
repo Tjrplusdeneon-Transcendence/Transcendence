@@ -1,4 +1,3 @@
-
 const gameContainers = document.getElementById('doom-game-container');
 
 function startdoomGame() {
@@ -11,7 +10,7 @@ function startdoomGame() {
     doomIframe.style.border = 'none';
 
     const quitButton = document.createElement('button');
-    quitButton.textContent = 'Quitter doom Game';
+    quitButton.textContent = 'X';
     quitButton.style.position = 'absolute';
     quitButton.style.top = '10px';
     quitButton.style.left = '10px';
@@ -25,8 +24,12 @@ function startdoomGame() {
 function quitdoomGame() {
     gameContainers.innerHTML = '<p>Retour à la sélection des jeux.</p>';
 }
+document.getElementById("start-doom-game-btn").addEventListener("click", function() {
+    document.getElementById("start-doom-game-btn").style.display = "none";
+    startdoomGame();
+});
 
-document.getElementById('start-doom-game-btn').addEventListener('click', startdoomGame);
+//document.getElementById('start-doom-game-btn').addEventListener('click', startdoomGame);
 
 // Bouton pour lancer doom Game (DOOM)
 document.getElementById("start-doom-game-btn").addEventListener("click", () => {
