@@ -33,7 +33,7 @@ def signin_user(request):
                 signin_error_message = 'Wrong credentials'
                 panel_html = render_to_string('pong/partials/panel.html', context={'sign_form': sign_form, 'signin_error_message': signin_error_message}, request=request)
                 return JsonResponse({'panel_html': panel_html})
-    sign_html = render_to_string('pong/partials/signin_form.html', {'sign_form': sign_form, 'signin_error_message': signin_error_message}, request=request)
+    sign_html = render_to_string('pong/partials/signin.html', {'sign_form': sign_form, 'signin_error_message': signin_error_message}, request=request)
     return JsonResponse({'sign_html': sign_html})
 
 #    return render(request, 'pong/partials/signin.html', context={'sign_form': sign_form, 'signin_error_message': signin_error_message})
