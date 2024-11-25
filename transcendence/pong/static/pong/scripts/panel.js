@@ -16,8 +16,8 @@ document.addEventListener('htmx:afterRequest', function(evt) {
                 document.getElementById('chatSection').innerHTML = response.chat_html;
             }
             if (response.sign_html) {
-                console.log("sign_form");
-                document.getElementById('sign_form').innerHTML = response.sign_html;
+                console.log("signForm");
+                document.getElementById('signForm').innerHTML = response.sign_html;
             }
     }
 
