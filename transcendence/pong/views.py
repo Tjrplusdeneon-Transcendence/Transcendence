@@ -31,7 +31,9 @@ def signin_user(request):
                 })
             else:
                 signin_error_message = 'Wrong credentials'
-    return render(request, 'pong/partials/signin.html', context={'sign_form': sign_form, 'signin_error_message': signin_error_message})
+    sign_html = render_to_string('pong/partials/signin_form.html', {'sign_form': sign_form, 'signin_error_message': signin_error_message}, request=request)
+    return JsonResponse({'sign_html': sign_html})
+#    return render(request, 'pong/partials/signin.html', context={'sign_form': sign_form, 'signin_error_message': signin_error_message})
 
 def signup_user(request):
     sign_form = forms.SignupForm()
@@ -47,7 +49,9 @@ def signup_user(request):
                 'panel_html': panel_html,
                 'chat_html': chat_html
             })
-    return render(request, 'pong/partials/signup.html', context={'sign_form': sign_form})
+    sign_html = render_to_string('pong/partials/signup.html', {'sign_form': sign_form}, request=request)
+    return JsonResponse({'sign_html': sign_html})
+#    return render(request, 'pong/partials/signup.html', context={'sign_form': sign_form})
 
 def logout_user(request):
     logout(request)

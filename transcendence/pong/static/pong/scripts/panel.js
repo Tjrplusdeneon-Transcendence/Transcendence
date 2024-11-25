@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOMContentLoaded");
     attachEventListeners();
 });
 
@@ -6,13 +7,23 @@ document.addEventListener('htmx:afterRequest', function(evt) {
     // Process the response
     if (evt.detail.xhr.responseText) {
             const response = JSON.parse(evt.detail.xhr.responseText);
-            document.getElementById('loginPanel').innerHTML = response.panel_html;
-            document.getElementById('chatSection').innerHTML = response.chat_html;
+            if (response.panel_html) {
+                console.log("loginPanel");
+                document.getElementById('loginPanel').innerHTML = response.panel_html;
+            }
+            if (response.chat_html) {
+                console.log("chatSection");
+                document.getElementById('chatSection').innerHTML = response.chat_html;
+            }
+            if (response.sign_html) {
+                console.log("sign_form");
+                document.getElementById('sign_form').innerHTML = response.sign_html;
+            }
     }
-    
+
     // Reinitialize HTMX for the updated content
     htmx.process(document.body);
-    
+
     // Reinitialize WebSocket and event listeners after content update
     if (document.getElementById('chatContainer')) {
         initializeWebSocket();
