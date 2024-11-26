@@ -7,7 +7,7 @@ from pong.models import Chat
 
 class SigninForm(forms.Form):
     username = forms.CharField(
-        max_length=63,
+        max_length=30,
         label='Username',
         widget=forms.TextInput(attrs={'autocomplete': 'username', 'placeholder': 'Username'})
     )
