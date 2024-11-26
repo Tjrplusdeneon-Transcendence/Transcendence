@@ -16,6 +16,7 @@ def index(request):
 def signin_user(request):
     sign_form = forms.SigninForm()
     signin_error_message = ''
+    sign_html = None
     if request.method == 'POST':
         sign_form = forms.SigninForm(request.POST)
         if sign_form.is_valid():
@@ -37,6 +38,7 @@ def signin_user(request):
 
 def signup_user(request):
     sign_form = forms.SignupForm()
+    sign_html = None
     if request.method == 'POST':
         sign_form = forms.SignupForm(request.POST)
         if sign_form.is_valid():
