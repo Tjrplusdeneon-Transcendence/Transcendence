@@ -58,7 +58,8 @@ function attachFormSubmitListener() {
     if (messageInput && messageSubmit) {
         messageInput.onkeyup = function(e) {
             if (e.key === 'Enter') {
-                messageSubmit.click();
+                tournamentGameStarting();
+                // messageSubmit.click();
             }
         };
 
