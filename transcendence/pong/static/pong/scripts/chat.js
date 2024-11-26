@@ -123,7 +123,7 @@ function attachJoinGameButtonListener() {
 //             closeChatSocket();
 //         });
 //     }
-}
+// }
 
 function attachEventListeners() {
     attachFormSubmitListener();
