@@ -41,13 +41,12 @@ function initializeWebSocket() {
     };
 }
 
-function tournamentGameStarting() {
+function tournamentGameStarting(playerId) {
     const messageList = document.getElementById('messageList');
     const chatBox = document.getElementById('chatBox');
-    
-    if (messageList && chatBox) {
-        messageList.innerHTML += "<li><span class=\"message other-message\">Tournament game starts now</span></li>";
-        chatBox.scrollTop = chatBox.scrollHeight;    
+
+    if (playerId) {
+        chatSocket.send(JSON.stringify({'tournament': playerId }));
     }
 }
 
@@ -65,7 +64,7 @@ function attachFormSubmitListener() {
         messageSubmit.onclick = function(e) {
             const message = messageInput.value.trim();
             if (message) {
-                chatSocket.send(JSON.stringify({ 'message': message }));
+                chatSocket.send(JSON.stringify({'message': message }));
                 messageInput.value = '';
             }
         };
@@ -76,10 +75,11 @@ function attachInfoButtonListener() {
     document.querySelectorAll('.info-button').forEach(button => {
         button.onclick = function(e) {
             const senderId = e.target.getAttribute('user-id');
-            const authorId = e.target.getAttribute('author-id');
-            if (authorId) {
-                chatSocket.send(JSON.stringify({ 'info': authorId, 'sender': senderId }));
-            }
+            tournamentGameStarting(senderId); // TO REMOVE
+            // const authorId = e.target.getAttribute('author-id');
+            // if (authorId) {
+            //     chatSocket.send(JSON.stringify({ 'info': authorId, 'sender': senderId }));
+            // }
         };
     });
 }

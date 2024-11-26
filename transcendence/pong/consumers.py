@@ -55,6 +55,14 @@ class ChatConsumer(WebsocketConsumer):
                 'other_id': other_id,
             }
             async_to_sync(self.channel_layer.group_send)(f"user_{sender_id}", event)  # Send info to the user's group
+        elif 'tournament' in data:
+            player_id = data['playerId']
+            event = {'type': 'tournament_handler'}
+            async_to_sync(self.channel_layer.group_send)(f"user_{player_id}", event)  # Send reminder to the user's group
+    
+    def tournament_handler(self, event):
+        html = render_to_string("<li><span class=\"message other-message\">Tournament game starts now</span></li>")
+        self.send(text_data=html)
 
     def info_handler(self, event):
         other = User.objects.get(id=event['other_id'])
