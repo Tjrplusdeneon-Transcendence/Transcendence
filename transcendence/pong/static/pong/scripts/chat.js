@@ -117,6 +117,7 @@ function attachJoinGameButtonListener() {
 }
 
 function attachLogoutButtonListener() {
+    console.log("ICI CHAT.JS");
     const logoutButton = document.getElementById('logoutButton');
     if (logoutButton) {
         logoutButton.addEventListener('click', function() {

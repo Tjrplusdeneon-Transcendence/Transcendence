@@ -51,6 +51,7 @@ function attachLoginButtonListener() {
 }
 
 function attachLogoutButtonListener() {
+    console.log("ICI PANEL.JS");
     const logoutButton = document.getElementById('logoutButton');
     if (logoutButton) {
         logoutButton.addEventListener('click', function() {
