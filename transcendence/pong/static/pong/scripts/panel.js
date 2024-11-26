@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("DOMContentLoaded");
     attachEventListeners();
 });
 
@@ -9,11 +8,9 @@ document.addEventListener('htmx:afterRequest', function(evt) {
         if (evt.detail.xhr.responseText) {
                 const response = JSON.parse(evt.detail.xhr.responseText);
                 if (response.panel_html) {
-                    console.log("loginPanel");
                     document.getElementById('loginPanel').innerHTML = response.panel_html;
                 }
                 if (response.chat_html) {
-                    console.log("chatSection");
                     document.getElementById('chatSection').innerHTML = response.chat_html;
                 }
         }
