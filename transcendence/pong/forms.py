@@ -25,15 +25,17 @@ class SignupForm(UserCreationForm):
             "username": None,
         }
     username = forms.CharField(
-        max_length=63,
+        max_length=30,
         label='Username',
         widget=forms.TextInput(attrs={'autocomplete': 'username', 'placeholder': 'Username'})
     )
     password1 = forms.CharField(
+        max_length=63,
         label='Password',
         widget=forms.PasswordInput(attrs={'autocomplete': 'new-password', 'placeholder': 'Password'})
     )
     password2 = forms.CharField(
+        max_length=63,
         label='Confirm Password',
         widget=forms.PasswordInput(attrs={'autocomplete': 'new-password', 'placeholder': 'Confirm Password'})
     )
