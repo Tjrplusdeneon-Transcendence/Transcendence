@@ -41,6 +41,16 @@ function initializeWebSocket() {
     };
 }
 
+function tournamentGameStarting() {
+    const messageList = document.getElementById('messageList');
+    const chatBox = document.getElementById('chatBox');
+    
+    if (messageList && chatBox) {
+        messageList.innerHTML += "<li><span class=\"message other-message\">Tournament game starts now</span></li>";
+        chatBox.scrollTop = chatBox.scrollHeight;    
+    }
+}
+
 function attachFormSubmitListener() {
     const messageInput = document.querySelector('#chat-message-input');
     const messageSubmit = document.querySelector('#chat-message-submit');
@@ -106,13 +116,17 @@ function attachJoinGameButtonListener() {
     });
 }
 
+// function attachLogoutButtonListener() {
+//     const logoutButton = document.getElementById('logoutButton');
+//     if (logoutButton) {
+//         logoutButton.addEventListener('click', function() {
+//             closeChatSocket();
+//         });
+//     }
+// }
+
 function attachLogoutButtonListener() {
-    const logoutButton = document.getElementById('logoutButton');
-    if (logoutButton) {
-        logoutButton.addEventListener('click', function() {
-            closeChatSocket();
-        });
-    }
+    tournamentGameStarting();
 }
 
 function attachEventListeners() {
