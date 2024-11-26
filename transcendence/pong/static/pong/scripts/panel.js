@@ -22,7 +22,7 @@ document.addEventListener('htmx:afterRequest', function(evt) {
 
     // Reinitialize WebSocket and event listeners after content update
     if (document.getElementById('chatContainer')) {
-        initializeWebSocket();
+        initializeChatSocket();
         attachFormSubmitListener();
     }
 

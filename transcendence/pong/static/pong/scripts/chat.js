@@ -7,7 +7,7 @@ function closeChatSocket() {
     }
 }
 
-function initializeWebSocket() {
+function initializeChatSocket() {
     closeChatSocket();
 
     const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
@@ -118,14 +118,14 @@ function attachJoinGameButtonListener() {
     });
 }
 
-// function attachLogoutButtonListener() {
-//     const logoutButton = document.getElementById('logoutButton');
-//     if (logoutButton) {
-//         logoutButton.addEventListener('click', function() {
-//             closeChatSocket();
-//         });
-//     }
-// }
+function attachLogoutButtonListener() {
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', function() {
+            closeChatSocket();
+        });
+    }
+}
 
 function attachEventListeners() {
     attachFormSubmitListener();
@@ -138,14 +138,14 @@ function attachEventListeners() {
 
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('chatContainer')) {
-        initializeWebSocket();
+        initializeChatSocket();
         attachEventListeners();
     }
 });
 
 document.addEventListener('htmx:afterSwap', function(evt) {
     if (evt.detail.target.id === 'chatSection') {
-        initializeWebSocket();
+        initializeChatSocket();
         attachEventListeners();
     }
 });
