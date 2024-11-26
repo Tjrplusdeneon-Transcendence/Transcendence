@@ -51,13 +51,12 @@ function attachLoginButtonListener() {
 }
 
 function attachLogoutButtonListener() {
-    tournamentGameStarting();
-    // const logoutButton = document.getElementById('logoutButton');
-    // if (logoutButton) {
-    //     logoutButton.addEventListener('click', function() {
-    //         closeChatSocket();
-    //     });
-    // }
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', function() {
+            closeChatSocket();
+        });
+    }
 }
 
 function attachCloseButtonListener() {
