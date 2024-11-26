@@ -37,7 +37,7 @@ function initializeWebSocket() {
     };
 
     chatSocket.onclose = function(e) {
-        console.error('Chat socket closed unexpectedly');
+        console.log('Chat socket closed');
     };
 }
 
@@ -116,17 +116,13 @@ function attachJoinGameButtonListener() {
     });
 }
 
-// function attachLogoutButtonListener() {
-//     const logoutButton = document.getElementById('logoutButton');
-//     if (logoutButton) {
-//         logoutButton.addEventListener('click', function() {
-//             closeChatSocket();
-//         });
-//     }
-// }
-
 function attachLogoutButtonListener() {
-    tournamentGameStarting();
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', function() {
+            closeChatSocket();
+        });
+    }
 }
 
 function attachEventListeners() {
