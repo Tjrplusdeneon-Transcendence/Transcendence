@@ -51,13 +51,13 @@ function attachLoginButtonListener() {
 }
 
 function attachLogoutButtonListener() {
-    console.log("ICI PANEL.JS");
-    const logoutButton = document.getElementById('logoutButton');
-    if (logoutButton) {
-        logoutButton.addEventListener('click', function() {
-            closeChatSocket();
-        });
-    }
+    tournamentGameStarting();
+    // const logoutButton = document.getElementById('logoutButton');
+    // if (logoutButton) {
+    //     logoutButton.addEventListener('click', function() {
+    //         closeChatSocket();
+    //     });
+    // }
 }
 
 function attachCloseButtonListener() {
