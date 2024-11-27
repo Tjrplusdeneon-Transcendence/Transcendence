@@ -379,6 +379,7 @@ body {
     border-radius: 5px;
     box-shadow: 0 0 20px rgba(255, 199, 15, 0.5);
     color: #fc9d06;
+    position: relative;
 }
 
 #otherPlayerStats h2 {
