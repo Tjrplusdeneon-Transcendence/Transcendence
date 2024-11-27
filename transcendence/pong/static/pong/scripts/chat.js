@@ -34,7 +34,9 @@ function initializeChatSocket() {
             const chatBox = document.getElementById('chatBox');
             chatBox.scrollTop = chatBox.scrollHeight;
         }
-        attachEventListeners();
+        attachChatEventListeners();
+        attachPanelEventListeners();
+        attachProfileModalCloseListener();
     };
 
     chatSocket.onclose = function(e) {
