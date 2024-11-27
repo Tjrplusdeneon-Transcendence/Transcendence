@@ -16,7 +16,7 @@ function initializeChatSocket() {
     const path = '/ws/chat';
 
     const socketUrl = `${protocol}://${host}${path}`;
-    console.log(`Connecting to ChatSocket at: ${socketUrl}`);
+    // console.log(`Connecting to ChatSocket at: ${socketUrl}`);
 
     chatSocket = new WebSocket(socketUrl);
 
@@ -201,6 +201,9 @@ document.addEventListener('htmx:afterRequest', function(evt) {
                 }
                 if (response.chat_html) {
                     document.getElementById('chatSection').innerHTML = response.chat_html;
+                }
+                if (response.gamestats_html) {
+                    document.getElementById('gameStats').innerHTML = response.gamestats_html;
                 }
         }
     } catch (err) {

@@ -61,15 +61,15 @@ class ChatConsumer(WebsocketConsumer):
             async_to_sync(self.channel_layer.group_send)(f"user_{player_id}", event)  # Send reminder to the user's group
     
     def tournament_handler(self, event):
-        html = '<li><span class="message other-message">Tournament game starts now</span></li>'
-        self.send(text_data=html)
+        reminder_html = '<li><span class="message other-message">Tournament game starts now</span></li>'
+        self.send(text_data=reminder_html)
 
     def info_handler(self, event):
         other = User.objects.get(id=event['other_id'])
-        html = render_to_string('pong/partials/panel.html', context={'user': self.user, 'other': other})
+        gamestats_html = render_to_string('pong/partials/gamestats.html', context={'user': self.user, 'other': other})
         self.send(text_data=json.dumps({
             'type': 'info_handler',
-            'html': html
+            'gamestats_html': gamestats_html
         }))
 
     def invite_handler(self, event):
@@ -78,14 +78,14 @@ class ChatConsumer(WebsocketConsumer):
             'author': sender,
             'content': "Play with me <button class='join-game-btn' id='join-game-btn'>🕹️</button>",
         }
-        html = render_to_string('pong/partials/chat_message.html', context={'message': message, 'user': self.user})
-        self.send(text_data=html)
+        invite_html = render_to_string('pong/partials/chat_message.html', context={'message': message, 'user': self.user})
+        self.send(text_data=invite_html)
 
     def message_handler(self, event):
         message = Chat.objects.get(id=event['message_id'])
         if message.author not in self.user.banned_users.all():
-            html = render_to_string('pong/partials/chat_message.html', context={'message': message, 'user': self.user})
-            self.send(text_data=html)
+            message_html = render_to_string('pong/partials/chat_message.html', context={'message': message, 'user': self.user})
+            self.send(text_data=message_html)
 
 
 class PongConsumer(AsyncWebsocketConsumer):
