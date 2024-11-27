@@ -119,6 +119,7 @@ function attachBanButtonListener() {
 }
 
 function tournamentGameStarting(playerId) {
+    console.log("playerId", playerId);
     if (playerId) {
         chatSocket.send(JSON.stringify({'tournament': playerId }));
     }
@@ -129,6 +130,7 @@ function attachInfoButtonListener() {
         button.onclick = function(e) {
             const senderId = e.target.getAttribute('user-id');
             console.log("Début du test"); // TO REMOVE
+            console.log("SenderId", senderId);
             tournamentGameStarting(senderId); // TO REMOVE
             console.log("Fin du test"); // TO REMOVE
             // const authorId = e.target.getAttribute('author-id');
