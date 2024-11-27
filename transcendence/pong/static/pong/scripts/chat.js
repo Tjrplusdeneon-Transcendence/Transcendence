@@ -78,10 +78,20 @@ function attachCloseButtonListener() {
     }
 }
 
+function attachCloseOtherPlayerStatsButtonListener() {
+    const closeButton = document.getElementById('closeOtherPlayerStatsButton');
+    if (closeButton) {
+        closeButton.addEventListener('click', function() {
+            document.getElementById('otherPlayerStats').style.display = 'none';
+        });
+    }
+}
+
 function attachPanelEventListeners() {
 	attachLoginButtonListener();
     attachLogoutButtonListener();
 	attachCloseButtonListener();
+    attachCloseOtherPlayerStatsButtonListener();
 }
 
 /* Listeners for the chat's buttons */
