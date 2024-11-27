@@ -129,14 +129,10 @@ function attachInfoButtonListener() {
     document.querySelectorAll('.info-button').forEach(button => {
         button.onclick = function(e) {
             const senderId = e.target.getAttribute('user-id');
-            console.log("Début du test"); // TO REMOVE
-            console.log("SenderId", senderId);
-            tournamentGameStarting(senderId); // TO REMOVE
-            console.log("Fin du test"); // TO REMOVE
-            // const authorId = e.target.getAttribute('author-id');
-            // if (authorId) {
-            //     chatSocket.send(JSON.stringify({ 'info': authorId, 'sender': senderId }));
-            // }
+            const authorId = e.target.getAttribute('author-id');
+            if (authorId) {
+                chatSocket.send(JSON.stringify({ 'info': authorId, 'sender': senderId }));
+            }
         };
     });
 }
