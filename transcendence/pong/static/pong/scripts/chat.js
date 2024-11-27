@@ -26,7 +26,7 @@ function initializeChatSocket() {
         try {
             const data = JSON.parse(e.data);
             if (data.type === 'info_handler') {
-                document.getElementById('loginPanel').innerHTML = data.html;
+                document.getElementById('gameStats').innerHTML = data.gamestats_html;
             }
         } catch (err) {
             // If parsing fails, assume it's HTML and append it to messageList
@@ -201,9 +201,6 @@ document.addEventListener('htmx:afterRequest', function(evt) {
                 }
                 if (response.chat_html) {
                     document.getElementById('chatSection').innerHTML = response.chat_html;
-                }
-                if (response.gamestats_html) {
-                    document.getElementById('gameStats').innerHTML = response.gamestats_html;
                 }
         }
     } catch (err) {
