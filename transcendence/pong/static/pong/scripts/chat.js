@@ -72,12 +72,13 @@ function attachFormSubmitListener() {
 }
 
 function attachInfoButtonListener() {
+    console.log("attachInfoButtonListener");
     document.querySelectorAll('.info-button').forEach(button => {
         button.onclick = function(e) {
             const senderId = e.target.getAttribute('user-id');
-            console.log("Début du test");
+            console.log("Début du test"); // TO REMOVE
             tournamentGameStarting(senderId); // TO REMOVE
-            console.log("Fin du test");
+            console.log("Fin du test"); // TO REMOVE
             // const authorId = e.target.getAttribute('author-id');
             // if (authorId) {
             //     chatSocket.send(JSON.stringify({ 'info': authorId, 'sender': senderId }));
@@ -87,6 +88,7 @@ function attachInfoButtonListener() {
 }
 
 function attachBanButtonListener() {
+    console.log("attachBanButtonListener");
     document.querySelectorAll('.ban-button').forEach(button => {
         button.onclick = function(e) {
             const authorId = e.target.getAttribute('author-id');
@@ -98,6 +100,7 @@ function attachBanButtonListener() {
 }
 
 function attachInviteButtonListener() {
+    console.log("attachInviteButtonListener");
     document.querySelectorAll('.invite-button').forEach(button => {
         button.onclick = function(e) {
             const senderId = e.target.getAttribute('user-id');
@@ -119,6 +122,7 @@ function attachJoinGameButtonListener() {
 }
 
 function attachLogoutButtonListener() {
+    console.log("attachLogoutButtonListener");
     const logoutButton = document.getElementById('logoutButton');
     if (logoutButton) {
         logoutButton.addEventListener('click', function() {
