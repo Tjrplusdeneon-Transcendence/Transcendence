@@ -31,6 +31,7 @@ document.addEventListener('htmx:afterRequest', function(evt) {
 });
 
 function attachEventListeners() {
+    console.log("PANEL.js");
     attachLoginButtonListener();
     attachLogoutButtonListener();
     attachCloseButtonListener();

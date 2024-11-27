@@ -132,6 +132,7 @@ function attachLogoutButtonListener() {
 }
 
 function attachEventListeners() {
+    console.log("CHAT.js");
     attachFormSubmitListener();
     attachBanButtonListener();
     attachInviteButtonListener();
