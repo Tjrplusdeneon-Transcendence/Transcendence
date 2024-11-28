@@ -218,8 +218,10 @@ function drawBall(posX = x, posY = y, opacity = 1)
 function gameOverMessage() {
     document.getElementById('go-back-btn').disabled = false;
     if (isMatchmaking) {
-        document.getElementById('rematch-btn').disabled = false;
+        if (document.getElementById('rematch-btn').textContent !== 'Opponent has left the match') {
+            document.getElementById('rematch-btn').disabled = false;
         document.getElementById('quit-btn').disabled = false;
+        }
     }
     context.clearRect(canvas.width / 2 - 250, canvas.height / 2 - 100, 500, 150);
     isRestarting = false;
@@ -939,8 +941,6 @@ function startGame() {
 
     gameRunning = false;
     winner = '';
-    // isAIEnabled = false;
-    isMatchmaking = false;
     aiTargetY = canvas.height / 2 - paddleHeight / 2;
 
     aiLastScanTime = 0;
@@ -1312,15 +1312,15 @@ document.getElementById('rematch-btn').addEventListener('click', function() {
     socket.send(JSON.stringify({ type: 'rematch', player: playerRole }));
 });
 
-document.getElementById('quit-btn').addEventListener('click', function() {
-    socket.send(JSON.stringify({ type: 'quit' }));
-    resetMatchmakingState();
-    document.getElementById('multiplayer-menu').style.display = 'flex';
-    document.getElementById('rematch-btn').style.display = 'none';
-    document.getElementById('quit-btn').style.display = 'none';
-    document.getElementById('pongCanvas').style.display = 'none'; // Hide the game canvas
-    document.getElementById('go-back-btn').style.display = 'none'; // Hide the "Go Back" button
-});
+// document.getElementById('quit-btn').addEventListener('click', function() {
+//     // socket.send(JSON.stringify({ type: 'quit' }));
+//     // resetMatchmakingState();
+//     // document.getElementById('multiplayer-menu').style.display = 'flex';
+//     // document.getElementById('rematch-btn').style.display = 'none';
+//     // document.getElementById('quit-btn').style.display = 'none';
+//     // document.getElementById('pongCanvas').style.display = 'none'; // Hide the game canvas
+//     // document.getElementById('go-back-btn').style.display = 'none'; // Hide the "Go Back" button
+// });
 
 function initializeGameState(initialState) {
     x = initialState.ball_position[0];
@@ -1840,6 +1840,11 @@ function showLocalMultiplayerMenu() {
 }
 
 function showMultiplayerMenu() {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        resetMatchmakingState();
+        socket.send(JSON.stringify({ type: 'quit' })); 
+        socket.close();
+    }
     resetDisplay();
     document.getElementById('multiplayer-menu').style.display = 'flex';
     document.getElementById('go-back-btn').style.display = 'inline-block';
@@ -1895,6 +1900,14 @@ document.getElementById('start-solo-game-btn').addEventListener('click', functio
 });
 
 document.getElementById('go-back-btn').addEventListener('click', function() {
+    history.back();
+});
+
+document.getElementById('quit-btn').addEventListener('click', function() {
+    socket.send(JSON.stringify({ type: 'quit' }));
+    socket.close();
+    resetMatchmakingState();
+    resetDisplay();
     history.back();
 });
 
