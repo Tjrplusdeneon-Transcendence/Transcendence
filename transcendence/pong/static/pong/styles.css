@@ -1,4 +1,3 @@
-/* BASE */
 html, body { 
     width: 100vw;
     height: 100vh; 
@@ -30,7 +29,6 @@ body {
     position: relative;
 }
 
-/* Visual effect */
 #glitchVideo {
     position: absolute;
     top: 0;
@@ -43,7 +41,6 @@ body {
     pointer-events: none;
 }
 
-/* Modal */
 .modal {
     pointer-events: none;
     z-index: 990;
@@ -157,7 +154,6 @@ body {
     animation: neon-glow 2s infinite alternate;
 }
 
-/* Difficulty selector */
 .difficulty-menu, .difficulty-menu-m {
     display: flex;
     flex-direction: column;
@@ -225,7 +221,6 @@ body {
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.5), 0 0 25px rgba(255, 0, 255, 0.5);
 }
 
-/* Title */
 .title-container{
     color: #ffffff;
     position:absolute;
@@ -235,7 +230,6 @@ body {
     transform: translate(-50%, -50%);
 }
 
-/* Login */
 .login-panel {
     display: none;
     position: fixed;
@@ -380,7 +374,6 @@ body {
     color: #ffffff;
 }
 
-/* Chat */
 .chat-container {
     position: absolute;
     top: 10%;
@@ -491,7 +484,6 @@ body {
   font-size: 12px;
 }
 
-/* Buttons in chat messages */
 .ban-button {
     background: none;
     border: none;
@@ -521,29 +513,18 @@ body {
 .join-game-btn {
     background: none;
     border: none;
-    color: #2ecc71; /* Set the color to green */
     cursor: pointer;
-    font-size: 1.2em; /* Adjust size as needed */
     padding: 0;
     display: inline;
 }
 
 .join-game-btn:hover {
-    color: #27ae60; /* Change to a darker green on hover, adjust as needed */
 }
 
 .info-button {
-    background-color: transparent; /* Remove background color */
-    border: none; /* Remove border */
-    color: inherit; /* Inherit text color from parent */
-    cursor: pointer; /* Change cursor to pointer */
-    font-size: 1em; /* Adjust font size as needed */
-    padding: 0; /* Remove padding */
-    outline: none; /* Remove focus outline */
 }
 
 .info-button:hover {
-    color: #007BFF; /* Change color on hover, adjust as needed */
 }
 
 
@@ -553,44 +534,33 @@ li {
     flex-direction: column;
     align-items: flex-start;
     margin: 10px 0;
-    clear: both; /* Ensure each message starts on a new line */
 }
 
-/* Common styles for messages */
 .message {
-    padding: 5px; /* Ensure some padding inside the bubble */
-    margin: 10px 0; /* Adjust margin for better spacing */
     border-radius: 10px;
-    max-width: 60%; /* Ensure the bubble doesn't exceed 60% of the chat box width */
     position: relative;
     word-wrap: break-word;
     overflow-wrap: break-word;
     font-size: 14px;
     color: white;
-    text-align: left; /* Align text to the left inside the bubble */
     border: 1px solid transparent;
-    background-clip: padding-box; /* Ensure gradient doesn't cover text */
     display: block;
     max-width: 75%;
     width: fit-content;
 }
 
-/* Specific styles for user messages */
 .user-message {
     background: linear-gradient(15deg, #D400FF, #FF8400);
-    align-self: flex-end; /* Align the bubble to the right */
     margin-left: auto;
     text-align: end;
 }
 
-/* Specific styles for other messages */
 .other-message {
     background: linear-gradient(135deg, #FF8400, #D400FF);
     align-self: flex-start;
     margin-top: 0px;
 }
 
-/* Users profile */
 .synthwave-modal {
     background: linear-gradient(135deg, #1e1e1e, #2b2b2b);
     border: 2px solid #ff8400;
@@ -649,7 +619,6 @@ li {
     font-size: 24px;
 }
 
-/* Slider */
 .slider_section {
     position: absolute;
     width: 70%;
@@ -796,16 +765,12 @@ li {
     transition: opacity 0.15s ease-in-out;
 }
 
-/* Games */
 #pongCanvas {
     width: 100%;
     height: auto;
     background-color: #1a1a1a;
     border: 5px solid;
     border-image: linear-gradient(to right, 
-        #ff00fb, #ff00fb 1%, /* Pink on the left */
-        #ff00fb 25%, #00FFFF 75%, /* Cyan in the center */
-        #00FFFF 75%, #00FFFF /* Pink on the right */
     ) 1;
     box-shadow: 0 0 20px rgba(187, 0, 255, 0.5);
     position: relative;
@@ -1086,20 +1051,12 @@ li {
     transform: scale(1.03);
 }
 
-
-
-
-
-
-
-/* Styles pour le conteneur principal */
 #gamecustom-blackout, #paddle-size {
     color: #00ffff; 
     margin-bottom: 10px;
     letter-spacing: 1px;
 }
 
-/* Style pour les labels */
 #gamecustom-blackout label, label[for="paddle-size"] {
     display: block;
     color: #ff00fb; 
@@ -1107,7 +1064,6 @@ li {
     font-size: 14px;
 }
 
-/* Style pour la checkbox */
 #darknessTogg, #shuffleToggle, #hintToggle {
     accent-color: #00ffff; 
     transform: scale(1.3); 
@@ -1115,7 +1071,6 @@ li {
     cursor: pointer;
 }
 
-/* Style pour le curseur de la barre de réglage */
 #paddle-size {
     -webkit-appearance: none; 
     width: 100%;
@@ -1133,7 +1088,6 @@ li {
     box-shadow: 0 0 25px rgba(255, 0, 251, 0.9);
 }
 
-/* Curseur de la barre de réglage */
 #paddle-size::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 20px;
@@ -1150,7 +1104,6 @@ li {
     box-shadow: 0 0 25px rgba(255, 0, 251, 0.9);
 }
 
-/* Style pour afficher la taille actuelle de la raquette */
 #paddle-size-display {
     display: inline-block;
     font-size: 18px;
@@ -1211,3 +1164,45 @@ li {
     border-color: #ff00ea;
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.5), 0 0 25px rgba(255, 0, 255, 0.5);
 }
+
+#pong-game-customs {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.gamecustom-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gamecustom-label {
+    flex: 1; 
+    text-align: left;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.gamecustom-select, .gamecustom-checkbox, .gamecustom-input {
+    flex: 2; 
+}
+
+#paddle-size {
+    width: 100%;
+}
+
+.difficulty-menu .row {
+    margin-bottom: 1rem; 
+}
+
+.difficulty-menu .col-6 {
+    display: flex;
+    align-items: center;
+}
+
+.difficulty-menu .text-end {
+    justify-content: flex-end;
+    font-weight: bold;
+}
+
