@@ -466,74 +466,52 @@ const angleAdjustmentUp = 0.2;
 const angleAdjustmentDown = -0.2;
 
 function checkPaddleCollision(deltaTime) {
+    const minBounceAngle = Math.PI / 12;
+
     if (dx < 0 && x + dx * deltaTime < paddleWidth + ball.radius) {
         let futureY = y + dy * deltaTime;
 
-        if (futureY > paddleY1 && futureY < paddleY1 + paddleHeight) {
-            let angleAdjustment = 0;
-            if (paddleDirection === 1) {
-                angleAdjustment = angleAdjustmentUp;
-                console.log("Player moving up: dy =", dy);
-            } else if (paddleDirection === -1) {
-                angleAdjustment = angleAdjustmentDown;
-                console.log("Player moving down: dy =", dy);
-            } else {
-                console.log("Player not moving: dy =", dy);
-            }
-
+        if (futureY + ball.radius > paddleY1 && futureY - ball.radius < paddleY1 + paddleHeight) {
             let speed = Math.sqrt(dx * dx + dy * dy);
-            let angle = Math.atan2(dy, dx) + angleAdjustment;
-            let minAngleCap = (Math.PI * 4) / 11;
-            let maxAngleCap = (Math.PI * 7) / 11;
+            let angle = Math.atan2(dy, dx);
 
-            if (Math.abs(angle) > minAngleCap && Math.abs(angle) < maxAngleCap) {
-                angle = Math.atan2(dy, dx);
+            if (Math.abs(angle) < minBounceAngle) {
+                angle = Math.sign(angle || 1) * minBounceAngle;
             }
+
             dx = Math.abs(speed * Math.cos(angle));
             dy = speed * Math.sin(angle);
 
             console.log("New dx:", dx, "New dy:", dy);
 
-            x = paddleWidth + ball.radius;
+            x = paddleWidth + ball.radius; 
             ballMovingTowardsAI = true;
-            if (start_hits++ > 3)
-                aiHits++;
+            if (start_hits++ > 3) aiHits++;
         }
     }
 
     if (dx > 0 && x + dx * deltaTime > canvas.width - paddleWidth - ball.radius) {
         let futureY = y + dy * deltaTime;
 
-        if (futureY > paddleY2 && futureY < paddleY2 + paddleHeight) {
-            let angleAdjustment = 0;
-            if (paddleDirection === 1) {
-                angleAdjustment = angleAdjustmentDown;
-                console.log("Player 2 moving up: dy =", dy);
-            } else if (paddleDirection === -1) {
-                angleAdjustment = angleAdjustmentUp;
-                console.log("Player 2 moving down: dy =", dy);
-            } else {
-                console.log("Player 2 not moving: dy =", dy);
-            }
-
+        if (futureY + ball.radius > paddleY2 && futureY - ball.radius < paddleY2 + paddleHeight) {
             let speed = Math.sqrt(dx * dx + dy * dy);
-            let angle = Math.atan2(dy, dx) + angleAdjustment;
-            let minAngleCap = (Math.PI * 4) / 11;
-            let maxAngleCap = (Math.PI * 7) / 11;
+            let angle = Math.atan2(dy, dx);
 
-            if (Math.abs(angle) > minAngleCap && Math.abs(angle) < maxAngleCap) {
-                angle = Math.atan2(dy, dx);
+            if (Math.abs(angle) < minBounceAngle) {
+                angle = Math.sign(angle || 1) * minBounceAngle;
             }
+
             dx = -Math.abs(speed * Math.cos(angle));
             dy = speed * Math.sin(angle);
 
             console.log("New player 2 dx:", dx, "New player 2 dy:", dy);
 
-            x = canvas.width - paddleWidth - ball.radius;
+            x = canvas.width - paddleWidth - ball.radius; 
             ballMovingTowardsAI = false;
         }
     }
 }
+
 let previousPaddleY1 = [];
 let previousPaddleY2 = [];
 let previousBallPositions = [];
