@@ -45,6 +45,10 @@ function startMemory() {
     generateCardsBasedOnDifficulty();
     shuffle(cards);
     displayCards();
+
+    if (isOnlineMultiplayer && currentPlayer === playerRole_memory) {
+        sendMemoryGameState(); // Send the initial game state to the server
+    }
     if (isMemoryGameAIEnabled) {
         botMoveTimeout = setTimeout(botMove, 1000);
     }
@@ -170,17 +174,16 @@ function displayCards() {
     gameContainer.style.gridTemplateColumns = `repeat(${Math.sqrt(cards.length)}, 1fr)`;
 }
 
-function onCardClick(cardElement) 
-{
-    if (isPlayerTurn && flippedCards.length < 2 && cardElement.classList.contains('hidden')) 
-    {
+function onCardClick(cardElement) {
+    if (isPlayerTurn && flippedCards.length < 2 && cardElement.classList.contains('hidden') && (!isOnlineMultiplayer || currentPlayer === playerRole_memory)) {
         revealCard(cardElement);
         flippedCards.push(cardElement);
-        if (playerRole_memory) {
+        if (isOnlineMultiplayer) {
             sendCardFlip(cardElement.dataset.index); // Send card flip event to the server
         }
-        if (flippedCards.length === 2) 
+        if (flippedCards.length === 2) {
             checkForMatch();
+        }
     }
 }
 
@@ -197,22 +200,20 @@ function hideCard(cardElement)
     cardElement.classList.add('hidden');
 }
 
-function checkForMatch() 
-{
+function checkForMatch() {
     const [card1, card2] = flippedCards;
     const index1 = card1.dataset.index;
     const index2 = card2.dataset.index;
 
-    if (cards[index1].value === cards[index2].value) 
-    {
+    if (cards[index1].value === cards[index2].value) {
         card1.classList.add('matched');
         card2.classList.add('matched');
         cards[index1].matched = true;
         cards[index2].matched = true;
-    
+
         cards[index1].foundBy = isMemoryGameAIEnabled ? (isPlayerTurn ? 'player' : 'bot') : currentPlayer;
         cards[index2].foundBy = isMemoryGameAIEnabled ? (isPlayerTurn ? 'player' : 'bot') : currentPlayer;
-        
+
         matchedCards += 2;
         flippedCards = [];
         attempts = 0;
@@ -266,7 +267,7 @@ function checkForMatch()
                         endGame('Player 2');
                     }
                 }
-                if (playerRole_memory) {
+                if (isOnlineMultiplayer) {
                     sendMemoryGameState(); // Send updated game state to the server
                 }
             }, 500);
@@ -303,8 +304,10 @@ function checkForMatch()
                 currentPlayer = currentPlayer === 'player1' ? 'player2' : 'player1';
                 isPlayerTurn = true; // Ensure the next player can click
             }
-            if (playerRole_memory) {
+
+            if (isOnlineMultiplayer) {
                 sendMemoryGameState(); // Send updated game state to the server
+                sendCardFlipResult(index1, index2, false); // Send card flip result to the server
             }
         }, 1000);
     }
@@ -417,13 +420,17 @@ document.getElementById('leftSideM').addEventListener('click', () => {
     document.getElementById('start-solo-game-btn-memo').textContent = 'Start Game';
 });
 
+let isOnlineMultiplayer = false;
 let bothPlayersReady_memory = false;
 let playerReady_memory = false;
 let rematchRequested_memory = false;
 let playerRole_memory = null;
-// gestion du online
+let socket_memory = null;
 
+// gestion du online
 function launchOnlineMemoryGame() {
+    isOnlineMultiplayer = true;
+    isMemoryGameAIEnabled = false;
     document.getElementById('multiplayer-menu-memory').style.display = 'none';
     document.getElementById('searching-menu-memory').style.display = 'flex';
     document.getElementById('go-back-btn-memo').style.display = 'inline-block';
@@ -434,26 +441,26 @@ function launchOnlineMemoryGame() {
     const host = window.location.host;
     const path = '/ws/memory/';
 
-    const socket_memoryUrl = `${protocol}://${host}${path}`;
-    console.log(`Connecting to WebSocket at: ${socket_memoryUrl}`);
+    const socketUrl = `${protocol}://${host}${path}`;
+    console.log(`Connecting to WebSocket at: ${socketUrl}`);
 
-    socket_memory = new WebSocket(socket_memoryUrl);
+    socket_memory = new WebSocket(socketUrl);
 
-    socket.onopen = function(e) {
-        console.log('Websocket_memory connected.');
+    socket_memory.onopen = function(e) {
+        console.log('WebSocket connected.');
         socket_memory.send(JSON.stringify({ type: 'matchmaking' }));
     };
 
     socket_memory.onmessage = function(event) {
         const data = JSON.parse(event.data);
         if (data.type === 'match_found') {
-            playerRole = data.player;
+            playerRole_memory = data.player;
             document.getElementById('searching-btn-memory').textContent = 'Start Match';
             document.getElementById('searching-btn-memory').disabled = false;
             document.getElementById('searching-btn-memory').classList.add('active');
         } else if (data.type === 'player_ready') {
-            if (data.player !== playerRole) {
-                bothPlayersReady = true;
+            if (data.player !== playerRole_memory) {
+                bothPlayersReady_memory = true;
                 document.getElementById('searching-btn-memory').textContent = 'Start Match';
                 document.getElementById('searching-btn-memory').disabled = false;
                 document.getElementById('searching-btn-memory').classList.add('active');
@@ -479,19 +486,21 @@ function launchOnlineMemoryGame() {
             document.getElementById('rematch-btn-memory').disabled = true;
             document.getElementById('quit-btn-memory').disabled = false;
         } else if (data.type === 'rematch') {
-            if (data.player !== playerRole) {
-                bothPlayersReady = true;
+            if (data.player !== playerRole_memory) {
+                bothPlayersReady_memory = true;
                 document.getElementById('rematch-btn-memory').textContent = 'Opponent wants a rematch';
                 document.getElementById('rematch-btn-memory').disabled = false;
                 document.getElementById('quit-btn-memory').disabled = false;
             }
-            if (rematchRequested && bothPlayersReady) {
+            if (rematchRequested_memory && bothPlayersReady_memory) {
                 socket_memory.send(JSON.stringify({ type: 'start_game' }));
             }
         } else if (data.type === 'game_update') {
             updateMemoryGameState(data.state);
         } else if (data.type === 'card_flipped') {
             handleCardFlip(data.player, data.card_index);
+        } else if (data.type === 'card_flip_result') {
+            handleCardFlipResult(data.player, data.card_indices, data.matched);
         }
     };
 
@@ -508,9 +517,9 @@ document.getElementById('searching-btn-memory').addEventListener('click', functi
     if (this.textContent === 'Start Match') {
         this.textContent = 'Waiting for opponent...';
         this.disabled = true;
-        playerReady = true;
-        socket_memory.send(JSON.stringify({ type: 'player_ready', player: playerRole }));
-        if (bothPlayersReady) {
+        playerReady_memory = true;
+        socket_memory.send(JSON.stringify({ type: 'player_ready', player: playerRole_memory }));
+        if (bothPlayersReady_memory) {
             socket_memory.send(JSON.stringify({ type: 'start_game' }));
         }
     }
@@ -519,8 +528,8 @@ document.getElementById('searching-btn-memory').addEventListener('click', functi
 document.getElementById('rematch-btn-memory').addEventListener('click', function() {
     this.textContent = 'Waiting for opponent...';
     this.disabled = true;
-    rematchRequested = true;
-    socket_memory.send(JSON.stringify({ type: 'rematch', player: playerRole }));
+    rematchRequested_memory = true;
+    socket_memory.send(JSON.stringify({ type: 'rematch', player: playerRole_memory }));
 });
 
 document.getElementById('quit-btn-memory').addEventListener('click', function() {
@@ -544,6 +553,7 @@ function initializeMemoryGameState(initialState) {
 
     // Ensure the game canvas is displayed
     document.getElementById('memory-game-container').style.display = 'grid';
+    displayCards();
 }
 
 function updateMemoryGameState(state) {
@@ -581,7 +591,7 @@ function sendCardFlip(cardIndex) {
     if (socket_memory && socket_memory.readyState === WebSocket.OPEN) {
         socket_memory.send(JSON.stringify({
             type: 'card_flip',
-            player: playerRole,
+            player: playerRole_memory,
             card_index: cardIndex
         }));
     }
@@ -598,5 +608,44 @@ function sendMemoryGameState() {
                 current_player: currentPlayer
             }
         }));
+    }
+}
+
+function sendCardFlipResult(index1, index2, matched) {
+    if (socket_memory && socket_memory.readyState === WebSocket.OPEN) {
+        socket_memory.send(JSON.stringify({
+            type: 'card_flip_result',
+            player: playerRole_memory,
+            card_indices: [index1, index2],
+            matched: matched
+        }));
+    }
+}
+function handleCardFlipResult(player, cardIndices, matched) {
+    const [index1, index2] = cardIndices;
+    const cardElement1 = document.querySelector(`.card[data-index='${index1}']`);
+    const cardElement2 = document.querySelector(`.card[data-index='${index2}']`);
+
+    if (matched) {
+        cardElement1.classList.add('matched');
+        cardElement2.classList.add('matched');
+        cards[index1].matched = true;
+        cards[index2].matched = true;
+
+        cards[index1].foundBy = player;
+        cards[index2].foundBy = player;
+
+        if (player === 'player1') {
+            cardElement1.classList.add('player1-match');
+            cardElement2.classList.add('player1-match');
+        } else {
+            cardElement1.classList.add('player2-match');
+            cardElement2.classList.add('player2-match');
+        }
+    } else {
+        setTimeout(() => {
+            hideCard(cardElement1);
+            hideCard(cardElement2);
+        }, 1000);
     }
 }
