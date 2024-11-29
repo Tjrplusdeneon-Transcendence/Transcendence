@@ -7,7 +7,6 @@ from pong.models import Chat
 from django.template.loader import render_to_string
 from django.middleware.csrf import get_token
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
 
 
 def view_404(request, exception=None):
@@ -71,8 +70,8 @@ def logout_user(request):
         })
 
 @login_required
-@require_POST
 def increase_wins(request):
+    print("WIN")
     user = request.user
     user.wins += 1
     user.score += 1
@@ -81,8 +80,8 @@ def increase_wins(request):
     return JsonResponse({'gamestats_html': gamestats_html})
 
 @login_required
-@require_POST
 def increase_losses(request):
+    print("LOSS")
     user = request.user
     user.losses += 1
     user.score -= 1
@@ -91,8 +90,8 @@ def increase_losses(request):
     return JsonResponse({'gamestats_html': gamestats_html})
 
 @login_required
-@require_POST
 def increase_games_played(request):
+    print("PLAYED")
     user = request.user
     user.games_played += 1
     user.save()

@@ -3,6 +3,7 @@ function isUserLogged() {
 }
 
 function increaseWins() {
+    console.log("NewWin");
     if (isUserLogged())
     {
         const csrfToken = document.querySelector('body').getAttribute('hx-headers').match(/"X-CSRFToken": "([^"]+)"/)[1];
@@ -24,6 +25,7 @@ function increaseWins() {
 }
 
 function increaseLosses() {
+    console.log("NewLoss");
     if (isUserLogged())
     {
         const csrfToken = document.querySelector('body').getAttribute('hx-headers').match(/"X-CSRFToken": "([^"]+)"/)[1];
@@ -45,6 +47,7 @@ function increaseLosses() {
 }
 
 function increaseGamesPlayed() {
+    console.log("NewGame");
     if (isUserLogged())
     {
         console.log("user is logged");
