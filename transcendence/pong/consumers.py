@@ -242,4 +242,146 @@ class PongConsumer(AsyncWebsocketConsumer):
         # Ensure the length is less than 100 characters
         return valid_name[:100]
 
+
+class MemoryConsumer(AsyncWebsocketConsumer):
+    players_waiting = []
+
+    async def connect(self):
+        await self.accept()
+        if self not in MemoryConsumer.players_waiting:
+            MemoryConsumer.players_waiting.append(self)
+
+        if len(MemoryConsumer.players_waiting) >= 2:
+            player1 = MemoryConsumer.players_waiting.pop(0)
+            player2 = MemoryConsumer.players_waiting.pop(0)
+
+            match_id = self.generate_valid_group_name(f"match_{player1.channel_name}_{player2.channel_name}")
+
+            await self.channel_layer.group_add(match_id, player1.channel_name)
+            await self.channel_layer.group_add(match_id, player2.channel_name)
+
+            await player1.send(json.dumps({'type': 'match_found', 'match_id': match_id, 'player': 'player1'}))
+            await player2.send(json.dumps({'type': 'match_found', 'match_id': match_id, 'player': 'player2'}))
+
+            player1.match_id = match_id
+            player2.match_id = match_id
+
+    async def disconnect(self, close_code):
+        if self in MemoryConsumer.players_waiting:
+            MemoryConsumer.players_waiting.remove(self)
+        else:
+            await self.channel_layer.group_discard(self.match_id, self.channel_name)
+            await self.channel_layer.group_send(
+                self.match_id,
+                {
+                    'type': 'opponent_left'
+                }
+            )
+
+    async def receive(self, text_data):
+        data = json.loads(text_data)
+        action = data.get('type')
+
+        if action == 'card_flip':
+            await self.channel_layer.group_send(
+                self.match_id,
+                {
+                    'type': 'card_flipped',
+                    'player': data['player'],
+                    'card_index': data['card_index']
+                }
+            )
+        elif action == 'game_update':
+            await self.channel_layer.group_send(
+                self.match_id,
+                {
+                    'type': 'game_update',
+                    'state': data['state']
+                }
+            )
+        elif action == 'player_ready':
+            await self.channel_layer.group_send(
+                self.match_id,
+                {
+                    'type': 'player_ready',
+                    'player': data['player']
+                }
+            )
+        elif action == 'start_game':
+            await self.channel_layer.group_send(
+                self.match_id,
+                {
+                    'type': 'start_game',
+                    'initial_state': self.generate_initial_game_state()
+                }
+            )
+        elif action == 'rematch':
+            await self.channel_layer.group_send(
+                self.match_id,
+                {
+                    'type': 'rematch',
+                    'player': data['player']
+                }
+            )
+        elif action == 'quit':
+            await self.channel_layer.group_send(
+                self.match_id,
+                {
+                    'type': 'opponent_left'
+                }
+            )
+
+    async def card_flipped(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'card_flipped',
+            'player': event['player'],
+            'card_index': event['card_index']
+        }))
+
+    async def game_update(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'game_update',
+            'state': event['state']
+        }))
+
+    async def player_ready(self, event):
+        player = event['player']
+        await self.send(text_data=json.dumps({
+            'type': 'player_ready',
+            'player': player
+        }))
+
+    async def start_game(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'start_game',
+            'initial_state': event['initial_state']
+        }))
+
+    async def rematch(self, event):
+        player = event['player']
+        await self.send(text_data=json.dumps({
+            'type': 'rematch',
+            'player': player
+        }))
+
+    async def opponent_left(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'opponent_left'
+        }))
+
+    def generate_initial_game_state(self):
+        # Generate the initial game state for the memory game
+        return {
+            'cards': [],  # Add initial card state here
+            'player1_points': 0,
+            'player2_points': 0,
+            'current_player': 'player1'
+        }
+
+    def generate_valid_group_name(self, name):
+        # Replace invalid characters with underscores
+        valid_name = re.sub(r'[^a-zA-Z0-9_\-\.]', '_', name)
+        # Ensure the length is less than 100 characters
+        return valid_name[:100]
+
 # ATTENTION: la ws doit être disconnect en cas de logout (sinon, erreur sur l'auteur du message, qui reste le premier utilisateur log)

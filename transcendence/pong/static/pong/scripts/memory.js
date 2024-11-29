@@ -40,20 +40,23 @@ document.getElementById('hintToggle').addEventListener('change', function() {
     hintModeEnabled = this.checked; 
 });
 
-function startMemory() 
-{
+function startMemory() {
     resetMemory();
     generateCardsBasedOnDifficulty();
     shuffle(cards);
     displayCards();
-    if (isMemoryGameAIEnabled)
+    if (isMemoryGameAIEnabled) {
         botMoveTimeout = setTimeout(botMove, 1000);
+    }
 
     const startButton = document.getElementById('start-solo-game-btn-memo');
     startButton.textContent = 'Go back';
 
     startButton.removeEventListener('click', startMemory);
     startButton.addEventListener('click', restartMemory);
+
+    // Ensure the game canvas is displayed
+    document.getElementById('memory-game-container').style.display = 'grid';
 }
 
 function resetMemory() 
@@ -173,6 +176,9 @@ function onCardClick(cardElement)
     {
         revealCard(cardElement);
         flippedCards.push(cardElement);
+        if (playerRole_memory) {
+            sendCardFlip(cardElement.dataset.index); // Send card flip event to the server
+        }
         if (flippedCards.length === 2) 
             checkForMatch();
     }
@@ -260,6 +266,9 @@ function checkForMatch()
                         endGame('Player 2');
                     }
                 }
+                if (playerRole_memory) {
+                    sendMemoryGameState(); // Send updated game state to the server
+                }
             }, 500);
         } else if (!isPlayerTurn && isMemoryGameAIEnabled) {
             botMoveTimeout = setTimeout(botMove, 1000);
@@ -293,6 +302,9 @@ function checkForMatch()
             } else {
                 currentPlayer = currentPlayer === 'player1' ? 'player2' : 'player1';
                 isPlayerTurn = true; // Ensure the next player can click
+            }
+            if (playerRole_memory) {
+                sendMemoryGameState(); // Send updated game state to the server
             }
         }, 1000);
     }
@@ -404,3 +416,187 @@ document.getElementById('leftSideM').addEventListener('click', () => {
     document.getElementById('return-menu-btn-memo').display = 'block';
     document.getElementById('start-solo-game-btn-memo').textContent = 'Start Game';
 });
+
+let bothPlayersReady_memory = false;
+let playerReady_memory = false;
+let rematchRequested_memory = false;
+let playerRole_memory = null;
+// gestion du online
+
+function launchOnlineMemoryGame() {
+    document.getElementById('multiplayer-menu-memory').style.display = 'none';
+    document.getElementById('searching-menu-memory').style.display = 'flex';
+    document.getElementById('go-back-btn-memo').style.display = 'inline-block';
+    document.getElementById('go-back-btn-memo').textContent = 'Go Back';
+    document.getElementById('return-menu-btn-memo').style.display = 'none';
+
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const host = window.location.host;
+    const path = '/ws/memory/';
+
+    const socket_memoryUrl = `${protocol}://${host}${path}`;
+    console.log(`Connecting to WebSocket at: ${socket_memoryUrl}`);
+
+    socket_memory = new WebSocket(socket_memoryUrl);
+
+    socket.onopen = function(e) {
+        console.log('Websocket_memory connected.');
+        socket_memory.send(JSON.stringify({ type: 'matchmaking' }));
+    };
+
+    socket_memory.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        if (data.type === 'match_found') {
+            playerRole = data.player;
+            document.getElementById('searching-btn-memory').textContent = 'Start Match';
+            document.getElementById('searching-btn-memory').disabled = false;
+            document.getElementById('searching-btn-memory').classList.add('active');
+        } else if (data.type === 'player_ready') {
+            if (data.player !== playerRole) {
+                bothPlayersReady = true;
+                document.getElementById('searching-btn-memory').textContent = 'Start Match';
+                document.getElementById('searching-btn-memory').disabled = false;
+                document.getElementById('searching-btn-memory').classList.add('active');
+            }
+        } else if (data.type === 'start_game') {
+            document.getElementById('searching-menu-memory').style.display = 'none';
+            document.getElementById('go-back-btn-memo').style.display = 'none';
+            document.getElementById('rematch-btn-memory').style.display = 'inline-block';
+            document.getElementById('quit-btn-memory').style.display = 'inline-block';
+            document.getElementById('quit-btn-memory').textContent = 'Quit Match';
+            document.getElementById('return-menu-btn-memo').style.display = 'inline-block';
+            document.getElementById('return-menu-btn-memo').disabled = true;
+            initializeMemoryGameState(data.initial_state);
+            startMemory();
+            resetMatchmakingStateMemory();
+            document.getElementById('rematch-btn-memory').disabled = true;
+            document.getElementById('quit-btn-memory').disabled = true;
+        } else if (data.type === 'opponent_left') {
+            document.getElementById('searching-btn-memory').textContent = 'Opponent has left the match';
+            document.getElementById('searching-btn-memory').disabled = true;
+            document.getElementById('searching-btn-memory').classList.remove('active');
+            document.getElementById('rematch-btn-memory').textContent = 'Opponent has left the match';
+            document.getElementById('rematch-btn-memory').disabled = true;
+            document.getElementById('quit-btn-memory').disabled = false;
+        } else if (data.type === 'rematch') {
+            if (data.player !== playerRole) {
+                bothPlayersReady = true;
+                document.getElementById('rematch-btn-memory').textContent = 'Opponent wants a rematch';
+                document.getElementById('rematch-btn-memory').disabled = false;
+                document.getElementById('quit-btn-memory').disabled = false;
+            }
+            if (rematchRequested && bothPlayersReady) {
+                socket_memory.send(JSON.stringify({ type: 'start_game' }));
+            }
+        } else if (data.type === 'game_update') {
+            updateMemoryGameState(data.state);
+        } else if (data.type === 'card_flipped') {
+            handleCardFlip(data.player, data.card_index);
+        }
+    };
+
+    socket_memory.onclose = function(event) {
+        console.log('WebSocket closed.');
+    };
+
+    socket_memory.onerror = function(error) {
+        console.error('WebSocket error:', error);
+    };
+}
+
+document.getElementById('searching-btn-memory').addEventListener('click', function() {
+    if (this.textContent === 'Start Match') {
+        this.textContent = 'Waiting for opponent...';
+        this.disabled = true;
+        playerReady = true;
+        socket_memory.send(JSON.stringify({ type: 'player_ready', player: playerRole }));
+        if (bothPlayersReady) {
+            socket_memory.send(JSON.stringify({ type: 'start_game' }));
+        }
+    }
+});
+
+document.getElementById('rematch-btn-memory').addEventListener('click', function() {
+    this.textContent = 'Waiting for opponent...';
+    this.disabled = true;
+    rematchRequested = true;
+    socket_memory.send(JSON.stringify({ type: 'rematch', player: playerRole }));
+});
+
+document.getElementById('quit-btn-memory').addEventListener('click', function() {
+    socket_memory.send(JSON.stringify({ type: 'quit' }));
+    resetMatchmakingStateMemory();
+    document.getElementById('multiplayer-menu-memory').style.display = 'flex';
+    document.getElementById('rematch-btn-memory').style.display = 'none';
+    document.getElementById('quit-btn-memory').style.display = 'none';
+    document.getElementById('memory-game-container').style.display = 'none';
+    document.getElementById('go-back-btn-memo').style.display = 'none';
+    document.getElementById('return-menu-btn-memo').style.display = 'inline-block';
+    document.getElementById('return-menu-btn-memo').disabled = false;
+});
+
+function initializeMemoryGameState(initialState) {
+    // Initialize the game state with the received initial state
+    cards = initialState.cards;
+    player1Points = initialState.player1_points;
+    player2Points = initialState.player2_points;
+    currentPlayer = initialState.current_player;
+
+    // Ensure the game canvas is displayed
+    document.getElementById('memory-game-container').style.display = 'grid';
+}
+
+function updateMemoryGameState(state) {
+    // Update the game state with the received state
+    cards = state.cards;
+    player1Points = state.player1_points;
+    player2Points = state.player2_points;
+    currentPlayer = state.current_player;
+    displayCards();
+}
+
+function handleCardFlip(player, cardIndex) {
+    // Handle the card flip event
+    const cardElement = document.querySelector(`.card[data-index='${cardIndex}']`);
+    revealCard(cardElement);
+    flippedCards.push(cardElement);
+    if (flippedCards.length === 2) {
+        checkForMatch();
+    }
+}
+
+function resetMatchmakingStateMemory() {
+    bothPlayersReady = false;
+    playerReady = false;
+    rematchRequested = false;
+    document.getElementById('searching-btn-memory').textContent = 'Searching for opponent...';
+    document.getElementById('searching-btn-memory').disabled = true;
+    document.getElementById('searching-btn-memory').classList.remove('active');
+    document.getElementById('rematch-btn-memory').textContent = 'Rematch';
+    document.getElementById('rematch-btn-memory').disabled = true;
+    document.getElementById('quit-btn-memory').disabled = true;
+}
+
+function sendCardFlip(cardIndex) {
+    if (socket_memory && socket_memory.readyState === WebSocket.OPEN) {
+        socket_memory.send(JSON.stringify({
+            type: 'card_flip',
+            player: playerRole,
+            card_index: cardIndex
+        }));
+    }
+}
+
+function sendMemoryGameState() {
+    if (socket_memory && socket_memory.readyState === WebSocket.OPEN) {
+        socket_memory.send(JSON.stringify({
+            type: 'game_update',
+            state: {
+                cards: cards,
+                player1_points: player1Points,
+                player2_points: player2Points,
+                current_player: currentPlayer
+            }
+        }));
+    }
+}

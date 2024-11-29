@@ -82,6 +82,10 @@ document.addEventListener("DOMContentLoaded", function()
         startSoloGameBtn.textContent = 'Start Game';  // Changer le texte du bouton
     });
 
+    const onlineMultiplayerBtn = document.getElementById('online-btn-memory');
+    onlineMultiplayerBtn.addEventListener('click', function() {
+        launchOnlineMemoryGame();
+});
     // Gestion du bouton Go Back
     goBackBtn.addEventListener('click', function() {
 		goBackBtn.style.display = 'none';
