@@ -888,6 +888,14 @@ li {
     border-color: orange;
 }
 
+.memory-game-container .card.matched.player1-match {
+    border-color: violet;
+}
+
+.memory-game-container .card.matched.player2-match {
+    border-color: orange;
+}
+
 .memory-game-container .card.hint {
     border-color: rgb(7, 255, 238);
 }

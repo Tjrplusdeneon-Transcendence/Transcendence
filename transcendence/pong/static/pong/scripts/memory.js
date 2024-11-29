@@ -16,6 +16,9 @@ let botMoveTimeout;
 let defaultDifficulty = 'medium'; 
 let attempts = 0; 
 let shuffleAttempts = 0;
+let currentPlayer = 'player1'; // Track the current player
+let player1Points = 0;
+let player2Points = 0;
 
 document.getElementById('start-solo-game-btn-memo').addEventListener('click', () => {
     defaultDifficulty = document.getElementById('memoryDifficultySelect').value;
@@ -64,6 +67,9 @@ function resetMemory()
     isPlayerTurn = true;
     attempts = 0;
     shuffleAttempts = 0;
+    currentPlayer = 'player1';
+    player1Points = 0;
+    player2Points = 0;
 }
 
 function generateCardsBasedOnDifficulty() 
@@ -95,11 +101,9 @@ function shuffleUnmatchedCards()
 {
     if(shuffleModeEnabled)
     {
-        // Extraire les cartes non trouvées
         const unmatchedCards = cards.filter(card => !card.matched);
-        shuffle(unmatchedCards); // Utiliser la fonction de mélange existante
+        shuffle(unmatchedCards);
 
-        // Réassigner uniquement les cartes non appariées sans toucher aux cartes trouvées
         let unmatchedIndex = 0;
         for (let i = 0; i < cards.length; i++) 
         {
@@ -107,19 +111,16 @@ function shuffleUnmatchedCards()
                 cards[i] = unmatchedCards[unmatchedIndex++];
         }
 
-        // Réinitialiser l'affichage pour refléter les nouvelles positions
         resetBoard();
     }
 }
 
-// Fonction pour réinitialiser l'affichage du tableau
 function resetBoard() 
 {
-    gameContainer.innerHTML = ''; // Effacer les cartes existantes
-    displayCards(); // Réafficher les cartes dans leur nouvel ordre
+    gameContainer.innerHTML = '';
+    displayCards();
 }
 
-// Fonction pour montrer une carte non appariée
 function showHintCard() {
     const unmatchedCards = cards.filter(card => !card.matched);
     if (unmatchedCards.length > 0) {
@@ -132,29 +133,32 @@ function showHintCard() {
         setTimeout(() => {
             cardElement.classList.remove('hint');
             hideCard(cardElement);
-        }, 1000); // La carte reste visible pendant 1 seconde
+        }, 1000);
     }
 }
 
 function displayCards() {
-    gameContainer.innerHTML = ''; // Effacer l'affichage existant
+    gameContainer.innerHTML = '';
     cards.forEach((card, index) => {
         const cardElement = document.createElement('div');
         cardElement.classList.add('card');
         cardElement.dataset.index = index;
 
         if (card.matched) {
-            cardElement.textContent = card.value; // Afficher la valeur de la carte
+            cardElement.textContent = card.value;
             cardElement.classList.add('matched');
             
-            // Appliquer le style spécifique basé sur le joueur
             if (card.foundBy === 'player') {
                 cardElement.classList.add('player-match');
             } else if (card.foundBy === 'bot') {
                 cardElement.classList.add('bot-match');
+            } else if (card.foundBy === 'player1') {
+                cardElement.classList.add('player1-match');
+            } else if (card.foundBy === 'player2') {
+                cardElement.classList.add('player2-match');
             }
         } else {
-            cardElement.classList.add('hidden'); // Sinon, masquer la carte
+            cardElement.classList.add('hidden');
         }
 
         cardElement.addEventListener('click', () => onCardClick(cardElement));
@@ -200,44 +204,67 @@ function checkForMatch()
         cards[index1].matched = true;
         cards[index2].matched = true;
     
-        // Ajouter la propriété de joueur pour les cartes appariées
-        cards[index1].foundBy = isPlayerTurn ? 'player' : 'bot';
-        cards[index2].foundBy = isPlayerTurn ? 'player' : 'bot';
+        cards[index1].foundBy = isMemoryGameAIEnabled ? (isPlayerTurn ? 'player' : 'bot') : currentPlayer;
+        cards[index2].foundBy = isMemoryGameAIEnabled ? (isPlayerTurn ? 'player' : 'bot') : currentPlayer;
         
         matchedCards += 2;
         flippedCards = [];
-        attempts = 0; // Réinitialiser les tentatives sur succès
+        attempts = 0;
         shuffleAttempts = 0;
         delete botMemory[index1];
         delete botMemory[index2];
 
-        if (isPlayerTurn) {
-            card1.classList.add('player-match');
-            card2.classList.add('player-match');
-            points++;
-        } else if (!isPlayerTurn && isMemoryGameAIEnabled) {
-            card1.classList.add('bot-match');
-            card2.classList.add('bot-match');
+        if (isMemoryGameAIEnabled) {
+            if (isPlayerTurn) {
+                card1.classList.add('player-match');
+                card2.classList.add('player-match');
+                points++;
+            } else {
+                card1.classList.add('bot-match');
+                card2.classList.add('bot-match');
+            }
+        } else {
+            if (currentPlayer === 'player1') {
+                card1.classList.add('player1-match');
+                card2.classList.add('player1-match');
+                player1Points++;
+            } else {
+                card1.classList.add('player2-match');
+                card2.classList.add('player2-match');
+                player2Points++;
+            }
         }
 
         if (matchedCards === cards.length) {
             setTimeout(() => {
-                if (points > pairs / 2) {
-                    window.updateGameStats(1);
-                    endGame('Joueur');
-                } else if (points === pairs / 2) {
-                    window.updateGameStats(0);
-                    endGame('Égalité');
+                if (isMemoryGameAIEnabled) {
+                    if (points > pairs / 2) {
+                        window.updateGameStats(1);
+                        endGame('Joueur');
+                    } else if (points === pairs / 2) {
+                        window.updateGameStats(0);
+                        endGame('Égalité');
+                    } else {
+                        window.updateGameStats(-1);
+                        endGame('Bot');
+                    }
                 } else {
-                    window.updateGameStats(-1);
-                    endGame('Bot');
+                    if (player1Points > player2Points) {
+                        window.updateGameStats(1);
+                        endGame('Player 1');
+                    } else if (player1Points === player2Points) {
+                        window.updateGameStats(0);
+                        endGame('Draw');
+                    } else {
+                        window.updateGameStats(-1);
+                        endGame('Player 2');
+                    }
                 }
             }, 500);
         } else if (!isPlayerTurn && isMemoryGameAIEnabled) {
             botMoveTimeout = setTimeout(botMove, 1000);
         }
     } else {
-        // Logique pour une paire incorrecte
         setTimeout(() => {
             hideCard(card1);
             hideCard(card2);
@@ -248,26 +275,31 @@ function checkForMatch()
             shuffleAttempts++;
             attempts++;
             if (shuffleAttempts >= 4 && shuffleModeEnabled) {
-                shuffleUnmatchedCards(); // Mélanger les cartes non matchées
-                shuffleAttempts = 0; // Réinitialiser après mélange
+                shuffleUnmatchedCards();
+                shuffleAttempts = 0;
             }
             if (attempts >= 4 && hintModeEnabled) {
-                setTimeout(showHintCard, 1200); // Afficher l'aide après un délai
+                setTimeout(showHintCard, 1200);
                 attempts = 0;
             }
 
-            if (isPlayerTurn) {
-                isPlayerTurn = false;
-                botMoveTimeout = setTimeout(botMove, 1000);
-            } else if (!isPlayerTurn && isMemoryGameAIEnabled) {
-                isPlayerTurn = true;
+            if (isMemoryGameAIEnabled) {
+                if (isPlayerTurn) {
+                    isPlayerTurn = false;
+                    botMoveTimeout = setTimeout(botMove, 1000);
+                } else {
+                    isPlayerTurn = true;
+                }
+            } else {
+                currentPlayer = currentPlayer === 'player1' ? 'player2' : 'player1';
+                isPlayerTurn = true; // Ensure the next player can click
             }
         }, 1000);
     }
 }
 
 function botMove() {
-    if (!isMemoryGameAIEnabled || isPlayerTurn || hintActive) return; // Vérifie si l'aide est active
+    if (!isMemoryGameAIEnabled || isPlayerTurn || hintActive) return;
 
     let rememberedPairs = [];
 
@@ -331,3 +363,44 @@ function restartMemory()
     startButton.removeEventListener('click', restartMemory);
     startButton.addEventListener('click', startMemory);
 }
+
+function resetDisplay_memory()
+{
+    document.getElementById('mainMenuCanvas-memory').display = 'none';
+    document.getElementById('singleplayerButton-memory').display = 'none';
+    document.getElementById('multiplayerButton-memory').display = 'none';
+    document.getElementById('leftSideM').display = 'none';
+    document.getElementById('rightSideM').display = 'none';
+	// document.getElementById('closeModalM');
+
+    document.getElementById('difficulty-menu-m').display = 'none';
+    document.getElementById('multiplayer-menu-memory').display = 'none';
+    document.getElementById('local-btn-memory').display = 'none';
+    document.getElementById('memory-game-container').display = 'none';
+	document.getElementById('gamecustom-shuffle').display = 'none';
+	document.getElementById('gamecustom-hint').display = 'none';
+
+    document.getElementById('start-solo-game-btn-memo').display = 'none';
+    document.getElementById('go-back-btn-memo').display = 'none';
+    document.getElementById('return-menu-btn-memo').display = 'none';
+}
+
+
+// Boutons du multi-joueur
+
+
+
+document.getElementById('local-btn-memory').addEventListener('click', () => {
+    isMemoryGameAIEnabled = false;
+});
+
+document.getElementById('leftSideM').addEventListener('click', () => {
+    resetDisplay_memory();
+    isMemoryGameAIEnabled = true;
+    document.getElementById('difficulty-menu-m').display = 'block';
+    document.getElementById('gamecustom-shuffle').display = 'block';
+    document.getElementById('gamecustom-hint').display = 'block';
+    document.getElementById('start-solo-game-btn-memo').display = 'block';
+    document.getElementById('return-menu-btn-memo').display = 'block';
+    document.getElementById('start-solo-game-btn-memo').textContent = 'Start Game';
+});
