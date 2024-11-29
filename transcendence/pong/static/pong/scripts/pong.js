@@ -2051,6 +2051,28 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         showMainMenu(); // Default to main menu if route not found
     }
+    const playButton = document.getElementById('close-cross');
+    if (playButton) {
+        playButton.addEventListener('click', () => {
+            //if socket is open, close it
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ type: 'quit' }));
+                socket.close();
+                resetMatchmakingState();
+            }
+            gameOverMessage();
+            cancelAnimationAndEndGame();
+            LocalMultiplayer = false;
+            inLocal = false;
+            showMainMenu();
+            history.replaceState(null, '', window.location.pathname);
+        });
+    }
 });
 
-// function resetGameSettings()
+window.addEventListener('beforeunload', () => {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.close();
+    }
+});
+// function resetGameSettings(
