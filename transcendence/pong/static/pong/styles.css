@@ -348,6 +348,24 @@ body {
     margin-bottom: 5px;
 }
 
+#userStats {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #333;
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(255, 199, 15, 0.5);
+    color: #fc9d06;
+}
+
+#userStats h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+#userStats p {
+    margin-bottom: 5px;
+}
+
 #otherPlayerStats {
     margin-top: 20px;
     padding: 20px;
@@ -355,6 +373,7 @@ body {
     border-radius: 5px;
     box-shadow: 0 0 20px rgba(255, 199, 15, 0.5);
     color: #fc9d06;
+    position: relative;
 }
 
 #otherPlayerStats h2 {
@@ -367,6 +386,14 @@ body {
 }
 
 #closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+#closeOtherPlayerStatsButton {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -881,11 +908,19 @@ li {
 }
 
 .memory-game-container .card.player-match {
-    border-color: violet;
+    border-color: #00ffea;
 }
 
 .memory-game-container .card.bot-match {
-    border-color: orange;
+    border-color: #ff00ff;
+}
+
+.memory-game-container .card.matched.player1-match {
+    border-color: #00ffea;
+}
+
+.memory-game-container .card.matched.player2-match {
+    border-color: #ff00ff;
 }
 
 .memory-game-container .card.hint {

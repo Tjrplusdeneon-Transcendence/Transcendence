@@ -1,5 +1,3 @@
-# /!\ A METTRE DANS UN DOSSIER AVEC LE DEFAULT.CONF
-
 FROM nginx:stable
 
 # Installer OpenSSL pour générer des certificats auto-signés
@@ -15,13 +13,11 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
   -subj "/CN=localhost"
 
 COPY . /usr/share/nginx/html
-COPY default.conf /etc/nginx/conf.d/default.conf
 
-COPY index.html /usr/share/nginx/html/index.html
-COPY styles.css /usr/share/nginx/html/styles.css
-COPY app.js /usr/share/nginx/html/app.js
-COPY default.conf /etc/nginx/conf.d/default.conf
+RUN rm /etc/nginx/conf.d/default.conf
+
+COPY nginx.conf /etc/nginx/conf.d
 
 RUN chown -R www-data:www-data /usr/share/nginx/html
 
-EXPOSE 80 443
+EXPOSE 8443

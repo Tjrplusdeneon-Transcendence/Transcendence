@@ -4,4 +4,5 @@ from . import consumers
 websocket_urlpatterns = [
 	path("ws/chat", consumers.ChatConsumer.as_asgi()),
 	re_path("ws/pong/$", consumers.PongConsumer.as_asgi()),
+    re_path(r'ws/memory/$', consumers.MemoryConsumer.as_asgi()),
 ]
