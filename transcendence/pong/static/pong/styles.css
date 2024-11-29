@@ -881,19 +881,19 @@ li {
 }
 
 .memory-game-container .card.player-match {
-    border-color: violet;
+    border-color: #00ffea;
 }
 
 .memory-game-container .card.bot-match {
-    border-color: orange;
+    border-color: #ff00ff;
 }
 
 .memory-game-container .card.matched.player1-match {
-    border-color: violet;
+    border-color: #00ffea;
 }
 
 .memory-game-container .card.matched.player2-match {
-    border-color: orange;
+    border-color: #ff00ff;
 }
 
 .memory-game-container .card.hint {
