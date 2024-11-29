@@ -31,6 +31,14 @@ ALLOWED_HOSTS = [
     '*'
 ]
 
+# SSL PARAMETERS
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+USE_X_FORWARDED_HOST = True
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -133,7 +141,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+# Main static files directory
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Additional static files directories
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'pong', 'static'),
+]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -147,3 +163,5 @@ LOGIN_URL = 'index'
 LOGIN_REDIRECT_URL = 'index'
 
 X_FRAME_OPTIONS = 'ALLOWALL'
+
+CSRF_TRUSTED_ORIGINS = ["https://localhost:8443"]

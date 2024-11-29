@@ -9,6 +9,8 @@ COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
+RUN apt-get update && apt-get install -y netcat-traditional && apt-get clean
+
 COPY . .
 
 COPY ./entrypoint.sh /usr/bin/entrypoint.sh
