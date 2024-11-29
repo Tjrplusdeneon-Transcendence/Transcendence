@@ -46,7 +46,7 @@
                             <h1>Pong</h1>
                             <p>Play a pong game with your friend or our opponent!</p>
                             <div class="btn-box">
-                                <a href="#" class="btn1" data-bs-toggle="modal" data-bs-target="#pongModal">Play</a>
+                                <a href="#" id="playButton" class="btn1" data-bs-toggle="modal" data-bs-target="#pongModal">Play</a>
                             </div>
                         </div>
                     </div>
@@ -125,7 +125,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="pongModalLabel">Pong Game</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+                <button type="button" class="btn-close" id="close-cross" data-bs-dismiss="modal" aria-label="Close">X</button>
             </div>
             <div class="modal-body">
                 <!-- New Main Menu Canvas -->
@@ -138,45 +138,71 @@
                     id="rightSide" class="main-menu-side">–Multiplayer
                     <button id="multiplayerButton" class="main-menu-button"></button>
                 </div>
-                
-                <!-- Difficulty selector -->
                 <div id="difficulty-menu" class="difficulty-menu mb-3" style="display: none;">
-                    <div id="gamecustom-difficulty">
-                        <label for="difficultySelect" class="form-label">Select Difficulty:</label>
-                        <select id="difficultySelect" class="form-select">
-                            <option value="easy">Easy</option>
-                            <option value="medium" selected>Medium</option>
-                            <option value="hard">Hard</option>
-                        </select>
+                    <!-- Ligne pour la difficulté -->
+                    <div class="row align-items-center mb-3">
+                        <div class="col-6 text-end">
+                            <label for="difficultySelect" class="form-label">Difficulty:</label>
+                        </div>
+                        <div class="col-6">
+                            <select id="difficultySelect" class="form-select">
+                                <option value="easy">Easy</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="hard">Hard</option>
+                            </select>
+                        </div>
                     </div>
-                    <!-- Game Customs -->
-                    <div id="gamecustom-blackout">
-                        <label>
-                            <input type="checkbox" id="darknessToggle"> Enable Darkness Mode
-                        </label>
+                
+                    <!-- Ligne pour Darkness Mode -->
+                    <div class="row align-items-center mb-3">
+                        <div class="col-6 text-end">
+                            <label for="darknessToggle" class="form-label">Darkness Mode:</label>
+                        </div>
+                        <div class="col-6">
+                            <input type="checkbox" id="darknessToggle" class="form-check-input">
+                        </div>
                     </div>
-                    <!-- Ball Size -->
-                    <div id="gamecustom-ballsize">
-                        <label for="ballSizeSelect" class="form-label">Ball Size:</label>
-                        <select id="ballSizeSelect" class="form-select">
-                            <option value="small">Small</option>
-                            <option value="medium" selected>Medium</option>
-                            <option value="large">Large</option>
-                        </select>
+                
+                    <!-- Ligne pour la taille de la balle -->
+                    <div class="row align-items-center mb-3">
+                        <div class="col-6 text-end">
+                            <label for="ballSizeSelect" class="form-label">Ball Size:</label>
+                        </div>
+                        <div class="col-6">
+                            <select id="ballSizeSelect" class="form-select">
+                                <option value="small">Small</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="large">Large</option>
+                            </select>
+                        </div>
                     </div>
-                    <!-- Paddle size selector -->
-                    <label for="paddle-size">Paddle Size:</label>
-                        <input 
-                            id="paddle-size" 
-                            type="range" 
-                            min="50" 
-                            max="150" 
-                            step="25" 
-                            value="100"
-                        />
-                        <span id="paddleSizeDisplay">Medium</span>
+
+
+                
+                    <!-- Ligne pour la taille de la palette -->
+                    <div class="row align-items-center">
+                        <div class="col-6 text-end">
+                            <label for="paddle-size" class="form-label">Paddle Size:</label>
+                        </div>
+                        <div>
+                            <input 
+                                id="paddle-size" 
+                                type="range"
+                                min="50" 
+                                max="150" 
+                                step="25" 
+                                value="100"
+                            />
+                            <span id="paddleSizeDisplay" class="ms-2">Medium</span>
+                        </div>
+                    </div>
                 </div>
 
+
+
+
+                
+                
                 <canvas id="pongCanvas" width="640" height="480" style="background-color: #000; display: none;"></canvas>
                 
                 <!-- New multiplayer menu -->
@@ -255,26 +281,39 @@
                     <button id="online-btn-memory" class="btn btn-primary">Online</button>
                 </div>
                 <!-- Difficulty selector -->
-                <div id="difficulty-menu-m" class="difficulty-menu-m mb-3">
-                    <div id="memo-select">
-                        <label for="memoryDifficultySelect" class="form-label">Select Difficulty:</label>
-                        <select id="memoryDifficultySelect" class="form-select">
-                            <option value="easy">Easy</option>
-                            <option value="medium" selected>Medium</option>
-                            <option value="hard">Hard</option>
-                        </select>
+                <div id="difficulty-menu-m" class="difficulty-menu-m mb-3" style="display: none;">
+                    <div class="row align-items-center mb-3">
+                        <div class="col-6 text-end">
+                            <label for="memoryDifficultySelect" class="form-label">Difficulty:</label>
+                        </div>
+                        <div class="col-6">
+                            <select id="memoryDifficultySelect" class="form-select">
+                                <option value="easy">Easy</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="hard">Hard</option>
+                            </select>
+                        </div>
                     </div>
+
                     <!-- Game Customs -->
-                    <div id="gamecustom-shuffle">
-                        <label>
-                            <input type="checkbox" id="shuffleToggle"> Enable ReShuffle Mode
-                        </label>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-6 text-end">
+                            <label for="shuffleToggle" class="form-label">ReShuffle Mode:</label>
+                        </div>
+                        <div class="col-6">
+                            <input type="checkbox" id="shuffleToggle" class="form-check-input">
+                        </div>
                     </div>
-                    <div id="gamecustom-hint">
-                        <label>
-                            <input type="checkbox" id="hintToggle"> Enable Show Random Card Mode
-                        </label>
+
+                    <div class="row align-items-center mb-3">
+                        <div class="col-6 text-end">
+                            <label for="hintToggle" class="form-label">ShowCard Mode:</label>
+                        </div>
+                        <div class="col-6">
+                            <input type="checkbox" id="hintToggle" class="form-check-input">
+                        </div>
                     </div>
+
                 <!--GAME-->
                 </div>
                     <div id="memory-game-container" class="memory-game-container"></div>
@@ -327,14 +366,11 @@
 <script src="{% static 'pong/scripts/doom.js' %}"></script>
 <script src="{% static 'pong/scripts/pong.js' %}"></script>
 <script src="{% static 'pong/scripts/chat.js' %}"></script>
-<script src="{% static 'pong/scripts/panel.js' %}"></script>
 <script src="{% static 'pong/scripts/gamestats.js' %}"></script>
 <script src="{% static 'pong/scripts/memory.js' %}"></script>
 <script src="{% static 'pong/scripts/menu.js' %}"></script>
 
-
 <script>
-	// Fonction pour vérifier si le menu principal est visible
 	function toggleFooterVisibility() {
 		const footer = document.getElementById('pong-footer');
 		const leftSide = document.getElementById('leftSide');
@@ -344,17 +380,16 @@
 		const leftSideM = document.getElementById('leftSideM');
 		const rightSideM = document.getElementById('rightSideM');
 	
-		// Vérifie si le menu principal est visible
 		if (leftSide && rightSide && window.getComputedStyle(leftSide).display !== 'none' && window.getComputedStyle(rightSide).display !== 'none') {
-			footer.style.display = 'none';  // Cache le footer
+			footer.style.display = 'none'; 
 		} else {
-			footer.style.display = 'flex';  // Affiche le footer
+			footer.style.display = 'flex';
 		}
 
         if (leftSideM && rightSideM && window.getComputedStyle(leftSideM).display !== 'none' && window.getComputedStyle(rightSideM).display !== 'none') {
-			footerM.style.display = 'none';  // Cache le footer
+			footerM.style.display = 'none';
 		} else {
-			footerM.style.display = 'flex';  // Affiche le footer
+			footerM.style.display = 'flex';
 		}
 	}
 	
