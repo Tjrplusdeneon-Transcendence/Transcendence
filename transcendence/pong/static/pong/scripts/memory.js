@@ -41,6 +41,7 @@ document.getElementById('hintToggle').addEventListener('change', function() {
 });
 
 function startMemory() {
+    increaseGamesPlayed();
     resetMemory();
     generateCardsBasedOnDifficulty();
     shuffle(cards);
@@ -250,6 +251,7 @@ function checkForMatch() {
             setTimeout(() => {
                 if (isMemoryGameAIEnabled) {
                     if (points > pairs / 2) {
+                        increaseWins();
                         // window.updateGameStats(1);
                         endGame('Joueur');
                     } else if (points === pairs / 2) {
@@ -257,17 +259,20 @@ function checkForMatch() {
                         endGame('Égalité');
                     } else {
                         // window.updateGameStats(-1);
+                        increaseLosses();
                         endGame('Bot');
                     }
                 } else {
                     if (player1Points > player2Points) {
                         // window.updateGameStats(1);
+                        increaseWins();
                         endGame('Player 1');
                     } else if (player1Points === player2Points) {
                         // window.updateGameStats(0);
                         endGame('Draw');
                     } else {
                         // window.updateGameStats(-1);
+                        increaseLosses();
                         endGame('Player 2');
                     }
                 }

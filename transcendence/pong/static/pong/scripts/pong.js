@@ -681,6 +681,7 @@ function draw(currentTime) {
     checkPaddleCollision(deltaTime);
 
     if (x + dx * deltaTime < ball.radius) {
+        increaseLosses();
         winner = LocalMultiplayer ? 'Player 2' : (isAIEnabled ? 'AI' : 'Player 2');
         gameRunning = false;
         if (isTournament) {
@@ -696,6 +697,7 @@ function draw(currentTime) {
         gameOverMessage();
         return;
     } else if (x + dx * deltaTime > canvas.width - ball.radius) {
+        increaseWins();
         winner = 'Player 1';
         gameRunning = false;
         if (isTournament) {
@@ -908,6 +910,7 @@ function restartPong() {
 }
 
 function startGame() {
+    increaseGamesPlayed();
     const selectedBallSize = document.getElementById('ballSizeSelect').value;
     updateBallSize(selectedBallSize);
     console.log('Ball size selected:', selectedBallSize);
