@@ -32,6 +32,10 @@ document.getElementById('start-solo-game-btn-memo').addEventListener('click', ()
     startMemory();
 });
 
+document.getElementById('closeModalM').addEventListener('click', () => {
+    resetMemory();
+});
+
 document.getElementById('shuffleToggle').addEventListener('change', function() {
     shuffleModeEnabled = this.checked; 
 });
@@ -67,6 +71,11 @@ function resetMemory()
 {
     clearTimeout(botMoveTimeout);
     gameContainer.innerHTML = '';
+
+    const endMessage = document.querySelector(".end-message");
+    if (endMessage) {
+        endMessage.remove();
+    }
     cards = [];
     flippedCards = [];
     matchedCards = 0;
@@ -78,8 +87,6 @@ function resetMemory()
     currentPlayer = 'player1';
     player1Points = 0;
     player2Points = 0;
-    if (typeof endMessage !== 'undefined')
-        endMessage.remove();
 }
 
 function generateCardsBasedOnDifficulty() 
@@ -395,6 +402,7 @@ function shuffleMessage()
 function endGame(winner) 
 {
     const endMessage = document.createElement("div");
+    endMessage.classList.add("end-message");
     
     endMessage.style.position = "absolute";
     endMessage.style.top = "50%";
