@@ -1,9 +1,8 @@
-/* BASE */
-html, body { 
+html, body {
     width: 100vw;
-    height: 100vh; 
-    overflow: hidden; 
-} 
+    height: 100vh;
+    overflow: hidden;
+}
 
 @font-face {
     font-family: 'ka1';
@@ -14,7 +13,7 @@ html, body {
     font-family: 'goodtime';
     src: url('font/good\ times\ rg.otf');
 }
- 
+
 body {
     margin: 0;
     padding: 0;
@@ -30,7 +29,6 @@ body {
     position: relative;
 }
 
-/* Visual effect */
 #glitchVideo {
     position: absolute;
     top: 0;
@@ -39,11 +37,10 @@ body {
     height: 100%;
     object-fit: cover;
     opacity: 0.18;
-    z-index: 999; 
+    z-index: 999;
     pointer-events: none;
 }
 
-/* Modal */
 .modal {
     pointer-events: none;
     z-index: 990;
@@ -157,7 +154,6 @@ body {
     animation: neon-glow 2s infinite alternate;
 }
 
-/* Difficulty selector */
 .difficulty-menu, .difficulty-menu-m {
     display: flex;
     flex-direction: column;
@@ -225,7 +221,6 @@ body {
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.5), 0 0 25px rgba(255, 0, 255, 0.5);
 }
 
-/* Title */
 .title-container{
     color: #ffffff;
     position:absolute;
@@ -235,7 +230,6 @@ body {
     transform: translate(-50%, -50%);
 }
 
-/* Login */
 .login-panel {
     display: none;
     position: fixed;
@@ -407,7 +401,6 @@ body {
     color: #ffffff;
 }
 
-/* Chat */
 .chat-container {
     position: absolute;
     top: 10%;
@@ -443,23 +436,23 @@ body {
 }
 
 .chat-box::-webkit-scrollbar {
-    width: 10px; 
+    width: 10px;
 }
 
 .chat-box::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.6); 
-    border-radius: 10px; 
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
 }
 
 .chat-box::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #ff00ff, #00ffea); 
-    border-radius: 10px; 
-    box-shadow: 0 0 5px rgba(0, 255, 234, 0.7), 0 0 10px rgba(255, 0, 255, 0.5); 
+    background: linear-gradient(135deg, #ff00ff, #00ffea);
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 255, 234, 0.7), 0 0 10px rgba(255, 0, 255, 0.5);
 }
 
 .chat-box::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #ff00ff, #ff7400); 
-    box-shadow: 0 0 10px rgba(255, 116, 0, 0.7), 0 0 15px rgba(255, 0, 255, 0.7); 
+    background: linear-gradient(135deg, #ff00ff, #ff7400);
+    box-shadow: 0 0 10px rgba(255, 116, 0, 0.7), 0 0 15px rgba(255, 0, 255, 0.7);
 }
 
 .chat-box p {
@@ -518,7 +511,6 @@ body {
   font-size: 12px;
 }
 
-/* Buttons in chat messages */
 .ban-button {
     background: none;
     border: none;
@@ -535,7 +527,7 @@ body {
 .invite-button {
     background: none;
     border: none;
-    color: #2ecc71; 
+    color: #2ecc71;
     cursor: pointer;
     font-size: 1em;
     padding: 0;
@@ -548,29 +540,18 @@ body {
 .join-game-btn {
     background: none;
     border: none;
-    color: #2ecc71; /* Set the color to green */
     cursor: pointer;
-    font-size: 1.2em; /* Adjust size as needed */
     padding: 0;
     display: inline;
 }
 
 .join-game-btn:hover {
-    color: #27ae60; /* Change to a darker green on hover, adjust as needed */
 }
 
 .info-button {
-    background-color: transparent; /* Remove background color */
-    border: none; /* Remove border */
-    color: inherit; /* Inherit text color from parent */
-    cursor: pointer; /* Change cursor to pointer */
-    font-size: 1em; /* Adjust font size as needed */
-    padding: 0; /* Remove padding */
-    outline: none; /* Remove focus outline */
 }
 
 .info-button:hover {
-    color: #007BFF; /* Change color on hover, adjust as needed */
 }
 
 
@@ -580,44 +561,33 @@ li {
     flex-direction: column;
     align-items: flex-start;
     margin: 10px 0;
-    clear: both; /* Ensure each message starts on a new line */
 }
 
-/* Common styles for messages */
 .message {
-    padding: 5px; /* Ensure some padding inside the bubble */
-    margin: 10px 0; /* Adjust margin for better spacing */
     border-radius: 10px;
-    max-width: 60%; /* Ensure the bubble doesn't exceed 60% of the chat box width */
     position: relative;
     word-wrap: break-word;
     overflow-wrap: break-word;
     font-size: 14px;
     color: white;
-    text-align: left; /* Align text to the left inside the bubble */
     border: 1px solid transparent;
-    background-clip: padding-box; /* Ensure gradient doesn't cover text */
     display: block;
     max-width: 75%;
     width: fit-content;
 }
 
-/* Specific styles for user messages */
 .user-message {
     background: linear-gradient(15deg, #D400FF, #FF8400);
-    align-self: flex-end; /* Align the bubble to the right */
     margin-left: auto;
     text-align: end;
 }
 
-/* Specific styles for other messages */
 .other-message {
     background: linear-gradient(135deg, #FF8400, #D400FF);
     align-self: flex-start;
     margin-top: 0px;
 }
 
-/* Users profile */
 .synthwave-modal {
     background: linear-gradient(135deg, #1e1e1e, #2b2b2b);
     border: 2px solid #ff8400;
@@ -626,38 +596,38 @@ li {
     border-radius: 8px;
     color: white;
     pointer-events: auto;
-    width: 200px; 
+    width: 200px;
 }
 
 .synthwave-modal h2 {
-    font-size: 1rem; 
+    font-size: 1rem;
     color: #ff00ff;
     text-shadow: 0 0 8px rgba(255, 0, 255, 0.7);
     text-align: center;
-    margin-bottom: 10px; 
+    margin-bottom: 10px;
 }
 
 .synthwave-modal button {
-    padding: 8px 15px; 
+    padding: 8px 15px;
     background: linear-gradient(135deg, #ff00ff, #ffa200);
     border: none;
     color: white;
     text-transform: uppercase;
-    border-radius: 4px; 
+    border-radius: 4px;
     cursor: pointer;
-    font-size: 10px; 
+    font-size: 10px;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
     margin-right: 20px;
 }
 
 .synthwave-modal button:hover {
     box-shadow: 0 0 8px rgba(255, 0, 255, 0.7), 0 0 15px rgba(0, 255, 234, 0.7);
-    transform: scale(1.05); 
+    transform: scale(1.05);
 }
 
 #profileModal {
-    width: auto; 
-    max-width: 220px; 
+    width: auto;
+    max-width: 220px;
 }
 
 .synthwave-modal button:hover {
@@ -676,7 +646,6 @@ li {
     font-size: 24px;
 }
 
-/* Slider */
 .slider_section {
     position: absolute;
     width: 70%;
@@ -778,11 +747,11 @@ li {
 }
 
 .carousel-control-prev {
-    left: calc(20%); 
+    left: calc(20%);
 }
 
 .carousel-control-next {
-    right: calc(20%); 
+    right: calc(20%);
 }
 
 .slider_section .carousel-indicators li {
@@ -795,7 +764,7 @@ li {
     cursor: pointer;
     list-style: none;
 }
-  
+
 .slider_section .carousel-indicators li.active {
     width: 13px;
     height: 13px;
@@ -823,16 +792,12 @@ li {
     transition: opacity 0.15s ease-in-out;
 }
 
-/* Games */
 #pongCanvas {
     width: 100%;
     height: auto;
     background-color: #1a1a1a;
     border: 5px solid;
-    border-image: linear-gradient(to right, 
-        #ff00fb, #ff00fb 1%, /* Pink on the left */
-        #ff00fb 25%, #00FFFF 75%, /* Cyan in the center */
-        #00FFFF 75%, #00FFFF /* Pink on the right */
+    border-image: linear-gradient(to right,
     ) 1;
     box-shadow: 0 0 20px rgba(187, 0, 255, 0.5);
     position: relative;
@@ -1027,23 +992,16 @@ li {
     cursor: not-allowed;
     font-size: 16px;
     width: 200px;
-    border-radius: 5px;
-    background: linear-gradient(135deg, #00ffea, #ff00fb);
     color: white;
+    background-color: #1a1a1a;
     text-transform: uppercase;
     text-decoration: none;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 #searching-btn.active {
     cursor: pointer;
-    background: linear-gradient(135deg, #00ffea, #ff00fb);
 }
 
-#searching-btn.active:hover {
-    box-shadow: 0 0 20px rgba(255, 0, 255, 0.7), 0 0 40px rgba(0, 255, 234, 0.7);
-    transform: scale(1.1);
-}
 
 #mainMenuCanvas {
     width: 100%;
@@ -1113,38 +1071,28 @@ li {
     transform: scale(1.03);
 }
 
-
-
-
-
-
-
-/* Styles pour le conteneur principal */
 #gamecustom-blackout, #paddle-size {
-    color: #00ffff; 
+    color: #00ffff;
     margin-bottom: 10px;
     letter-spacing: 1px;
 }
 
-/* Style pour les labels */
 #gamecustom-blackout label, label[for="paddle-size"] {
     display: block;
-    color: #ff00fb; 
+    color: #ff00fb;
     margin-bottom: 5px;
     font-size: 14px;
 }
 
-/* Style pour la checkbox */
 #darknessTogg, #shuffleToggle, #hintToggle {
-    accent-color: #00ffff; 
-    transform: scale(1.3); 
+    accent-color: #00ffff;
+    transform: scale(1.3);
     margin-right: 10px;
     cursor: pointer;
 }
 
-/* Style pour le curseur de la barre de réglage */
 #paddle-size {
-    -webkit-appearance: none; 
+    -webkit-appearance: none;
     width: 100%;
     height: 8px;
     background: linear-gradient(90deg, #ff00fb, #00ffff);
@@ -1160,12 +1108,11 @@ li {
     box-shadow: 0 0 25px rgba(255, 0, 251, 0.9);
 }
 
-/* Curseur de la barre de réglage */
 #paddle-size::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 20px;
     height: 20px;
-    background: #00ffff; 
+    background: #00ffff;
     border: 2px solid #ff00fb;
     border-radius: 50%;
     cursor: pointer;
@@ -1173,11 +1120,10 @@ li {
 }
 
 #paddle-size::-webkit-slider-thumb:hover {
-    background: #ff00fb; 
+    background: #ff00fb;
     box-shadow: 0 0 25px rgba(255, 0, 251, 0.9);
 }
 
-/* Style pour afficher la taille actuelle de la raquette */
 #paddle-size-display {
     display: inline-block;
     font-size: 18px;
@@ -1189,7 +1135,7 @@ li {
 #memo-select {
     display: flex;
     text-align: center;
-    padding: 20px;                 
+    padding: 20px;
     border-radius: 10px;
 }
 
@@ -1238,3 +1184,289 @@ li {
     border-color: #ff00ea;
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.5), 0 0 25px rgba(255, 0, 255, 0.5);
 }
+
+
+#playerCount {
+    font-size: 1.2rem;
+    color: #ff00ff;
+    text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff;
+}
+
+
+#playerInputs {
+    margin: 20px 0;
+}
+
+#playerInputs label {
+    font-size: 1.2rem;
+    color: #00ffff;
+    text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+}
+
+#playerInputs input {
+    padding: 10px;
+    font-size: 1rem;
+    width: 80%;
+    background-color: transparent;
+    border: 2px solid #ff00ff;
+    color: #fff;
+    border-radius: 5px;
+    text-align: center;
+    outline: none;
+    box-shadow: 0 0 5px #ff00ff;
+    margin-top: 10px;
+}
+
+#playerInputs input:focus {
+    border-color: #00ffff;
+    box-shadow: 0 0 10px #00ffff;
+}
+
+
+@keyframes glitch {
+    0% {
+        transform: translateX(0);
+    }
+    10% {
+        transform: translateX(-5px);
+    }
+    20% {
+        transform: translateX(5px);
+    }
+    30% {
+        transform: translateX(-5px);
+    }
+    40% {
+        transform: translateX(5px);
+    }
+    50% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+#tournamentMatch {
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    color: #fff;
+    padding: 30px;
+    width: 80%;
+    max-width: 500px;
+    margin: 50px auto;
+    box-shadow: 0 0 15px rgba(247, 94, 255, 0.7);
+    text-align: center;
+}
+
+#tournamentStage {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #ffffff;
+    text-shadow: 0 0 5px #f714ff, 0 0 15px #f714ff, 0 0 25px #f714ff;
+}
+
+#matchup {
+    font-size: 1.5rem;
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+    margin-bottom: 30px;
+}
+
+
+
+#searching-menu {
+    border-radius: 10px;
+    color: #fff;
+    padding: 30px;
+    width: 80%;
+    max-width: 500px;
+    margin: 50px auto;
+    text-align: center;
+    background-color: #1a1a1a;
+    animation: pulse 1s infinite;
+    box-shadow: inset 0 0 20px #00FFFF, 0 0 20px #00FFFF;
+    border-color: #00FFFF;
+}
+
+
+@keyframes pulse {
+    0% {
+        color: 0 0 15px #ff1493, 0 0 30px #ff1493;
+        transform: scale(1);
+    }
+    50% {
+        color: 0 0 20px #00ffff, 0 0 40px #00ffff;
+        transform: scale(1.05);
+    }
+    100% {
+        color: 0 0 15px #ff1493, 0 0 30px #ff1493;
+        transform: scale(1);
+    }
+}
+
+
+
+#pong-game-customs {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.gamecustom-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gamecustom-label {
+    flex: 1;
+    text-align: left;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.gamecustom-select, .gamecustom-checkbox, .gamecustom-input {
+    flex: 2;
+}
+
+#paddle-size {
+    width: 100%;
+}
+
+.difficulty-menu .row {
+    margin-bottom: 1rem;
+}
+
+.difficulty-menu .col-6 {
+    display: flex;
+    align-items: center;
+}
+
+.difficulty-menu .text-end {
+    justify-content: flex-end;
+    font-weight: bold;
+}
+
+
+#playerCount {
+    font-size: 1.2rem;
+    color: #ff00ff;
+    text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff;
+}
+
+
+#playerInputs {
+    margin: 20px 0;
+}
+
+#playerInputs label {
+    font-size: 1.2rem;
+    color: #00ffff;
+    text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+}
+
+#playerInputs input {
+    padding: 10px;
+    font-size: 1rem;
+    width: 80%;
+    background-color: transparent;
+    border: 2px solid #ff00ff;
+    color: #fff;
+    border-radius: 5px;
+    text-align: center;
+    outline: none;
+    box-shadow: 0 0 5px #ff00ff;
+    margin-top: 10px;
+}
+
+#playerInputs input:focus {
+    border-color: #00ffff;
+    box-shadow: 0 0 10px #00ffff;
+}
+
+
+@keyframes glitch {
+    0% {
+        transform: translateX(0);
+    }
+    10% {
+        transform: translateX(-5px);
+    }
+    20% {
+        transform: translateX(5px);
+    }
+    30% {
+        transform: translateX(-5px);
+    }
+    40% {
+        transform: translateX(5px);
+    }
+    50% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+#tournamentMatch {
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    color: #fff;
+    padding: 30px;
+    width: 80%;
+    max-width: 500px;
+    margin: 50px auto;
+    box-shadow: 0 0 15px rgba(247, 94, 255, 0.7);
+    text-align: center;
+}
+
+#tournamentStage {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #ffffff;
+    text-shadow: 0 0 5px #f714ff, 0 0 15px #f714ff, 0 0 25px #f714ff;
+}
+
+#matchup {
+    font-size: 1.5rem;
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+    margin-bottom: 30px;
+}
+
+
+
+#searching-menu {
+    border-radius: 10px;
+    color: #fff;
+    padding: 30px;
+    width: 80%;
+    max-width: 500px;
+    margin: 50px auto;
+    text-align: center;
+    background-color: #1a1a1a;
+    animation: pulse 1s infinite;
+    box-shadow: inset 0 0 20px #00FFFF, 0 0 20px #00FFFF;
+    border-color: #00FFFF;
+}
+
+
+@keyframes pulse {
+    0% {
+        color: 0 0 15px #ff1493, 0 0 30px #ff1493;
+        transform: scale(1);
+    }
+    50% {
+        color: 0 0 20px #00ffff, 0 0 40px #00ffff;
+        transform: scale(1.05);
+    }
+    100% {
+        color: 0 0 15px #ff1493, 0 0 30px #ff1493;
+        transform: scale(1);
+    }
+}
+
+
+

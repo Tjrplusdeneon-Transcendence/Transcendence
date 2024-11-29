@@ -7,6 +7,7 @@ import json
 import re
 import math
 import random
+import uuid
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
@@ -93,88 +94,116 @@ class PongConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         await self.accept()
-        if self not in PongConsumer.players_waiting:
-            PongConsumer.players_waiting.append(self)
 
+        # Generate a unique identifier for each user
+        self.user_id = str(uuid.uuid4())
+        print(f"User connected with ID: {self.user_id}")
+
+        # Check if the user is already in the queue
+        for player in PongConsumer.players_waiting:
+            if player.channel_name == self.channel_name:
+                await self.close()
+                return
+
+        PongConsumer.players_waiting.append(self)
+        print(f"Current queue: {[player.user_id for player in PongConsumer.players_waiting]}")
+
+        # Check if there are at least two players in the queue
         if len(PongConsumer.players_waiting) >= 2:
             player1 = PongConsumer.players_waiting.pop(0)
             player2 = PongConsumer.players_waiting.pop(0)
 
-            match_id = self.generate_valid_group_name(f"match_{player1.channel_name}_{player2.channel_name}")
+            # Ensure the two players are different
+            if player1.user_id != player2.user_id:
+                group_name = self.generate_valid_group_name(f"match_{player1.channel_name}_{player2.channel_name}")
 
-            await self.channel_layer.group_add(match_id, player1.channel_name)
-            await self.channel_layer.group_add(match_id, player2.channel_name)
+                await self.channel_layer.group_add(group_name, player1.channel_name)
+                await self.channel_layer.group_add(group_name, player2.channel_name)
 
-            await player1.send(json.dumps({'type': 'match_found', 'match_id': match_id, 'player': 'player1'}))
-            await player2.send(json.dumps({'type': 'match_found', 'match_id': match_id, 'player': 'player2'}))
+                await player1.send(json.dumps({'type': 'match_found', 'group_name': group_name, 'player': 'player1'}))
+                await player2.send(json.dumps({'type': 'match_found', 'group_name': group_name, 'player': 'player2'}))
 
-            player1.match_id = match_id
-            player2.match_id = match_id
+                player1.group_name = group_name
+                player2.group_name = group_name
+                print(f"Match found: {player1.user_id} vs {player2.user_id}")
+            else:
+                # If the players are the same, put them back in the queue
+                PongConsumer.players_waiting.append(player1)
+                PongConsumer.players_waiting.append(player2)
+                print("Same user matched, putting them back in the queue")
 
     async def disconnect(self, close_code):
         if self in PongConsumer.players_waiting:
             PongConsumer.players_waiting.remove(self)
         else:
-            await self.channel_layer.group_discard(self.match_id, self.channel_name)
-            await self.channel_layer.group_send(
-                self.match_id,
-                {
-                    'type': 'opponent_left'
-                }
-            )
+            if hasattr(self, 'group_name'):
+                await self.channel_layer.group_discard(self.group_name, self.channel_name)
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        'type': 'opponent_left'
+                    }
+                )
+        print(f"User disconnected with ID: {self.user_id}")
 
     async def receive(self, text_data):
         data = json.loads(text_data)
         action = data.get('type')
 
         if action == 'move_paddle':
-            await self.channel_layer.group_send(
-                self.match_id,
-                {
-                    'type': 'paddle_moved',
-                    'player': data['player'],
-                    'position': data['position']
-                }
-            )
+            if hasattr(self, 'group_name'):
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        'type': 'paddle_moved',
+                        'player': data['player'],
+                        'position': data['position']
+                    }
+                )
         elif action == 'game_update':
-            await self.channel_layer.group_send(
-                self.match_id,
-                {
-                    'type': 'game_update',
-                    'state': data['state']
-                }
-            )
+            if hasattr(self, 'group_name'):
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        'type': 'game_update',
+                        'state': data['state']
+                    }
+                )
         elif action == 'player_ready':
-            await self.channel_layer.group_send(
-                self.match_id,
-                {
-                    'type': 'player_ready',
-                    'player': data['player']
-                }
-            )
+            if hasattr(self, 'group_name'):
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        'type': 'player_ready',
+                        'player': data['player']
+                    }
+                )
         elif action == 'start_game':
-            await self.channel_layer.group_send(
-                self.match_id,
-                {
-                    'type': 'start_game',
-                    'initial_state': self.generate_initial_game_state()
-                }
-            )
+            if hasattr(self, 'group_name'):
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        'type': 'start_game',
+                        'initial_state': self.generate_initial_game_state()
+                    }
+                )
         elif action == 'rematch':
-            await self.channel_layer.group_send(
-                self.match_id,
-                {
-                    'type': 'rematch',
-                    'player': data['player']
-                }
-            )
+            if hasattr(self, 'group_name'):
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        'type': 'rematch',
+                        'player': data['player']
+                    }
+                )
         elif action == 'quit':
-            await self.channel_layer.group_send(
-                self.match_id,
-                {
-                    'type': 'opponent_left'
-                }
-            )
+            if hasattr(self, 'group_name'):
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        'type': 'opponent_left'
+                    }
+                )
 
     async def paddle_moved(self, event):
         await self.send(text_data=json.dumps({
