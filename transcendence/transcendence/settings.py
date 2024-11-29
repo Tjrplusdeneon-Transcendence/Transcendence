@@ -164,4 +164,4 @@ LOGIN_REDIRECT_URL = 'index'
 
 X_FRAME_OPTIONS = 'ALLOWALL'
 
-CSRF_TRUSTED_ORIGINS = ["https://localhost:8443"]
+CSRF_TRUSTED_ORIGINS = ["https://localhost:10000"]
