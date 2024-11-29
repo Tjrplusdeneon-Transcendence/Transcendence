@@ -2,8 +2,15 @@ function isUserLogged() {
     return document.body.getAttribute('data-user-authenticated') === 'True';
 }
 
+function handleResponse(response) {
+    if (response.ok) {
+        response.json().then(data => {
+            document.getElementById('gameStats').innerHTML = data.gamestats_html;
+        });
+    }
+}
+
 function increaseWins() {
-    console.log("NewWin");
     if (isUserLogged())
     {
         const csrfToken = document.querySelector('body').getAttribute('hx-headers').match(/"X-CSRFToken": "([^"]+)"/)[1];
@@ -14,13 +21,7 @@ function increaseWins() {
                 'X-CSRFToken': csrfToken
             },
             body: JSON.stringify({})
-        }).then(response => {
-            if (response.ok) {
-                response.text().then(html => {
-                    document.getElementById('gameStats').innerHTML = html;
-                });
-            }
-        });
+        }).then(handleResponse);
     }
 }
 
@@ -36,13 +37,7 @@ function increaseLosses() {
                 'X-CSRFToken': csrfToken
             },
             body: JSON.stringify({})
-        }).then(response => {
-            if (response.ok) {
-                response.text().then(html => {
-                    document.getElementById('gameStats').innerHTML = html;
-                });
-            }
-        });
+        }).then(handleResponse);
     }
 }
 
@@ -59,14 +54,6 @@ function increaseGamesPlayed() {
                 'X-CSRFToken': csrfToken
             },
             body: JSON.stringify({})
-        }).then(response => {
-            if (response.ok) {
-                response.text().then(html => {
-                    document.getElementById('gameStats').innerHTML = html;
-                });
-            }
-        });
-    } else {
-        console.log("Gamestats: user is not logged");
+        }).then(handleResponse);
     }
 }

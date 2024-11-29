@@ -71,32 +71,26 @@ def logout_user(request):
 
 @login_required
 def increase_wins(request):
-    print("WIN")
     user = request.user
     user.wins += 1
     user.score += 1
     user.save()
-    return render(request, 'pong/partials/gamestats.html', context={'user': user})
-    # gamestats_html = render_to_string('pong/partials/gamestats.html', context={'user': user}, request=request)
-    # return JsonResponse({'gamestats_html': gamestats_html})
+    gamestats_html = render_to_string('pong/partials/gamestats.html', context={'user': user}, request=request)
+    return JsonResponse({'gamestats_html': gamestats_html})
 
 @login_required
 def increase_losses(request):
-    print("LOSS")
     user = request.user
     user.losses += 1
     user.score -= 1
     user.save()
-    return render(request, 'pong/partials/gamestats.html', context={'user': user})
-    # gamestats_html = render_to_string('pong/partials/gamestats.html', context={'user': user}, request=request)
-    # return JsonResponse({'gamestats_html': gamestats_html})
+    gamestats_html = render_to_string('pong/partials/gamestats.html', context={'user': user}, request=request)
+    return JsonResponse({'gamestats_html': gamestats_html})
 
 @login_required
 def increase_games_played(request):
-    print("PLAYED")
     user = request.user
     user.games_played += 1
     user.save()
-    return render(request, 'pong/partials/gamestats.html', context={'user': user})
-    # gamestats_html = render_to_string('pong/partials/gamestats.html', context={'user': user}, request=request)
-    # return JsonResponse({'gamestats_html': gamestats_html})
+    gamestats_html = render_to_string('pong/partials/gamestats.html', context={'user': user}, request=request)
+    return JsonResponse({'gamestats_html': gamestats_html})
