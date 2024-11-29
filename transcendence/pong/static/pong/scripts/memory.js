@@ -20,6 +20,7 @@ let shuffleAttempts = 0;
 let currentPlayer = 'player1'; // Track the current player
 let player1Points = 0;
 let player2Points = 0;
+let endMessage;
 
 document.getElementById('start-solo-game-btn-memo').addEventListener('click', () => {
     defaultDifficulty = document.getElementById('memoryDifficultySelect').value;
@@ -77,6 +78,8 @@ function resetMemory()
     currentPlayer = 'player1';
     player1Points = 0;
     player2Points = 0;
+    if (typeof endMessage !== 'undefined')
+        endMessage.remove();
 }
 
 function generateCardsBasedOnDifficulty() 
@@ -247,24 +250,24 @@ function checkForMatch() {
             setTimeout(() => {
                 if (isMemoryGameAIEnabled) {
                     if (points > pairs / 2) {
-                        window.updateGameStats(1);
+                        // window.updateGameStats(1);
                         endGame('Joueur');
                     } else if (points === pairs / 2) {
-                        window.updateGameStats(0);
+                        // window.updateGameStats(0);
                         endGame('Égalité');
                     } else {
-                        window.updateGameStats(-1);
+                        // window.updateGameStats(-1);
                         endGame('Bot');
                     }
                 } else {
                     if (player1Points > player2Points) {
-                        window.updateGameStats(1);
+                        // window.updateGameStats(1);
                         endGame('Player 1');
                     } else if (player1Points === player2Points) {
-                        window.updateGameStats(0);
+                        // window.updateGameStats(0);
                         endGame('Draw');
                     } else {
-                        window.updateGameStats(-1);
+                        // window.updateGameStats(-1);
                         endGame('Player 2');
                     }
                 }
