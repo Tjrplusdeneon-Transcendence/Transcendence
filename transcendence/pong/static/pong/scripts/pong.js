@@ -1771,6 +1771,18 @@ function updatePaddleSize(size) {
     console.log(`Paddle size updated to: ${paddleSizeLabels[size]} (${size}px)`);
 }
 
+document.getElementById("paddle-size").addEventListener("input", function () {
+    const paddleSizeLabels = {
+        50: "Small",
+        75: "Below Medium",
+        100: "Medium",
+        125: "Above Medium",
+        150: "Large"
+    };
+    const selectedValue = this.value;
+    document.getElementById("paddleSizeDisplay").textContent = paddleSizeLabels[selectedValue] || selectedValue;
+});
+
 
 
 
