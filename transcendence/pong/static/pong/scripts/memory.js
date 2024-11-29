@@ -91,13 +91,12 @@ function shuffle(array)
 
 function shuffleUnmatchedCards() 
 {
+    shuffleMessage();
     if(shuffleModeEnabled)
     {
-        // Extraire les cartes non trouvées
         const unmatchedCards = cards.filter(card => !card.matched);
-        shuffle(unmatchedCards); // Utiliser la fonction de mélange existante
+        shuffle(unmatchedCards); 
 
-        // Réassigner uniquement les cartes non appariées sans toucher aux cartes trouvées
         let unmatchedIndex = 0;
         for (let i = 0; i < cards.length; i++) 
         {
@@ -105,20 +104,18 @@ function shuffleUnmatchedCards()
                 cards[i] = unmatchedCards[unmatchedIndex++];
         }
 
-        // Réinitialiser l'affichage pour refléter les nouvelles positions
         resetBoard();
     }
 }
 
-// Fonction pour réinitialiser l'affichage du tableau
 function resetBoard() 
 {
-    gameContainer.innerHTML = ''; // Effacer les cartes existantes
-    displayCards(); // Réafficher les cartes dans leur nouvel ordre
+    gameContainer.innerHTML = ''; 
+    displayCards();
 }
 
-// Fonction pour montrer une carte non appariée
-function showHintCard() {
+function showHintCard() 
+{
     const unmatchedCards = cards.filter(card => !card.matched);
     if (unmatchedCards.length > 0) {
         const randomIndex = Math.floor(Math.random() * unmatchedCards.length);
@@ -130,11 +127,12 @@ function showHintCard() {
         setTimeout(() => {
             cardElement.classList.remove('hint');
             hideCard(cardElement);
-        }, 1000); // La carte reste visible pendant 1 seconde
+        }, 1000); 
     }
 }
 
-function displayCards() {
+function displayCards() 
+{
     gameContainer.innerHTML = ''; // Effacer l'affichage existant
     cards.forEach((card, index) => {
         const cardElement = document.createElement('div');
@@ -264,7 +262,8 @@ function checkForMatch()
     }
 }
 
-function botMove() {
+function botMove() 
+{
     if (!isMemoryGameAIEnabled || isPlayerTurn || hintActive) return; // Vérifie si l'aide est active
 
     let rememberedPairs = [];
@@ -309,6 +308,45 @@ function botMove() {
     }, 1000);
 }
 
+function shuffleMessage() 
+{
+    const cardsContainer = document.querySelector(".cards-container"); 
+    const endMessage = document.createElement("div");
+    
+    endMessage.style.position = "absolute";
+    endMessage.style.top = "50%";
+    endMessage.style.left = "50%";
+    endMessage.style.transform = "translate(-50%, -50%)";
+    endMessage.style.padding = "20px";
+    endMessage.style.backgroundColor = "#1a1a1a";
+    endMessage.style.color = "#fff";
+    endMessage.style.borderRadius = "10px";
+    endMessage.style.boxShadow = "0px 0px 10px rgba(255, 255, 255, 0.5)";
+    endMessage.style.textAlign = "center";
+    endMessage.style.zIndex = "1000";
+
+    endMessage.innerHTML = `
+        <h1>Reshuffle !</h1>
+        <p>No match since 4 tries, reshuffling...</p>
+    `;
+
+    document.body.appendChild(endMessage);
+
+    setTimeout(() => {
+        if (cardsContainer) {
+            cardsContainer.style.opacity = "0"; 
+            setTimeout(() => {
+                cardsContainer.innerHTML = ""; 
+                cardsContainer.style.opacity = "1"; 
+            }, 500); 
+        }
+    }, 1000); 
+
+    setTimeout(() => {
+        endMessage.remove();
+    }, 4000);
+}
+
 function endGame(winner) 
 {
     const cardsContainer = document.querySelector(".cards-container"); 
@@ -327,8 +365,8 @@ function endGame(winner)
     endMessage.style.zIndex = "1000";
 
     endMessage.innerHTML = `
-        <h1>🎉 ${winner} a gagné! 🎉</h1>
-        <p>Merci d'avoir joué.</p>
+        <h1>🎉 ${winner} win! 🎉</h1>
+        <p>Thanks for playing.</p>
     `;
 
     document.body.appendChild(endMessage);
@@ -342,10 +380,6 @@ function endGame(winner)
             }, 500); 
         }
     }, 1000); 
-
-    setTimeout(() => {
-        endMessage.remove();
-    }, 5000);
 }
 
 function restartMemory() 
