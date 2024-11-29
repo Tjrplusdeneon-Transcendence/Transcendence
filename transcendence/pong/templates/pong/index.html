@@ -176,17 +176,18 @@
                             </select>
                         </div>
                     </div>
+
+
                 
                     <!-- Ligne pour la taille de la palette -->
-                    <div class="row align-items-center mb-3">
+                    <div class="row align-items-center">
                         <div class="col-6 text-end">
                             <label for="paddle-size" class="form-label">Paddle Size:</label>
                         </div>
-                        <div class="col-6">
+                        <div>
                             <input 
                                 id="paddle-size" 
-                                type="range" 
-                                class="form-range" 
+                                type="range"
                                 min="50" 
                                 max="150" 
                                 step="25" 
@@ -196,6 +197,10 @@
                         </div>
                     </div>
                 </div>
+
+
+
+
                 
                 
                 <canvas id="pongCanvas" width="640" height="480" style="background-color: #000; display: none;"></canvas>
@@ -276,26 +281,39 @@
                     <button id="online-btn-memory" class="btn btn-primary">Online</button>
                 </div>
                 <!-- Difficulty selector -->
-                <div id="difficulty-menu-m" class="difficulty-menu-m mb-3">
-                    <div id="memo-select">
-                        <label for="memoryDifficultySelect" class="form-label">Select Difficulty:</label>
-                        <select id="memoryDifficultySelect" class="form-select">
-                            <option value="easy">Easy</option>
-                            <option value="medium" selected>Medium</option>
-                            <option value="hard">Hard</option>
-                        </select>
+                <div id="difficulty-menu-m" class="difficulty-menu-m mb-3" style="display: none;">
+                    <div class="row align-items-center mb-3">
+                        <div class="col-6 text-end">
+                            <label for="memoryDifficultySelect" class="form-label">Difficulty:</label>
+                        </div>
+                        <div class="col-6">
+                            <select id="memoryDifficultySelect" class="form-select">
+                                <option value="easy">Easy</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="hard">Hard</option>
+                            </select>
+                        </div>
                     </div>
+
                     <!-- Game Customs -->
-                    <div id="gamecustom-shuffle">
-                        <label>
-                            <input type="checkbox" id="shuffleToggle"> Enable ReShuffle Mode
-                        </label>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-6 text-end">
+                            <label for="shuffleToggle" class="form-label">ReShuffle Mode:</label>
+                        </div>
+                        <div class="col-6">
+                            <input type="checkbox" id="shuffleToggle" class="form-check-input">
+                        </div>
                     </div>
-                    <div id="gamecustom-hint">
-                        <label>
-                            <input type="checkbox" id="hintToggle"> Enable Show Random Card Mode
-                        </label>
+
+                    <div class="row align-items-center mb-3">
+                        <div class="col-6 text-end">
+                            <label for="hintToggle" class="form-label">ShowCard Mode:</label>
+                        </div>
+                        <div class="col-6">
+                            <input type="checkbox" id="hintToggle" class="form-check-input">
+                        </div>
                     </div>
+
                 <!--GAME-->
                 </div>
                     <div id="memory-game-container" class="memory-game-container"></div>
@@ -353,7 +371,6 @@
 <script src="{% static 'pong/scripts/menu.js' %}"></script>
 
 <script>
-	// Fonction pour vérifier si le menu principal est visible
 	function toggleFooterVisibility() {
 		const footer = document.getElementById('pong-footer');
 		const leftSide = document.getElementById('leftSide');
@@ -363,17 +380,16 @@
 		const leftSideM = document.getElementById('leftSideM');
 		const rightSideM = document.getElementById('rightSideM');
 	
-		// Vérifie si le menu principal est visible
 		if (leftSide && rightSide && window.getComputedStyle(leftSide).display !== 'none' && window.getComputedStyle(rightSide).display !== 'none') {
-			footer.style.display = 'none';  // Cache le footer
+			footer.style.display = 'none'; 
 		} else {
-			footer.style.display = 'flex';  // Affiche le footer
+			footer.style.display = 'flex';
 		}
 
         if (leftSideM && rightSideM && window.getComputedStyle(leftSideM).display !== 'none' && window.getComputedStyle(rightSideM).display !== 'none') {
-			footerM.style.display = 'none';  // Cache le footer
+			footerM.style.display = 'none';
 		} else {
-			footerM.style.display = 'flex';  // Affiche le footer
+			footerM.style.display = 'flex';
 		}
 	}
 	
