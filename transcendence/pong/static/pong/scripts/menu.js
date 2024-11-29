@@ -61,16 +61,12 @@ document.addEventListener("DOMContentLoaded", function()
 
     localMultiplayer.addEventListener('click', function() 
 	{
-        mainMenuCanvas.style.display = 'none';
-        singleplayerButton.style.display = 'none';
-        multiplayerButton.style.display = 'none';
-		leftSide.style.display = 'none';
-        rightSide.style.display = 'none';
-        multiplayerMenu.style.display = 'none';
+        resetDisplay_menu();
         difficultyMenu.style.display = 'block';
-		shuffleOption.style.display = 'block';
-		hintOption.style.display = 'block';
+		// shuffleOption.style.display = 'block';
+		// hintOption.style.display = 'block';
         startSoloGameBtn.style.display = 'block';
+        returnMenuBtn.style.display = 'block';
         startSoloGameBtn.textContent = 'Start Game';  // Changer le texte du bouton
     });
 
@@ -105,6 +101,33 @@ document.addEventListener("DOMContentLoaded", function()
         multiplayerButton.style.display = 'block';
     }
 });
+
+
+function resetDisplay_menu() {
+    console.log('Resetting display menu');
+    document.getElementById('mainMenuCanvas-memory').style.display = 'none';
+    document.getElementById('singleplayerButton-memory').style.display = 'none';
+    document.getElementById('multiplayerButton-memory').style.display = 'none';
+    document.getElementById('leftSideM').style.display = 'none';
+    document.getElementById('rightSideM').style.display = 'none';
+    // document.getElementById('closeModalM').style.display = 'none';
+
+    document.getElementById('difficulty-menu-m').style.display = 'none';
+    document.getElementById('multiplayer-menu-memory').style.display = 'none';
+    document.getElementById('local-btn-memory').style.display = 'none';
+    document.getElementById('memory-game-container').style.display = 'none';
+    // document.getElementById('gamecustom-shuffle').style.display = 'none';
+    // document.getElementById('gamecustom-hint').style.display = 'none';
+
+    document.getElementById('start-solo-game-btn-memo').style.display = 'none';
+    document.getElementById('go-back-btn-memo').style.display = 'none';
+    document.getElementById('return-menu-btn-memo').style.display = 'none';
+    document.getElementById('online-btn-memory').style.display = 'none';
+    document.getElementById('tournament-btn-memory').style.display = 'none';
+    document.getElementById('local-btn-memory').style.display = 'none';
+
+    console.log('Elements hidden');
+}
 
 // Affiche le menu de sélection de difficulté pour le jeu de memory
 function showMemoryMenu() {
