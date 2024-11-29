@@ -61,7 +61,7 @@
         <div class="carousel-item">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-6 col-12">
+                    <div class="col-md-6">
                         <div class="detail-box">
                             <h1>Memory</h1>
                             <p>Use your brain and remember the pictures</p>
@@ -70,7 +70,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-12">
+                    <div class="col-md-6">
                         <div class="img-box">
                             <img src="{% static 'pong/images/logo_memory.png' %}" alt="Game 2">
                         </div>
@@ -81,7 +81,7 @@
         <div class="carousel-item">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-6 col-12">
+                    <div class="col-md-6">
                         <div class="detail-box">
                             <h1>Doom</h1>
                             <p>Rock and roll baby!</p>
@@ -90,7 +90,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-12">
+                    <div class="col-md-6">
                         <div class="img-box">
                             <img src="{% static 'pong/images/Doom.png' %}" alt="Game 3">
                         </div>
@@ -120,9 +120,9 @@
 
 
 <!-- Modale pour le jeu Pong -->
-<div class="modal" id="pongModal" data-backdrop="" aria-labelledby="pongModalLabel" aria-hidden="true" data-bs-focus="false" data-bs-keyboard="false">
+<div class="modal fade" id="pongModal" data-backdrop="" aria-labelledby="pongModalLabel" aria-hidden="true" data-bs-focus="false" data-bs-backdrop="false" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content ">
+        <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="pongModalLabel">Pong Game</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
@@ -331,6 +331,7 @@
 <script src="{% static 'pong/scripts/gamestats.js' %}"></script>
 <script src="{% static 'pong/scripts/memory.js' %}"></script>
 <script src="{% static 'pong/scripts/menu.js' %}"></script>
+
 
 <script>
 	// Fonction pour vérifier si le menu principal est visible
