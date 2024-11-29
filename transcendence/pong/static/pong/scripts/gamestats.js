@@ -17,7 +17,7 @@ function increaseWins() {
         }).then(response => {
             if (response.ok) {
                 response.text().then(html => {
-                    document.getElementById('panel').innerHTML = html; // Update the entire panel
+                    document.getElementById('gameStats').innerHTML = html;
                 });
             }
         });
@@ -39,7 +39,7 @@ function increaseLosses() {
         }).then(response => {
             if (response.ok) {
                 response.text().then(html => {
-                    document.getElementById('panel').innerHTML = html; // Update the entire panel
+                    document.getElementById('gameStats').innerHTML = html;
                 });
             }
         });
@@ -62,11 +62,11 @@ function increaseGamesPlayed() {
         }).then(response => {
             if (response.ok) {
                 response.text().then(html => {
-                    document.getElementById('panel').innerHTML = html; // Update the entire panel
+                    document.getElementById('gameStats').innerHTML = html;
                 });
             }
         });
     } else {
-        console.log("user is NOT logged");
+        console.log("Gamestats: user is not logged");
     }
 }
