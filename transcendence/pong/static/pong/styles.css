@@ -348,6 +348,24 @@ body {
     margin-bottom: 5px;
 }
 
+#userStats {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #333;
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(255, 199, 15, 0.5);
+    color: #fc9d06;
+}
+
+#userStats h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+#userStats p {
+    margin-bottom: 5px;
+}
+
 #otherPlayerStats {
     margin-top: 20px;
     padding: 20px;
@@ -355,6 +373,7 @@ body {
     border-radius: 5px;
     box-shadow: 0 0 20px rgba(255, 199, 15, 0.5);
     color: #fc9d06;
+    position: relative;
 }
 
 #otherPlayerStats h2 {
@@ -367,6 +386,14 @@ body {
 }
 
 #closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+#closeOtherPlayerStatsButton {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -1060,16 +1087,8 @@ li {
 
 #gamecustom-blackout label, label[for="paddle-size"] {
     display: block;
-    color: #ff00fb;
     margin-bottom: 5px;
     font-size: 14px;
-}
-
-#darknessTogg, #shuffleToggle, #hintToggle {
-    accent-color: #00ffff;
-    transform: scale(1.3);
-    margin-right: 10px;
-    cursor: pointer;
 }
 
 #paddle-size {
@@ -1315,20 +1334,19 @@ li {
     width: 100%;
 }
 
-.difficulty-menu .row {
+.difficulty-menu .row, .difficulty-menu-m .row {
     margin-bottom: 1rem;
 }
 
-.difficulty-menu .col-6 {
+.difficulty-menu .col-6, .difficulty-menu-m .col-6 {
     display: flex;
     align-items: center;
 }
 
-.difficulty-menu .text-end {
+.difficulty-menu .text-end, .difficulty-menu-m .text-end {
     justify-content: flex-end;
     font-weight: bold;
 }
-
 
 #playerCount {
     font-size: 1.2rem;
@@ -1448,6 +1466,4 @@ li {
         transform: scale(1);
     }
 }
-
-
 

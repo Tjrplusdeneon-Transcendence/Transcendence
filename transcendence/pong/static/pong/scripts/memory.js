@@ -25,8 +25,6 @@ document.getElementById('start-solo-game-btn-memo').addEventListener('click', ()
     
     document.getElementById('difficulty-menu-m').style.display = 'none';
     document.getElementById('return-menu-btn-memo').style.display = 'none';
-    document.getElementById('gamecustom-shuffle').style.display = 'none';
-    document.getElementById('gamecustom-hint').style.display = 'none';
     gameContainer.style.display = 'grid';
 
     startMemory();
@@ -244,6 +242,7 @@ function checkForMatch() {
 
         if (matchedCards === cards.length) {
             setTimeout(() => {
+<<<<<<< HEAD
                 if (isMemoryGameAIEnabled) {
                     if (points > pairs / 2) {
                         window.updateGameStats(1);
@@ -269,6 +268,17 @@ function checkForMatch() {
                 }
                 if (isOnlineMultiplayer) {
                     sendMemoryGameState(); // Send updated game state to the server
+=======
+                if (points > pairs / 2) {
+                    //window.updateGameStats(1);
+                    endGame('Joueur');
+                } else if (points === pairs / 2) {
+                    //window.updateGameStats(0);
+                    endGame('Égalité');
+                } else {
+                    //window.updateGameStats(-1);
+                    endGame('Bot');
+>>>>>>> main
                 }
             }, 500);
         } else if (!isPlayerTurn && isMemoryGameAIEnabled) {
@@ -360,7 +370,41 @@ function botMove() {
 
 function endGame(winner) 
 {
-    alert(`${winner} a gagné!`);
+    const cardsContainer = document.querySelector(".cards-container"); 
+    const endMessage = document.createElement("div");
+    
+    endMessage.style.position = "absolute";
+    endMessage.style.top = "50%";
+    endMessage.style.left = "50%";
+    endMessage.style.transform = "translate(-50%, -50%)";
+    endMessage.style.padding = "20px";
+    endMessage.style.backgroundColor = "#1a1a1a";
+    endMessage.style.color = "#fff";
+    endMessage.style.borderRadius = "10px";
+    endMessage.style.boxShadow = "0px 0px 10px rgba(255, 255, 255, 0.5)";
+    endMessage.style.textAlign = "center";
+    endMessage.style.zIndex = "1000";
+
+    endMessage.innerHTML = `
+        <h1>🎉 ${winner} a gagné! 🎉</h1>
+        <p>Merci d'avoir joué.</p>
+    `;
+
+    document.body.appendChild(endMessage);
+
+    setTimeout(() => {
+        if (cardsContainer) {
+            cardsContainer.style.opacity = "0"; 
+            setTimeout(() => {
+                cardsContainer.innerHTML = ""; 
+                cardsContainer.style.opacity = "1"; 
+            }, 500); 
+        }
+    }, 1000); 
+
+    setTimeout(() => {
+        endMessage.remove();
+    }, 5000);
 }
 
 function restartMemory() 
@@ -368,8 +412,6 @@ function restartMemory()
     resetMemory();
     gameContainer.style.display = 'none';
     document.getElementById('difficulty-menu-m').style.display = 'block';
-    document.getElementById('gamecustom-shuffle').style.display = 'block';
-    document.getElementById('gamecustom-hint').style.display = 'block';
 
     const startButton = document.getElementById('start-solo-game-btn-memo');
     document.getElementById('return-menu-btn-memo').style.display = 'block';

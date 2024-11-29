@@ -12,8 +12,6 @@ document.addEventListener("DOMContentLoaded", function()
     const multiplayerMenu = document.getElementById('multiplayer-menu-memory');
     const localMultiplayer = document.getElementById('local-btn-memory');
     const memoryGameContainer = document.getElementById('memory-game-container');
-	const shuffleOption = document.getElementById('gamecustom-shuffle');
-	const hintOption = document.getElementById('gamecustom-hint');
 
 
     const startSoloGameBtn = document.getElementById('start-solo-game-btn-memo');
@@ -22,8 +20,6 @@ document.addEventListener("DOMContentLoaded", function()
 
     // Masquer les sous-menus au chargement
     difficultyMenu.style.display = 'none';
-	shuffleOption.style.display = 'none';
-	hintOption.style.display = 'none';
     multiplayerMenu.style.display = 'none';
     returnMenuBtn.style.display = 'none';
     memoryGameContainer.style.display = 'none';
@@ -42,8 +38,6 @@ document.addEventListener("DOMContentLoaded", function()
 		leftSide.style.display = 'none';
         rightSide.style.display = 'none';
         difficultyMenu.style.display = 'block';
-		shuffleOption.style.display = 'block';
-		hintOption.style.display = 'block';
         startSoloGameBtn.style.display = 'block';
         returnMenuBtn.style.display = 'block';
         startSoloGameBtn.textContent = 'Start Game';  // Changer le texte du bouton
@@ -58,8 +52,6 @@ document.addEventListener("DOMContentLoaded", function()
 		leftSide.style.display = 'none';
         rightSide.style.display = 'none';
         difficultyMenu.style.display = 'none';
-		shuffleOption.style.display = 'none';
-		hintOption.style.display = 'none';
         startSoloGameBtn.style.display = 'none';
         goBackBtn.style.display = 'inline-block';
         goBackBtn.textContent = 'Return to Menu';
@@ -104,8 +96,6 @@ document.addEventListener("DOMContentLoaded", function()
         singleplayerButton.style.display = 'block';
         multiplayerButton.style.display = 'block';
         difficultyMenu.style.display = 'none';
-		shuffleOption.style.display = 'none';
-		hintOption.style.display = 'none';
         multiplayerMenu.style.display = 'none';
         returnMenuBtn.style.display = 'none';
         memoryGameContainer.style.display = 'none';

@@ -1,32 +1,20 @@
 <span id="closeButton">X</span>
 {% if not user.is_authenticated %}
-	<button id="signinButton" hx-get="{% url 'signin' %}" hx-target="#sign_form" hx-swap="innerHTML">
+	<button id="signinButton" hx-get="{% url 'signin' %}" hx-target="#signForm" hx-swap="innerHTML">
 		Sign In
 	</button>
-	<button id="signupButton" hx-get="{% url 'signup' %}" hx-target="#sign_form" hx-swap="innerHTML">
+	<button id="signupButton" hx-get="{% url 'signup' %}" hx-target="#signForm" hx-swap="innerHTML">
 		Sign Up
 	</button>
-	<div id="sign_form">
+	<div id="signForm">
+		{{ sign_html|safe }}
 	</div>
 {% else %}
-	<p>Welcome, {{ request.user }}</p>
+	<p>Welcome, {{ user.username }}</p>
 	<button id="logoutButton" hx-get="{% url 'logout' %}" hx-target="#loginPanel" hx-swap="innerHTML">
 		Log Out
 	</button>
 	<div id="gameStats">
-        <h2>Game Statistics</h2>
-        <p>Games played: <span id="gamesPlayed">{{ user.games_played }}</span></p>
-        <p>Wins: <span id="wins">{{ user.wins }}</span></p>
-        <p>Losses: <span id="losses">{{ user.losses }}</span></p>
-        <p>Score: <span id="totalScore">{{ user.score }}</span></p>
+		{% include 'pong/partials/gamestats.html' %}
     </div>
-	{% if other %}
-	<div id="otherPlayerStats">
-        <h2>{{ other.username }} Statistics</h2>
-        <p>Games played: <span id="gamesPlayed">{{ other.games_played }}</span></p>
-        <p>Wins: <span id="wins">{{ other.wins }}</span></p>
-        <p>Losses: <span id="losses">{{ other.losses }}</span></p>
-        <p>Score: <span id="totalScore">{{ other.score }}</span></p>
-    </div>
-	{% endif %}
 {% endif %}
