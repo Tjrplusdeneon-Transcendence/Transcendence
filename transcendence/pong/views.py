@@ -6,6 +6,9 @@ from django.conf import settings
 from pong.models import Chat
 from django.template.loader import render_to_string
 from django.middleware.csrf import get_token
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+
 
 def view_404(request, exception=None):
     return redirect('index')
@@ -66,3 +69,32 @@ def logout_user(request):
         'panel_html': panel_html,
         'chat_html': chat_html
         })
+
+@login_required
+@require_POST
+def increase_wins(request):
+    user = request.user
+    user.wins += 1
+    user.score += 1
+    user.save()
+    gamestats_html = render_to_string('pong/partials/gamestats.html', request=request)
+    return JsonResponse({'gamestats_html': gamestats_html})
+
+@login_required
+@require_POST
+def increase_losses(request):
+    user = request.user
+    user.losses += 1
+    user.score -= 1
+    user.save()
+    gamestats_html = render_to_string('pong/partials/gamestats.html', request=request)
+    return JsonResponse({'gamestats_html': gamestats_html})
+
+@login_required
+@require_POST
+def increase_games_played(request):
+    user = request.user
+    user.games_played += 1
+    user.save()
+    gamestats_html = render_to_string('pong/partials/gamestats.html', request=request)
+    return JsonResponse({'gamestats_html': gamestats_html})

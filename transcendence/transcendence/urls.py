@@ -24,6 +24,9 @@ urlpatterns = [
     path('signin/', views.signin_user, name='signin'),
 	path('signup/', views.signup_user, name='signup'),
     path('logout/', views.logout_user, name='logout'),
+	path('increase_wins/', views.increase_wins, name='increase_wins'),
+	path('increase_losses/', views.increase_losses, name='increase_losses'),
+	path('increase_games_played/', views.increase_games_played, name='increase_games_played'),
 ]
 
 handler404 = 'pong.views.view_404'

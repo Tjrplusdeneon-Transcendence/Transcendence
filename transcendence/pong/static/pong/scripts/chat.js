@@ -212,6 +212,9 @@ document.addEventListener('htmx:afterRequest', function(evt) {
                 if (response.chat_html) {
                     document.getElementById('chatSection').innerHTML = response.chat_html;
                 }
+                if (response.gamestats_html) {
+                    document.getElementById('gameStats').innerHTML = response.gamestats_html;
+                }
         }
     } catch (err) {
         console.log("htmx: not Json");
