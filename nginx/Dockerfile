@@ -20,4 +20,4 @@ COPY nginx.conf /etc/nginx/conf.d
 
 RUN chown -R www-data:www-data /usr/share/nginx/html
 
-EXPOSE 8443
+EXPOSE 10000

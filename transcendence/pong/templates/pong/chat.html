@@ -1,6 +1,6 @@
 {% if user.is_authenticated %}
 <div class="chat-container" id="chatContainer">
-    <h2>Tchat</h2>
+    <h2>Chat</h2>
     <div class="chat-box" id="chatBox">
         <ul class="message-list" id="messageList">
             {% for message in chat_messages reversed %}
@@ -21,7 +21,7 @@
                     {% endif %}
             {% endfor %}
         </ul>
-    </div>    
+    </div>
     <div class="chat-input">
         <input id="chat-message-input" type="text" placeholder="Type your message..." style="width: 70%;" maxlength="50"><br>
         <button id="chat-message-submit" name="chatBtn">➤</button>

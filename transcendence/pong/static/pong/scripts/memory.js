@@ -9,6 +9,7 @@ let points = 0;
 let pairs = 10;
 let isMemoryGameAIEnabled = true;
 let isPlayerTurn = true;
+let messageDisplay = false;
 let shuffleModeEnabled = false;
 let hintModeEnabled = false;
 let hintActive = false; // Indique si l'aide est en cours
@@ -19,6 +20,7 @@ let shuffleAttempts = 0;
 let currentPlayer = 'player1'; // Track the current player
 let player1Points = 0;
 let player2Points = 0;
+let endMessage;
 
 document.getElementById('start-solo-game-btn-memo').addEventListener('click', () => {
     defaultDifficulty = document.getElementById('memoryDifficultySelect').value;
@@ -39,6 +41,7 @@ document.getElementById('hintToggle').addEventListener('change', function() {
 });
 
 function startMemory() {
+    increaseGamesPlayed();
     resetMemory();
     generateCardsBasedOnDifficulty();
     shuffle(cards);
@@ -70,11 +73,14 @@ function resetMemory()
     matchedCards = 0;
     points = 0;
     isPlayerTurn = true;
+    messageDisplay = false;
     attempts = 0;
     shuffleAttempts = 0;
     currentPlayer = 'player1';
     player1Points = 0;
     player2Points = 0;
+    if (typeof endMessage !== 'undefined')
+        endMessage.remove();
 }
 
 function generateCardsBasedOnDifficulty() 
@@ -104,6 +110,7 @@ function shuffle(array)
 
 function shuffleUnmatchedCards() 
 {
+    shuffleMessage();
     if(shuffleModeEnabled)
     {
         const unmatchedCards = cards.filter(card => !card.matched);
@@ -173,7 +180,7 @@ function displayCards() {
 }
 
 function onCardClick(cardElement) {
-    if (isPlayerTurn && flippedCards.length < 2 && cardElement.classList.contains('hidden') && (!isOnlineMultiplayer || currentPlayer === playerRole_memory)) {
+    if (!messageDisplay && isPlayerTurn && flippedCards.length < 2 && cardElement.classList.contains('hidden') && (!isOnlineMultiplayer || currentPlayer === playerRole_memory)) {
         revealCard(cardElement);
         flippedCards.push(cardElement);
         if (isOnlineMultiplayer) {
@@ -242,43 +249,35 @@ function checkForMatch() {
 
         if (matchedCards === cards.length) {
             setTimeout(() => {
-<<<<<<< HEAD
                 if (isMemoryGameAIEnabled) {
                     if (points > pairs / 2) {
-                        window.updateGameStats(1);
+                        increaseWins();
+                        // window.updateGameStats(1);
                         endGame('Joueur');
                     } else if (points === pairs / 2) {
-                        window.updateGameStats(0);
+                        // window.updateGameStats(0);
                         endGame('Égalité');
                     } else {
-                        window.updateGameStats(-1);
+                        // window.updateGameStats(-1);
+                        increaseLosses();
                         endGame('Bot');
                     }
                 } else {
                     if (player1Points > player2Points) {
-                        window.updateGameStats(1);
+                        // window.updateGameStats(1);
+                        increaseWins();
                         endGame('Player 1');
                     } else if (player1Points === player2Points) {
-                        window.updateGameStats(0);
+                        // window.updateGameStats(0);
                         endGame('Draw');
                     } else {
-                        window.updateGameStats(-1);
+                        // window.updateGameStats(-1);
+                        increaseLosses();
                         endGame('Player 2');
                     }
                 }
                 if (isOnlineMultiplayer) {
                     sendMemoryGameState(); // Send updated game state to the server
-=======
-                if (points > pairs / 2) {
-                    //window.updateGameStats(1);
-                    endGame('Joueur');
-                } else if (points === pairs / 2) {
-                    //window.updateGameStats(0);
-                    endGame('Égalité');
-                } else {
-                    //window.updateGameStats(-1);
-                    endGame('Bot');
->>>>>>> main
                 }
             }, 500);
         } else if (!isPlayerTurn && isMemoryGameAIEnabled) {
@@ -368,9 +367,8 @@ function botMove() {
     }, 1000);
 }
 
-function endGame(winner) 
+function shuffleMessage() 
 {
-    const cardsContainer = document.querySelector(".cards-container"); 
     const endMessage = document.createElement("div");
     
     endMessage.style.position = "absolute";
@@ -386,25 +384,41 @@ function endGame(winner)
     endMessage.style.zIndex = "1000";
 
     endMessage.innerHTML = `
-        <h1>🎉 ${winner} a gagné! 🎉</h1>
-        <p>Merci d'avoir joué.</p>
+        <h1>Reshuffle !</h1>
+        <p>No match since 4 tries, reshuffling...</p>
     `;
-
+    
+    messageDisplay = true;
     document.body.appendChild(endMessage);
 
     setTimeout(() => {
-        if (cardsContainer) {
-            cardsContainer.style.opacity = "0"; 
-            setTimeout(() => {
-                cardsContainer.innerHTML = ""; 
-                cardsContainer.style.opacity = "1"; 
-            }, 500); 
-        }
-    }, 1000); 
-
-    setTimeout(() => {
         endMessage.remove();
-    }, 5000);
+        messageDisplay = false;
+    }, 4000);
+}
+
+function endGame(winner) 
+{
+    const endMessage = document.createElement("div");
+    
+    endMessage.style.position = "absolute";
+    endMessage.style.top = "50%";
+    endMessage.style.left = "50%";
+    endMessage.style.transform = "translate(-50%, -50%)";
+    endMessage.style.padding = "20px";
+    endMessage.style.backgroundColor = "#1a1a1a";
+    endMessage.style.color = "#fff";
+    endMessage.style.borderRadius = "10px";
+    endMessage.style.boxShadow = "0px 0px 10px rgba(255, 255, 255, 0.5)";
+    endMessage.style.textAlign = "center";
+    endMessage.style.zIndex = "1000";
+
+    endMessage.innerHTML = `
+        <h1>🎉 ${winner} win! 🎉</h1>
+        <p>Thanks for playing.</p>
+    `;
+
+    document.body.appendChild(endMessage);
 }
 
 function restartMemory() 

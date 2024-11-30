@@ -2,6 +2,14 @@ function isUserLogged() {
     return document.body.getAttribute('data-user-authenticated') === 'True';
 }
 
+function handleResponse(response) {
+    if (response.ok) {
+        response.json().then(data => {
+            document.getElementById('gameStats').innerHTML = data.gamestats_html;
+        });
+    }
+}
+
 function increaseWins() {
     if (isUserLogged())
     {
@@ -13,17 +21,12 @@ function increaseWins() {
                 'X-CSRFToken': csrfToken
             },
             body: JSON.stringify({})
-        }).then(response => {
-            if (response.ok) {
-                response.text().then(html => {
-                    document.getElementById('panel').innerHTML = html; // Update the entire panel
-                });
-            }
-        });
+        }).then(handleResponse);
     }
 }
 
 function increaseLosses() {
+    console.log("NewLoss");
     if (isUserLogged())
     {
         const csrfToken = document.querySelector('body').getAttribute('hx-headers').match(/"X-CSRFToken": "([^"]+)"/)[1];
@@ -34,17 +37,12 @@ function increaseLosses() {
                 'X-CSRFToken': csrfToken
             },
             body: JSON.stringify({})
-        }).then(response => {
-            if (response.ok) {
-                response.text().then(html => {
-                    document.getElementById('panel').innerHTML = html; // Update the entire panel
-                });
-            }
-        });
+        }).then(handleResponse);
     }
 }
 
 function increaseGamesPlayed() {
+    console.log("NewGame");
     if (isUserLogged())
     {
         console.log("user is logged");
@@ -56,14 +54,6 @@ function increaseGamesPlayed() {
                 'X-CSRFToken': csrfToken
             },
             body: JSON.stringify({})
-        }).then(response => {
-            if (response.ok) {
-                response.text().then(html => {
-                    document.getElementById('panel').innerHTML = html; // Update the entire panel
-                });
-            }
-        });
-    } else {
-        console.log("user is NOT logged");
+        }).then(handleResponse);
     }
 }
