@@ -767,7 +767,15 @@ function navigateTo_memo(path) {
 
 cross.addEventListener('click', function()
 { 
-    resetToMainMenu();
+    if (socket_memory && socket_memory.readyState === WebSocket.OPEN) {
+        socket_memory.send(JSON.stringify({ type: 'quit' }));
+        socket_memory.close();
+        isOnlineMultiplayer = false;
+        resetMatchmakingStateMemory();
+    }
+    showMainMenu_Memory();
+    resetMemoryValues();
+    history.replaceState(null, '', window.location.pathname);
 });
 
 // Bouton Solo
