@@ -250,29 +250,29 @@ function checkForMatch() {
         if (matchedCards === cards.length) {
             setTimeout(() => {
                 if (!isGameActive) return; // Check if the game is still active
-                if (isMemoryGameAIEnabled) {
-                    if (points > pairs / 2) {
-                        // window.updateGameStats(1);
-                        endGame('Joueur');
-                    } else if (points === pairs / 2) {
-                        // window.updateGameStats(0);
-                        endGame('Égalité');
-                    } else {
-                        // window.updateGameStats(-1);
-                        endGame('Bot');
-                    }
-                } else {
-                    if (player1Points > player2Points) {
-                        // window.updateGameStats(1);
-                        endGame('Player 1');
-                    } else if (player1Points === player2Points) {
-                        // window.updateGameStats(0);
-                        endGame('Draw');
-                    } else {
-                        // window.updateGameStats(-1);
-                        endGame('Player 2');
-                    }
-                }
+                // if (isMemoryGameAIEnabled) {
+                //     if (points > pairs / 2) {
+                //         // window.updateGameStats(1);
+                //         endGame('Joueur');
+                //     } else if (points === pairs / 2) {
+                //         // window.updateGameStats(0);
+                //         endGame('Égalité');
+                //     } else {
+                //         // window.updateGameStats(-1);
+                //         endGame('Bot');
+                //     }
+                // } else {
+                //     if (player1Points > player2Points) {
+                //         // window.updateGameStats(1);
+                //         endGame('Player 1');
+                //     } else if (player1Points === player2Points) {
+                //         // window.updateGameStats(0);
+                //         endGame('Draw');
+                //     } else {
+                //         // window.updateGameStats(-1);
+                //         endGame('Player 2');
+                //     }
+                // }
                 if (isOnlineMultiplayer) {
                     sendMemoryGameState(); // Send updated game state to the server
                 }
@@ -439,29 +439,29 @@ function shuffleMessage()
     }, 4000);
 }
 
-function endGame(winner) 
-{
-    const endMessage = document.createElement("div");
+// function endGame(winner) 
+// {
+//     const endMessage = document.createElement("div");
     
-    endMessage.style.position = "absolute";
-    endMessage.style.top = "50%";
-    endMessage.style.left = "50%";
-    endMessage.style.transform = "translate(-50%, -50%)";
-    endMessage.style.padding = "20px";
-    endMessage.style.backgroundColor = "#1a1a1a";
-    endMessage.style.color = "#fff";
-    endMessage.style.borderRadius = "10px";
-    endMessage.style.boxShadow = "0px 0px 10px rgba(255, 255, 255, 0.5)";
-    endMessage.style.textAlign = "center";
-    endMessage.style.zIndex = "1000";
+//     endMessage.style.position = "absolute";
+//     endMessage.style.top = "50%";
+//     endMessage.style.left = "50%";
+//     endMessage.style.transform = "translate(-50%, -50%)";
+//     endMessage.style.padding = "20px";
+//     endMessage.style.backgroundColor = "#1a1a1a";
+//     endMessage.style.color = "#fff";
+//     endMessage.style.borderRadius = "10px";
+//     endMessage.style.boxShadow = "0px 0px 10px rgba(255, 255, 255, 0.5)";
+//     endMessage.style.textAlign = "center";
+//     endMessage.style.zIndex = "1000";
 
-    endMessage.innerHTML = `
-        <h1>🎉 ${winner} win! 🎉</h1>
-        <p>Thanks for playing.</p>
-    `;
+//     endMessage.innerHTML = `
+//         <h1>🎉 ${winner} win! 🎉</h1>
+//         <p>Thanks for playing.</p>
+//     `;
 
-    document.body.appendChild(endMessage);
-}
+//     document.body.appendChild(endMessage);
+// }
 
 function restartMemory() 
 {
@@ -545,16 +545,14 @@ function launchOnlineMemoryGame() {
                 document.getElementById('searching-btn-memory').classList.add('active');
             }
         } else if (data.type === 'start_game') {
-            document.getElementById('searching-menu-memory').style.display = 'none';
+            resetDisplay_menu();
             document.getElementById('rematch-btn-memory').style.display = 'inline-block';
             document.getElementById('quit-btn-memory').style.display = 'inline-block';
             document.getElementById('quit-btn-memory').textContent = 'Quit Match';
-            document.getElementById('go-back-btn-memo').style.display = 'inline-block';
             initializeMemoryGameState(data.initial_state);
             startMemory();
             resetMatchmakingStateMemory();
             document.getElementById('rematch-btn-memory').disabled = true;
-            document.getElementById('quit-btn-memory').disabled = true;
         } else if (data.type === 'opponent_left') {
             document.getElementById('searching-btn-memory').textContent = 'Opponent has left the match';
             document.getElementById('searching-btn-memory').disabled = true;
@@ -607,16 +605,6 @@ document.getElementById('rematch-btn-memory').addEventListener('click', function
     this.disabled = true;
     rematchRequested_memory = true;
     socket_memory.send(JSON.stringify({ type: 'rematch', player: playerRole_memory }));
-});
-
-document.getElementById('quit-btn-memory').addEventListener('click', function() {
-    socket_memory.send(JSON.stringify({ type: 'quit' }));
-    resetMatchmakingStateMemory();
-    document.getElementById('multiplayer-menu-memory').style.display = 'flex';
-    document.getElementById('rematch-btn-memory').style.display = 'none';
-    document.getElementById('quit-btn-memory').style.display = 'none';
-    document.getElementById('memory-game-container').style.display = 'none';
-    document.getElementById('go-back-btn-memo').style.display = 'inline-block';
 });
 
 function initializeMemoryGameState(initialState) {
@@ -744,6 +732,7 @@ const cross = document.getElementById('closeModalM');
 const difficultyMenu = document.getElementById('difficulty-menu-m');
 const multiplayerMenu = document.getElementById('multiplayer-menu-memory');
 const localMultiplayer = document.getElementById('local-btn-memory');
+const onlineMultiplayerBtn = document.getElementById('online-btn-memory');
 const memoryGameContainer = document.getElementById('memory-game-container');
 
 const startSoloGameBtn = document.getElementById('start-solo-game-btn-memo');
@@ -757,7 +746,7 @@ const routes_memo = {
     'solo-game-memo': showSoloGame_Memory,
     'multiplayer-memo': showMultiplayerMenu_Memory,
     'local-multiplayer-memo': showLocalMultiplayerMenu_Memory,
-    // 'online': showOnlineMenu,
+    'online-memo': showOnlineMenu_Memory,
     // 'rematch': showRematchMenu,
     // 'quit': showQuitMenu,
 };
@@ -792,6 +781,7 @@ function showSoloMenu_Memory() {
     resetDisplay_menu();
     resetGameState();
     isMemoryGameAIEnabled = true;
+    isOnlineMultiplayer = false;
     difficultyMenu.style.display = 'block';
     if (document.getElementById('gamecustom-shuffle') !== null)
         document.getElementById('gamecustom-shuffle').style.display = 'block';
@@ -827,6 +817,7 @@ function showMultiplayerMenu_Memory() {
 
 function showLocalMultiplayerMenu_Memory() {
     resetGameState();
+    isOnlineMultiplayer = false;
     isMemoryGameAIEnabled = false;
     resetDisplay_menu();
     difficultyMenu.style.display = 'block';
@@ -844,20 +835,34 @@ function showLocalMultiplayerMenu_Memory() {
     startSoloGameBtn.addEventListener('click', startMemory);
 }
 
+function showOnlineMenu_Memory() {
+    resetDisplay_menu();
+    multiplayerMenu.style.display = 'flex';
+    document.getElementById('searching-btn-memory').style.display = 'block';
+    document.getElementById('rematch-btn-memory').style.display = 'none';
+    document.getElementById('quit-btn-memory').style.display = 'none';
+    launchOnlineMemoryGame();
+}
 // Bouton Multijoueur Local
 
-const onlineMultiplayerBtn = document.getElementById('online-btn-memory');
 onlineMultiplayerBtn.addEventListener('click', function() {
-    launchOnlineMemoryGame();
+    navigateTo_memo('online-memo');
 });
+
 // Gestion du bouton Go Back
 goBackBtn.addEventListener('click', function() {
+    if (socket_memory && socket_memory.readyState === WebSocket.OPEN) {
+        socket_memory.close();
+    }
     history.back();
 });
 
 // Fonction pour gérer le retour au menu principaldocument.getElementById('difficulty-menu-m').style.display = 'none';
 
 function resetToMainMenu() {
+    if (socket_memory && socket_memory.readyState === WebSocket.OPEN) {
+        socket_memory.close();
+    }
     mainMenuCanvas.style.display = 'block';
     difficultyMenu.style.display = 'none';
     multiplayerMenu.style.display = 'none';
@@ -888,6 +893,12 @@ function resetDisplay_menu() {
         document.getElementById('gamecustom-shuffle').style.display = 'none';
     if (document.getElementById('gamecustom-hint') !== null)
         document.getElementById('gamecustom-hint').display = 'none';
+    if (document.getElementById('searching-btn-memory') !== null)
+        document.getElementById('searching-btn-memory').style.display = 'none';
+    if (document.getElementById('rematch-btn-memory') !== null)
+        document.getElementById('rematch-btn-memory').style.display = 'none';
+    if (document.getElementById('quit-btn-memory') !== null)
+        document.getElementById('quit-btn-memory').style.display = 'none';
 }
 
 
@@ -908,6 +919,15 @@ function resetDisplay_menu() {
 // document.getElementById('memoryCanvas').style.display = 'none';
 // document.getElementById('start-solo-game-btn-memo').style.display = 'none';
 // }
+
+document.getElementById('quit-btn-memory').addEventListener('click', function() {
+    if (socket_memory && socket_memory.readyState === WebSocket.OPEN) {
+        socket_memory.send(JSON.stringify({ type: 'quit' }));
+        socket_memory.close();
+    }
+    resetMatchmakingStateMemory();
+    history.back();
+});
 
 mainMenuCanvas.addEventListener('click', function() {
     navigateTo_memo('memory-menu');
@@ -930,6 +950,11 @@ localMultiplayer.addEventListener('click', function() {
 });
 
 window.addEventListener('popstate', (event) => {
+    if (socket_memory && socket_memory.readyState === WebSocket.OPEN) {
+        resetMatchmakingStateMemory();
+        socket_memory.close();
+    }
+    resetMatchmakingStateMemory();
     resetMemoryValues();
     const path = window.location.hash.substring(1); // Use hash to get the path
     if (routes_memo[path]) {
@@ -940,6 +965,11 @@ window.addEventListener('popstate', (event) => {
 });
 // Initialize the correct menu on page load
 document.addEventListener('DOMContentLoaded', () => {
+    if (socket_memory && socket_memory.readyState === WebSocket.OPEN) {
+        resetMatchmakingStateMemory();
+        socket_memory.close();
+    }
+    resetMatchmakingStateMemory();
     resetMemoryValues();
     const path = window.location.hash.substring(1); // Use hash to get the path
     if (routes_memo[path]) {
