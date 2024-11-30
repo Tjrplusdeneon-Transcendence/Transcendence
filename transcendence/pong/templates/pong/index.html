@@ -19,7 +19,7 @@
     <div class="login-panel" id="loginPanel">
         {% include 'pong/partials/panel.html' %}
     </div>
-</div>  
+</div>
 
 <!-- Tchat -->
 <div id="chatSection">
@@ -33,7 +33,7 @@
         <h2 id="profileUsername"></h2>
         <button id="addFriendBtn">Add as Friend</button>
     </div>
-</div>    
+</div>
 
 <!-- Slider Section -->
 <section id="carouselIndicators" class="carousel slide slider_section" data-bs-ride="carousel">
@@ -130,11 +130,11 @@
             <div class="modal-body">
                 <!-- New Main Menu Canvas -->
                 <canvas id="mainMenuCanvas" width="640" height="480" style="background-color: #1a1a1a;"></canvas>
-                <div 
+                <div
                     id="leftSide" class="main-menu-side">–Singleplayer
                     <button id="singleplayerButton" class="main-menu-button"></button>
                 </div>
-                <div 
+                <div
                     id="rightSide" class="main-menu-side">–Multiplayer
                     <button id="multiplayerButton" class="main-menu-button"></button>
                 </div>
@@ -152,7 +152,7 @@
                             </select>
                         </div>
                     </div>
-                
+
                     <!-- Ligne pour Darkness Mode -->
                     <div class="row align-items-center mb-3">
                         <div class="col-6 text-end">
@@ -162,7 +162,7 @@
                             <input type="checkbox" id="darknessToggle" class="form-check-input">
                         </div>
                     </div>
-                
+
                     <!-- Ligne pour la taille de la balle -->
                     <div class="row align-items-center mb-3">
                         <div class="col-6 text-end">
@@ -178,19 +178,19 @@
                     </div>
 
 
-                
+
                     <!-- Ligne pour la taille de la palette -->
                     <div class="row align-items-center">
                         <div class="col-6 text-end">
                             <label for="paddle-size" class="form-label">Paddle Size:</label>
                         </div>
                         <div>
-                            <input 
-                                id="paddle-size" 
+                            <input
+                                id="paddle-size"
                                 type="range"
-                                min="50" 
-                                max="150" 
-                                step="25" 
+                                min="50"
+                                max="150"
+                                step="25"
                                 value="100"
                             />
                             <span id="paddleSizeDisplay" class="ms-2">Medium</span>
@@ -199,19 +199,15 @@
                 </div>
 
 
-
-
-                
-                
                 <canvas id="pongCanvas" width="640" height="480" style="background-color: #000; display: none;"></canvas>
-                
+
                 <!-- New multiplayer menu -->
                 <div id="multiplayer-menu" style="display: none;">
                     <button id="local-btn" class="btn btn-primary">Local</button>
                     <button id="tournament-btn" class="btn btn-primary">Tournament</button>
                     <button id="online-btn" class="btn btn-primary">Online</button>
                 </div>
-                
+
                 <!-- New searching for opponent menu -->
                 <div id="searching-menu" style="display: none;">
                     <button id="searching-btn" class="btn btn-primary" disabled>Searching for opponent...</button>
@@ -267,11 +263,11 @@
             <div class="modal-body">
                 <!-- New Main Menu Canvas -->
                 <canvas id="mainMenuCanvas-memory" width="640" height="480" style="background-color: #1a1a1a;"></canvas>
-                <div 
+                <div
                     id="leftSideM" class="main-menu-side">–Singleplayer
                     <button id="singleplayerButton-memory" class="main-menu-button"></button>
                 </div>
-                <div 
+                <div
                     id="rightSideM" class="main-menu-side">–Multiplayer
                     <button id="multiplayerButton-memory" class="main-menu-button"></button>
                 </div>
@@ -318,7 +314,7 @@
                 </div>
                     <div id="memory-game-container" class="memory-game-container"></div>
                 </div>
-                 
+
                 <!-- New multiplayer menu -->
                 <div id="multiplayer-menu-memory" style="display: none;">
                     <button id="local-btn-memory" class="btn btn-primary">Local</button>
@@ -371,31 +367,31 @@
 <script src="{% static 'pong/scripts/menu.js' %}"></script>
 
 <script>
-	function toggleFooterVisibility() {
-		const footer = document.getElementById('pong-footer');
-		const leftSide = document.getElementById('leftSide');
-		const rightSide = document.getElementById('rightSide');
+    function toggleFooterVisibility() {
+        const footer = document.getElementById('pong-footer');
+        const leftSide = document.getElementById('leftSide');
+        const rightSide = document.getElementById('rightSide');
 
         const footerM = document.getElementById('memory-footer');
-		const leftSideM = document.getElementById('leftSideM');
-		const rightSideM = document.getElementById('rightSideM');
-	
-		if (leftSide && rightSide && window.getComputedStyle(leftSide).display !== 'none' && window.getComputedStyle(rightSide).display !== 'none') {
-			footer.style.display = 'none'; 
-		} else {
-			footer.style.display = 'flex';
-		}
+        const leftSideM = document.getElementById('leftSideM');
+        const rightSideM = document.getElementById('rightSideM');
+
+        if (leftSide && rightSide && window.getComputedStyle(leftSide).display !== 'none' && window.getComputedStyle(rightSide).display !== 'none') {
+            footer.style.display = 'none';
+        } else {
+            footer.style.display = 'flex';
+        }
 
         if (leftSideM && rightSideM && window.getComputedStyle(leftSideM).display !== 'none' && window.getComputedStyle(rightSideM).display !== 'none') {
-			footerM.style.display = 'none';
-		} else {
-			footerM.style.display = 'flex';
-		}
-	}
-	
-	// Exécute la fonction lors du chargement de la page et à chaque changement de menu
-	document.addEventListener('DOMContentLoaded', toggleFooterVisibility);
-	document.addEventListener('click', toggleFooterVisibility);
+            footerM.style.display = 'none';
+        } else {
+            footerM.style.display = 'flex';
+        }
+    }
+
+    // Exécute la fonction lors du chargement de la page et à chaque changement de menu
+    document.addEventListener('DOMContentLoaded', toggleFooterVisibility);
+    document.addEventListener('click', toggleFooterVisibility);
 </script>
-	
+
 {% endblock content %}

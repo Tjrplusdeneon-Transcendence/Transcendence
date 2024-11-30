@@ -412,7 +412,7 @@ body {
     padding: 20px;
     border-radius: 10px;
     color: white;
-    z-index: 997;
+    z-index: 987;
     pointer-events: auto;
 }
 
@@ -564,6 +564,7 @@ li {
 }
 
 .message {
+    padding: 5px;
     border-radius: 10px;
     position: relative;
     word-wrap: break-word;
