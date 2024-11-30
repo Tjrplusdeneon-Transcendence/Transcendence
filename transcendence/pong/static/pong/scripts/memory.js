@@ -33,6 +33,7 @@ document.getElementById('hintToggle').addEventListener('change', function() {
 });
 
 function startMemory() {
+    increaseGamesPlayed();
     resetMemory();
     generateCardsBasedOnDifficulty();
     shuffle(cards);
