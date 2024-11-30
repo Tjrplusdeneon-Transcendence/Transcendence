@@ -21,16 +21,8 @@ let currentPlayer = 'player1'; // Track the current player
 let player1Points = 0;
 let player2Points = 0;
 let endMessage;
-
-document.getElementById('start-solo-game-btn-memo').addEventListener('click', () => {
-    defaultDifficulty = document.getElementById('memoryDifficultySelect').value;
-    
-    document.getElementById('difficulty-menu-m').style.display = 'none';
-    document.getElementById('return-menu-btn-memo').style.display = 'none';
-    gameContainer.style.display = 'grid';
-
-    startMemory();
-});
+let gameSessionId = 0;
+let currentSessionId = 0;
 
 document.getElementById('shuffleToggle').addEventListener('change', function() {
     shuffleModeEnabled = this.checked; 
@@ -63,6 +55,8 @@ function startMemory() {
     document.getElementById('memory-game-container').style.display = 'grid';
 }
 
+let isGameActive = true;
+
 function resetMemory() 
 {
     clearTimeout(botMoveTimeout);
@@ -78,8 +72,10 @@ function resetMemory()
     currentPlayer = 'player1';
     player1Points = 0;
     player2Points = 0;
-    if (typeof endMessage !== 'undefined')
-        endMessage.remove();
+    isGameActive = true; // Set the game as active
+    gameSessionId++; // Increment the game session ID
+    // if (typeof endMessage !== 'undefined')
+    //     endMessage.remove();
 }
 
 function generateCardsBasedOnDifficulty() 
@@ -193,6 +189,7 @@ function onCardClick(cardElement) {
 
 function revealCard(cardElement) 
 {
+    if (!cardElement) return; // Ensure the card element is defined
     const index = cardElement.dataset.index;
     cardElement.textContent = cards[index].value;
     cardElement.classList.remove('hidden');
@@ -206,10 +203,14 @@ function hideCard(cardElement)
 
 function checkForMatch() {
     const [card1, card2] = flippedCards;
+    if (!card1 || !card2) {
+        flippedCards = [];
+        return;
+    }
     const index1 = card1.dataset.index;
     const index2 = card2.dataset.index;
 
-    if (cards[index1].value === cards[index2].value) {
+    if (cards[index1] && cards[index2] && cards[index1].value === cards[index2].value) {
         card1.classList.add('matched');
         card2.classList.add('matched');
         cards[index1].matched = true;
@@ -248,6 +249,7 @@ function checkForMatch() {
 
         if (matchedCards === cards.length) {
             setTimeout(() => {
+                if (!isGameActive) return; // Check if the game is still active
                 if (isMemoryGameAIEnabled) {
                     if (points > pairs / 2) {
                         // window.updateGameStats(1);
@@ -276,15 +278,42 @@ function checkForMatch() {
                 }
             }, 500);
         } else if (!isPlayerTurn && isMemoryGameAIEnabled) {
-            botMoveTimeout = setTimeout(botMove, 1000);
+            currentSessionId = gameSessionId; // Capture the current game session ID
+            botMoveTimeout = setTimeout(() => {
+                if (!isGameActive || currentSessionId !== gameSessionId) {
+                    console.log('Game session has changed. Stopping AI.');
+                    isPlayerTurn = true; // Let the player play
+                    return; // Check if the game is still active and if the session IDs match
+                }
+                botMove();
+            }, 1000);
         }
     } else {
+        currentSessionId = gameSessionId;
         setTimeout(() => {
+            if (!isGameActive) return; // Check if the game is still active
             hideCard(card1);
             hideCard(card2);
             flippedCards = [];
-            botMemory[index1] = cards[index1].value;
-            botMemory[index2] = cards[index2].value;
+            if (currentSessionId !== gameSessionId) 
+                {
+                    console.log('Game session has changed. Stopping AI.');
+                    isPlayerTurn = true; // Let the player play
+                    return; // Check if the game is still active and if the session IDs match
+                }
+            if (cards[index1]) {
+                botMemory[index1] = cards[index1].value;
+            } else {
+                console.error(`Invalid card index: ${index1}`);
+                return;
+            }
+
+            if (cards[index2]) {
+                botMemory[index2] = cards[index2].value;
+            } else {
+                console.error(`Invalid card index: ${index2}`);
+                return;
+            }
 
             shuffleAttempts++;
             attempts++;
@@ -293,14 +322,30 @@ function checkForMatch() {
                 shuffleAttempts = 0;
             }
             if (attempts >= 4 && hintModeEnabled) {
-                setTimeout(showHintCard, 1200);
+                currentSessionId = gameSessionId; // Capture the current game session ID
+                setTimeout(() => {
+                    if (!isGameActive || currentSessionId !== gameSessionId) {
+                        console.log('Game session has changed. Stopping AI.');
+                        isPlayerTurn = true; // Let the player play
+                        return; // Check if the game is still active and if the session IDs match
+                    }
+                    showHintCard();
+                }, 1200);
                 attempts = 0;
             }
 
             if (isMemoryGameAIEnabled) {
                 if (isPlayerTurn) {
                     isPlayerTurn = false;
-                    botMoveTimeout = setTimeout(botMove, 1000);
+                    currentSessionId = gameSessionId; // Capture the current game session ID
+                    botMoveTimeout = setTimeout(() => {
+                        if (!isGameActive || currentSessionId !== gameSessionId) {
+                            console.log('Game session has changed. Stopping AI.');
+                            isPlayerTurn = true; // Let the player play
+                            return; // Check if the game is still active and if the session IDs match
+                        }
+                        botMove();
+                    }, 1000);
                 } else {
                     isPlayerTurn = true;
                 }
@@ -346,6 +391,8 @@ function botMove() {
     const botCardElement1 = document.querySelector(`.card[data-index='${cards.indexOf(randomCard1)}']`);
     const botCardElement2 = document.querySelector(`.card[data-index='${cards.indexOf(randomCard2)}']`);
 
+    if (!botCardElement1 || !botCardElement2) return; // Ensure the card elements are defined
+
     revealCard(botCardElement1);
     flippedCards.push(botCardElement1);
 
@@ -387,7 +434,7 @@ function shuffleMessage()
     document.body.appendChild(endMessage);
 
     setTimeout(() => {
-        endMessage.remove();
+        // endMessage.remove();
         messageDisplay = false;
     }, 4000);
 }
@@ -423,7 +470,7 @@ function restartMemory()
     document.getElementById('difficulty-menu-m').style.display = 'block';
 
     const startButton = document.getElementById('start-solo-game-btn-memo');
-    document.getElementById('return-menu-btn-memo').style.display = 'block';
+    document.getElementById('go-back-btn-memo').style.display = 'inline-block';
     startButton.textContent = 'Start Game';
 
     startButton.removeEventListener('click', restartMemory);
@@ -433,8 +480,6 @@ function restartMemory()
 function resetDisplay_memory()
 {
     document.getElementById('mainMenuCanvas-memory').display = 'none';
-    document.getElementById('singleplayerButton-memory').display = 'none';
-    document.getElementById('multiplayerButton-memory').display = 'none';
     document.getElementById('leftSideM').display = 'none';
     document.getElementById('rightSideM').display = 'none';
 	// document.getElementById('closeModalM');
@@ -448,28 +493,12 @@ function resetDisplay_memory()
 
     document.getElementById('start-solo-game-btn-memo').display = 'none';
     document.getElementById('go-back-btn-memo').display = 'none';
-    document.getElementById('return-menu-btn-memo').display = 'none';
 }
 
 
 // Boutons du multi-joueur
 
 
-
-document.getElementById('local-btn-memory').addEventListener('click', () => {
-    isMemoryGameAIEnabled = false;
-});
-
-document.getElementById('leftSideM').addEventListener('click', () => {
-    resetDisplay_memory();
-    isMemoryGameAIEnabled = true;
-    document.getElementById('difficulty-menu-m').display = 'block';
-    document.getElementById('gamecustom-shuffle').display = 'block';
-    document.getElementById('gamecustom-hint').display = 'block';
-    document.getElementById('start-solo-game-btn-memo').display = 'block';
-    document.getElementById('return-menu-btn-memo').display = 'block';
-    document.getElementById('start-solo-game-btn-memo').textContent = 'Start Game';
-});
 
 let isOnlineMultiplayer = false;
 let bothPlayersReady_memory = false;
@@ -486,7 +515,6 @@ function launchOnlineMemoryGame() {
     document.getElementById('searching-menu-memory').style.display = 'flex';
     document.getElementById('go-back-btn-memo').style.display = 'inline-block';
     document.getElementById('go-back-btn-memo').textContent = 'Go Back';
-    document.getElementById('return-menu-btn-memo').style.display = 'none';
 
     const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
     const host = window.location.host;
@@ -518,12 +546,10 @@ function launchOnlineMemoryGame() {
             }
         } else if (data.type === 'start_game') {
             document.getElementById('searching-menu-memory').style.display = 'none';
-            document.getElementById('go-back-btn-memo').style.display = 'none';
             document.getElementById('rematch-btn-memory').style.display = 'inline-block';
             document.getElementById('quit-btn-memory').style.display = 'inline-block';
             document.getElementById('quit-btn-memory').textContent = 'Quit Match';
-            document.getElementById('return-menu-btn-memo').style.display = 'inline-block';
-            document.getElementById('return-menu-btn-memo').disabled = true;
+            document.getElementById('go-back-btn-memo').style.display = 'inline-block';
             initializeMemoryGameState(data.initial_state);
             startMemory();
             resetMatchmakingStateMemory();
@@ -590,9 +616,7 @@ document.getElementById('quit-btn-memory').addEventListener('click', function() 
     document.getElementById('rematch-btn-memory').style.display = 'none';
     document.getElementById('quit-btn-memory').style.display = 'none';
     document.getElementById('memory-game-container').style.display = 'none';
-    document.getElementById('go-back-btn-memo').style.display = 'none';
-    document.getElementById('return-menu-btn-memo').style.display = 'inline-block';
-    document.getElementById('return-menu-btn-memo').disabled = false;
+    document.getElementById('go-back-btn-memo').style.display = 'inline-block';
 });
 
 function initializeMemoryGameState(initialState) {
@@ -699,4 +723,259 @@ function handleCardFlipResult(player, cardIndices, matched) {
             hideCard(cardElement2);
         }, 1000);
     }
+}
+
+
+
+//PARTIE QUI GERE TOUS LES BUTOOOONS
+
+
+
+
+
+
+//////////////////////////
+// Récupération des éléments spécifiques au Memory
+const mainMenuCanvas = document.getElementById('mainMenuCanvas-memory');
+const leftSide = document.getElementById('leftSideM');
+const rightSide = document.getElementById('rightSideM');
+const cross = document.getElementById('closeModalM');
+
+const difficultyMenu = document.getElementById('difficulty-menu-m');
+const multiplayerMenu = document.getElementById('multiplayer-menu-memory');
+const localMultiplayer = document.getElementById('local-btn-memory');
+const memoryGameContainer = document.getElementById('memory-game-container');
+
+const startSoloGameBtn = document.getElementById('start-solo-game-btn-memo');
+const goBackBtn = document.getElementById('go-back-btn-memo');
+
+
+
+const routes_memo = {
+    'memory-menu': showMainMenu_Memory,
+    'solo-memo': showSoloMenu_Memory,
+    'solo-game-memo': showSoloGame_Memory,
+    'multiplayer-memo': showMultiplayerMenu_Memory,
+    'local-multiplayer-memo': showLocalMultiplayerMenu_Memory,
+    // 'online': showOnlineMenu,
+    // 'rematch': showRematchMenu,
+    // 'quit': showQuitMenu,
+};
+
+function navigateTo_memo(path) {
+    const currentPath_memo = window.location.hash.substring(1);
+    if (currentPath_memo !== path) {
+        window.history.pushState({}, path, window.location.origin + '#' + path);
+    }
+    console.log(`Navigating to ${path}`);
+    if (routes_memo[path]) {
+        routes_memo[path]();
+    } else {
+        console.error(`No route found for ${path}`);
+    }
+}
+
+cross.addEventListener('click', function()
+{ 
+    resetToMainMenu();
+});
+
+// Bouton Solo
+function showMainMenu_Memory() {
+    resetDisplay_menu();
+    mainMenuCanvas.style.display = 'block';
+    leftSide.style.display = 'flex';
+    rightSide.style.display = 'flex';
+}
+
+function showSoloMenu_Memory() {
+    resetDisplay_menu();
+    resetGameState();
+    isMemoryGameAIEnabled = true;
+    difficultyMenu.style.display = 'block';
+    if (document.getElementById('gamecustom-shuffle') !== null)
+        document.getElementById('gamecustom-shuffle').style.display = 'block';
+    if (document.getElementById('gamecustom-hint') !== null)
+        document.getElementById('gamecustom-hint').style.display = 'block';
+
+    startSoloGameBtn.style.display = 'block';
+    goBackBtn.style.display = 'inline-block';
+    startSoloGameBtn.textContent = 'Start Game';  // Change the button text
+
+    // Remove any existing event listeners to avoid duplicates
+    startSoloGameBtn.removeEventListener('click', startMemory);
+    startSoloGameBtn.removeEventListener('click', restartMemory);
+
+    // Add the correct event listener
+    startSoloGameBtn.addEventListener('click', startMemory);
+}
+
+function showSoloGame_Memory() {
+    resetDisplay_menu();
+    defaultDifficulty = document.getElementById('memoryDifficultySelect').value;
+    gameContainer.style.display = 'grid';
+    startMemory();
+}
+
+function showMultiplayerMenu_Memory() {
+    resetDisplay_menu();
+    localMultiplayer.style.display = 'block';
+    multiplayerMenu.style.display = 'flex';
+    document.getElementById('tournament-btn-memory').style.display = 'none';
+    goBackBtn.style.display = 'inline-block';
+}
+
+function showLocalMultiplayerMenu_Memory() {
+    resetGameState();
+    isMemoryGameAIEnabled = false;
+    resetDisplay_menu();
+    difficultyMenu.style.display = 'block';
+    if (document.getElementById('gamecustom-shuffle') !== null)
+        document.getElementById('gamecustom-shuffle').style.display = 'block';
+    if (document.getElementById('gamecustom-hint') !== null)
+        document.getElementById('gamecustom-hint').style.display = 'block';
+    startSoloGameBtn.style.display = 'block';
+    goBackBtn.style.display = 'inline-block';
+    startSoloGameBtn.textContent = 'Start Game';
+    startSoloGameBtn.removeEventListener('click', startMemory);
+    startSoloGameBtn.removeEventListener('click', restartMemory);
+
+    // Add the correct event listener
+    startSoloGameBtn.addEventListener('click', startMemory);
+}
+
+// Bouton Multijoueur Local
+
+const onlineMultiplayerBtn = document.getElementById('online-btn-memory');
+onlineMultiplayerBtn.addEventListener('click', function() {
+    launchOnlineMemoryGame();
+});
+// Gestion du bouton Go Back
+goBackBtn.addEventListener('click', function() {
+    history.back();
+});
+
+// Fonction pour gérer le retour au menu principaldocument.getElementById('difficulty-menu-m').style.display = 'none';
+
+function resetToMainMenu() {
+    mainMenuCanvas.style.display = 'block';
+    difficultyMenu.style.display = 'none';
+    multiplayerMenu.style.display = 'none';
+    memoryGameContainer.style.display = 'none';
+    leftSide.style.display = 'flex';
+    rightSide.style.display = 'flex';
+}
+
+
+function resetDisplay_menu() {
+    console.log('Resetting display menu');
+    mainMenuCanvas.style.display = 'none';
+    leftSide.style.display = 'none';
+    rightSide.style.display = 'none';
+    // document.getElementById('closeModalM').style.display = 'none';
+
+    difficultyMenu.style.display = 'none';
+    multiplayerMenu.style.display = 'none';
+    localMultiplayer.style.display = 'none';
+    memoryGameContainer.style.display = 'none';
+    // document.getElementById('gamecustom-shuffle').style.display = 'none';
+    // document.getElementById('gamecustom-hint').style.display = 'none';
+
+    startSoloGameBtn.style.display = 'none';
+    goBackBtn.style.display = 'none';
+    // put to none if they exist
+    if (document.getElementById('gamecustom-shuffle') !== null)
+        document.getElementById('gamecustom-shuffle').style.display = 'none';
+    if (document.getElementById('gamecustom-hint') !== null)
+        document.getElementById('gamecustom-hint').display = 'none';
+}
+
+
+// Affiche le menu de sélection de difficulté pour le jeu de memory
+// function showMemoryMenu() {
+// document.getElementById('memory-menu').style.display = 'block';
+// document.getElementById('memoryCanvas').style.display = 'none';
+// document.getElementById('start-memory-game-btn').textContent = 'Start Game';
+// }
+
+
+// Réinitialise l'interface pour revenir au menu principal
+// function resetMemoryMainMenu() {
+// document.getElementById('mainMemoryMenu').style.display = 'block';
+// document.getElementById('leftSideshowSoloGame_Memory').style.display = 'flex';
+// document.getElementById('rightSide').style.display = 'flex';
+// document.getElementById('memory-menu').style.display = 'none';
+// document.getElementById('memoryCanvas').style.display = 'none';
+// document.getElementById('start-solo-game-btn-memo').style.display = 'none';
+// }
+
+mainMenuCanvas.addEventListener('click', function() {
+    navigateTo_memo('memory-menu');
+});
+
+leftSide.addEventListener('click', function() {
+    navigateTo_memo('solo-memo');
+});
+
+rightSide.addEventListener('click', function() {
+    navigateTo_memo('multiplayer-memo');
+});
+
+startSoloGameBtn.addEventListener('click', function() {
+    navigateTo_memo('solo-game-memo');
+});
+
+localMultiplayer.addEventListener('click', function() {
+    navigateTo_memo('local-multiplayer-memo');
+});
+
+window.addEventListener('popstate', (event) => {
+    resetMemoryValues();
+    const path = window.location.hash.substring(1); // Use hash to get the path
+    if (routes_memo[path]) {
+        routes_memo[path]();
+    } else {
+        showMainMenu_Memory(); // Default to main menu if route not found
+    }
+});
+// Initialize the correct menu on page load
+document.addEventListener('DOMContentLoaded', () => {
+    resetMemoryValues();
+    const path = window.location.hash.substring(1); // Use hash to get the path
+    if (routes_memo[path]) {
+        routes_memo[path]();
+    } else {
+        showMainMenu_Memory(); // Default to main menu if route not found
+    }
+});
+
+// Function to reset the memory game variables
+
+
+function resetMemoryValues() {
+    clearTimeout(botMoveTimeout);
+    cards = [];
+    flippedCards = [];
+    botMemory = {}; 
+    matchedCards = 0;
+    points = 0;
+    pairs = 10;
+    isPlayerTurn = true;
+    messageDisplay = false;
+    // shuffleModeEnabled = false;
+    // hintModeEnabled = false;
+    hintActive = false; // Indicates if hint is active
+    defaultDifficulty = 'medium'; 
+    attempts = 0; 
+    shuffleAttempts = 0;
+    currentPlayer = 'player1'; // Track the current player
+    player1Points = 0;
+    player2Points = 0;
+    endMessage = '';
+}
+
+function resetGameState() {
+    resetMemoryValues();
+    isMemoryGameAIEnabled = false;
+    // Reset other game-related variables if needed
 }
