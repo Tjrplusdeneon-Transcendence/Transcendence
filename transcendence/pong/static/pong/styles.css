@@ -549,11 +549,15 @@ body {
 }
 
 .info-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    padding: 0;
 }
 
 .info-button:hover {
 }
-
 
 li {
     list-style-type: none;
