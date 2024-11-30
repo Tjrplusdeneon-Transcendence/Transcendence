@@ -7,6 +7,9 @@ function handleResponse(response) {
         response.json().then(data => {
             document.getElementById('gameStats').innerHTML = data.gamestats_html;
         });
+        console.log(data.gamestats_html);
+    } else {
+        console.log("Error fetching the correct gamestats");
     }
 }
 

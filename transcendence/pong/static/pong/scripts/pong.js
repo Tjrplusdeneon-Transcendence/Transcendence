@@ -107,7 +107,6 @@ function updatePaddlePosition(deltaTime) {
                 mouseBlocked = true;
             }
 
-            console.log(`Player 1 sending paddle position: ${paddleY1}`);
             sendPaddlePosition(paddleY1);
         } else if (playerRole === 'player2') {
             if (mouseY < paddleY2 + paddleHeight / 2) {
@@ -131,7 +130,6 @@ function updatePaddlePosition(deltaTime) {
                 mouseBlocked = true;
             }
 
-            console.log(`Player 2 sending paddle position: ${paddleY2}`);
             sendPaddlePosition(paddleY2);
         }
     }
@@ -203,7 +201,6 @@ function drawPaddle(x, y, color, shadowColor, opacity = 1)
 
 function drawBall(posX = x, posY = y, opacity = 1)
 {
-    console.log('Drawing ball at position:', posX, posY, 'with opacity:', opacity);
     context.beginPath();
     context.arc(posX, posY, ball.radius, 0, Math.PI * 2);
     context.fillStyle = ball.color;
@@ -474,12 +471,8 @@ function checkPaddleCollision(deltaTime) {
             let angleAdjustment = 0;
             if (paddleDirection === 1) {
                 angleAdjustment = angleAdjustmentUp;
-                console.log("Player moving up: dy =", dy);
             } else if (paddleDirection === -1) {
                 angleAdjustment = angleAdjustmentDown;
-                console.log("Player moving down: dy =", dy);
-            } else {
-                console.log("Player not moving: dy =", dy);
             }
 
             let speed = Math.sqrt(dx * dx + dy * dy);
@@ -492,8 +485,6 @@ function checkPaddleCollision(deltaTime) {
             }
             dx = Math.abs(speed * Math.cos(angle));
             dy = speed * Math.sin(angle);
-
-            console.log("New dx:", dx, "New dy:", dy);
 
             x = paddleWidth + ball.radius;
             ballMovingTowardsAI = true;
@@ -509,12 +500,8 @@ function checkPaddleCollision(deltaTime) {
             let angleAdjustment = 0;
             if (paddleDirection === 1) {
                 angleAdjustment = angleAdjustmentDown;
-                console.log("Player 2 moving up: dy =", dy);
             } else if (paddleDirection === -1) {
                 angleAdjustment = angleAdjustmentUp;
-                console.log("Player 2 moving down: dy =", dy);
-            } else {
-                console.log("Player 2 not moving: dy =", dy);
             }
 
             let speed = Math.sqrt(dx * dx + dy * dy);
@@ -527,8 +514,6 @@ function checkPaddleCollision(deltaTime) {
             }
             dx = -Math.abs(speed * Math.cos(angle));
             dy = speed * Math.sin(angle);
-
-            console.log("New player 2 dx:", dx, "New player 2 dy:", dy);
 
             x = canvas.width - paddleWidth - ball.radius;
             ballMovingTowardsAI = false;
@@ -637,7 +622,6 @@ function draw(currentTime) {
             }
 
             if (paddleMoved) {
-                console.log(`Player 1 sending paddle position: ${paddleY1}`);
                 sendPaddlePosition(paddleY1);
             }
         } else if (playerRole === 'player2') {
@@ -658,7 +642,6 @@ function draw(currentTime) {
             }
 
             if (paddleMoved) {
-                console.log(`Player 2 sending paddle position: ${paddleY2}`);
                 sendPaddlePosition(paddleY2);
             }
         }
@@ -913,16 +896,13 @@ function startGame() {
     increaseGamesPlayed();
     const selectedBallSize = document.getElementById('ballSizeSelect').value;
     updateBallSize(selectedBallSize);
-    console.log('Ball size selected:', selectedBallSize);
 
     // Récupérer les options sélectionnées
     const selectedDifficulty = document.getElementById('difficultySelect').value;
     currentDifficulty = selectedDifficulty;
-    console.log('Difficulty selected:', selectedDifficulty);
 
     const selectedPaddleSize = document.getElementById('paddle-size').value;
     updatePaddleSize(selectedPaddleSize);
-    console.log('Paddle size selected:', selectedPaddleSize);
 
     // Reinitialize game state
     const restartButton = isMatchmaking ? document.getElementById('start-multiplayer-btn') : document.getElementById('start-solo-game-btn');
@@ -956,10 +936,6 @@ function startGame() {
     const speed = Math.sqrt(difficultySettings[currentDifficulty].dx * difficultySettings[currentDifficulty].dx + difficultySettings[currentDifficulty].dy * difficultySettings[currentDifficulty].dy);
     dx = -Math.abs(speed * Math.cos(angle));
     dy = speed * Math.sin(angle);
-
-    console.log('Initial ball position:', ball.x, ball.y);
-    console.log('Initial ball velocity:', dx, dy);
-    console.log('Paddle positions:', paddleY1, paddleY2);
 
     if (isMatchmaking) {
         // Directly start the game without showing the restart button or difficulty menu
@@ -1773,8 +1749,6 @@ function updatePaddleSize(size) {
     // Ajuster les positions pour rester dans les limites
     paddleY1 = Math.min(paddleY1, canvas.height - paddleHeight);
     paddleY2 = Math.min(paddleY2, canvas.height - paddleHeight);
-
-    console.log(`Paddle size updated to: ${paddleSizeLabels[size]} (${size}px)`);
 }
 
 document.getElementById("paddle-size").addEventListener("input", function () {
