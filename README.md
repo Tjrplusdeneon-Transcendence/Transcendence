@@ -37,17 +37,11 @@ Ce projet propose une plateforme de jeux multijoueurs en ligne, incluant des cla
 
 ## **Liste des tâches**
 
-### **Principales fonctionnalités à développer**
-1. **Multijoueur distant** (en réflexion)
-2. **Chat en direct** (en cours)
-3. **Nouveau jeu : Memory** (terminé)
-4. **Gestion du backend utilisateur et login** (en cours)
-5. **Statistiques des jeux** (terminé)
-
-### **Bug connus**
-1. **Problème de détection des collisions dans Pong** : Lorsque la balle va trop vite, les collisions ne réagissent pas correctement.
-2. **Chat inutilisable en mode jeu** : Résolu. [X]
-3. **Vitesse de la balle dans Pong** : Limiter la vitesse maximale.
+### **Principales fonctionnalités**
+1. **Multijoueur distant**
+2. **Chat en direct**
+3. **Nouveau jeu : Memory**
+4. **Gestion du backend utilisateur et login**
 
 ---
 
@@ -55,15 +49,14 @@ Ce projet propose une plateforme de jeux multijoueurs en ligne, incluant des cla
 
 | **Nom**      | **Tâche**               |
 | ------------ | ----------------------- |
-| **Seydou**   | Backend                  |
-| **Jeremie**  | Backend                  |
-| **Ulysse**   | Backend                  |
-| **Sarah**    | Frontend                 |
-| **Nagui**    | Frontend                 |
+| **Seydou**   | Backend                 |
+| **Jeremie**  | Backend                 |
+| **Ulysse**   | Backend                 |
+| **Sarah**    | Frontend                |
+| **Nagui**    | Frontend                |
 
 ---
 
 ## **Merci d'avoir lu**
-Un readme beaucoup trop long pour un projet si peu prétencieux et imprétionnant, mais au moins c'est joli.
 
 ---
